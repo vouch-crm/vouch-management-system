@@ -1,6 +1,6 @@
-import mongoose, {Schema, Document} from "mongoose";
+import mongoose, {Schema} from "mongoose";
 
-export interface IClient extends Document {
+export interface IClient{
     clientBasicInfo: {
         name: string,
         email: string,
