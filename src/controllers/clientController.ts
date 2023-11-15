@@ -18,9 +18,30 @@ const clientOnBoard = async (req: Request, res: Response) => {
     const dbResponse: IReturnClient = await clientServices.create(clientData);
 
     if (dbResponse.status === 'success') {
-        res.status(201).json({
-            message: 'client created successfuly!'
-        });
+        console.log(`the created client id: ${dbResponse.data?.id}`);
+        const jobData: IJob = {
+            clientSector: requestData.clientSector,
+            vouchAccountLead: requestData.vouchAccountLead,
+            additionalTeamOnAccount: requestData.additionalTeamOnAccount,
+            coreServices: requestData.coreServices,
+            client: dbResponse.data?.id
+        }
+        const dbResponse2: IReturnJob = await jobServices.create(jobData);
+        if (dbResponse2.status === 'success') {
+            res.status(201).json({
+                message: 'Client Onboarded Successfuly!'
+            });
+        }
+        else if (dbResponse2.status === 'failed') {
+            res.status(400).json({
+                message: dbResponse2.message
+            });
+        }
+        else {
+            res.status(500).json({
+                message: dbResponse2.message
+            });
+        }
     }
     else if (dbResponse.status === 'failed') {
         res.status(400).json({

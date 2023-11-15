@@ -1,6 +1,7 @@
 import mongoose, {Schema} from "mongoose";
 
 export interface IClient{
+    id?: string,
     clientBasicInfo: {
         name: string,
         email: string,

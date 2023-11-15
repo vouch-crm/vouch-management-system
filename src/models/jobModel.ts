@@ -1,11 +1,12 @@
 import mongoose, {Schema} from "mongoose";
 
 export interface IJob {
+    id?: string,
     clientSector: string,
     vouchAccountLead: [string],
     additionalTeamOnAccount: [String],
-    coreServices: [String],
-    client?: mongoose.Schema.Types.ObjectId
+    coreServices?: [String],
+    client?: string
     clientAccess?: {
         metaAds: Boolean,
         googleAds: Boolean,
