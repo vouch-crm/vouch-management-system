@@ -102,6 +102,6 @@ const getClient = async (req: Request, res: Response) => {
 
 clientRouter.post('/client-onboard', clientOnBoard);
 clientRouter.put('/client-setup', clientSetup);
-clientRouter.get('/client', getClient);
+clientRouter.get('/client/:id', getClient);
 
 export default clientRouter;
