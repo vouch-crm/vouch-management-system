@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 
 export interface IJobForm {
     id?: string,
-    job: string,
+    job?: string,
     paidMediaBrief?: {
         email: string,
         brandName: string,

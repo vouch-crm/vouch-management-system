@@ -1,7 +1,32 @@
 "use strict";
-var person;
-person = 'Mohamadi';
-var printPersonName = function (person) {
-    return "the person name is: ".concat(person);
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-console.log(printPersonName(person));
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const dotenv_1 = __importDefault(require("dotenv"));
+const mongoose_1 = __importDefault(require("mongoose"));
+const body_parser_1 = __importDefault(require("body-parser"));
+const clientController_1 = __importDefault(require("./controllers/clientController"));
+dotenv_1.default.config();
+const app = (0, express_1.default)();
+const PORT = process.env.PORT;
+app.use(body_parser_1.default.json());
+app.use(clientController_1.default);
+app.get('/', (_req, res) => {
+    res.send('Server Started!');
+});
+const connectDB = async () => {
+    try {
+        const connectionString = process.env.DB_CONNECTION_STRING;
+        await mongoose_1.default.connect(connectionString);
+        console.log('Database connected successfully!');
+    }
+    catch (error) {
+        console.error('Failed to connect to the database', error);
+    }
+};
+connectDB();
+app.listen(PORT, () => {
+    console.log(`Server Running On Port: ${PORT}`);
+});

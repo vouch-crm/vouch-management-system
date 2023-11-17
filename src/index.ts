@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import clientRouter from './controllers/clientController';
+import jobFormRouter from './controllers/jobFormsController';
 
 dotenv.config();
 
@@ -11,6 +12,7 @@ const PORT: string = process.env.PORT as string;
 
 app.use(bodyParser.json());
 app.use(clientRouter);
+app.use(jobFormRouter);
 
 app.get('/', (_req: Request, res: Response): void => {
     res.send('Server Started!');

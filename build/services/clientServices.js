@@ -1,81 +1,77 @@
-import { clientAgent, IClient } from "../models/clientModel";
-
-export interface IReturnClient {
-    status: string,
-    message?: string,
-    data?: IClient
-}
-
-const create = async (clientData: IClient): Promise<IReturnClient> => {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.clientServices = void 0;
+const clientModel_1 = require("../models/clientModel");
+const create = async (clientData) => {
     try {
-        const newClient: IClient = await clientAgent.create(clientData);
+        const newClient = await clientModel_1.clientAgent.create(clientData);
         if (newClient) {
             return {
                 status: 'success',
                 data: newClient
-            }
+            };
         }
         else {
             return {
                 status: 'failed',
-                message: 'client document was not created'
-            }
-        }
-    } catch (error) {
-        return {
-            status: 'error',
-            message: `an error occurred while creating a client document: ${error}`
+                message: 'document was not created'
+            };
         }
     }
-}
-
-const update = async (id: string, clientData: IClient): Promise<IReturnClient> => {
+    catch (error) {
+        return {
+            status: 'error',
+            message: `an error occurred: ${error}`
+        };
+    }
+};
+const update = async (id, clientData) => {
     try {
-        const updatedClient: IClient | null = await clientAgent.findByIdAndUpdate(id, clientData);
+        const updatedClient = await clientModel_1.clientAgent.findByIdAndUpdate(id, clientData);
         if (!updatedClient) {
             return {
                 status: 'failed',
                 message: `client with id: ${id} not found`
-            }
+            };
         }
         else {
             return {
                 status: 'success',
                 data: updatedClient
-            }
+            };
         }
-    } catch (error) {
+    }
+    catch (error) {
         return {
             status: 'error',
             message: `an error occurred: ${error}`
-        }
+        };
     }
-}
-
-const findByID = async (id: string): Promise<IReturnClient> => {
+};
+const findByID = async (id) => {
     try {
-        const clientDocument: IClient | null = await clientAgent.findById(id);
+        const clientDocument = await clientModel_1.clientAgent.findById(id);
         if (clientDocument) {
             return {
                 status: 'success',
                 data: clientDocument
-            }
+            };
         }
         else {
             return {
                 status: 'failed'
-            }
+            };
         }
-    } catch (error) {
+    }
+    catch (error) {
         return {
             status: 'error',
             message: `an error occurred: ${error}`
-        }
+        };
     }
-}
-
-export const clientServices = {
+};
+exports.clientServices = {
     create,
     update,
     findByID
-}
+};
