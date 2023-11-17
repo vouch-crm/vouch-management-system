@@ -1,47 +1,24 @@
-import { clientAgent, IClient } from "../models/clientModel";
+import { jobAgent, IJob } from '../models/jobModel'
 
-export interface IReturnClient {
+export interface IReturnJob {
     status: string,
     message?: string,
-    data?: IClient
+    data?: IJob
 }
 
-const create = async (clientData: IClient): Promise<IReturnClient> => {
+const create = async (jobData: IJob): Promise<IReturnJob> => {
     try {
-        const newClient: IClient = await clientAgent.create(clientData);
-        if (newClient) {
+        const newJob: IJob = await jobAgent.create(jobData);
+        if (newJob) {
             return {
                 status: 'success',
-                data: newClient
+                data: newJob
             }
         }
         else {
             return {
                 status: 'failed',
-                message: 'client document was not created'
-            }
-        }
-    } catch (error) {
-        return {
-            status: 'error',
-            message: `an error occurred while creating a client document: ${error}`
-        }
-    }
-}
-
-const update = async (id: string, clientData: IClient): Promise<IReturnClient> => {
-    try {
-        const updatedClient: IClient | null = await clientAgent.findByIdAndUpdate(id, clientData);
-        if (!updatedClient) {
-            return {
-                status: 'failed',
-                message: `client with id: ${id} not found`
-            }
-        }
-        else {
-            return {
-                status: 'success',
-                data: updatedClient
+                message: 'document was not created'
             }
         }
     } catch (error) {
@@ -52,13 +29,36 @@ const update = async (id: string, clientData: IClient): Promise<IReturnClient> =
     }
 }
 
-const findByID = async (id: string): Promise<IReturnClient> => {
+const update = async (id: string, jobData: IJob): Promise<IReturnJob> => {
     try {
-        const clientDocument: IClient | null = await clientAgent.findById(id);
-        if (clientDocument) {
+        const updatedJob: IJob | null = await jobAgent.findByIdAndUpdate(id, jobData);
+        if (!updatedJob) {
+            return {
+                status: 'failed',
+                message: `client with id: ${id} not found`
+            }
+        }
+        else {
             return {
                 status: 'success',
-                data: clientDocument
+                data: updatedJob
+            }
+        }
+    } catch (error) {
+        return {
+            status: 'error',
+            message: `an error occurred: ${error}`
+        }
+    }
+}
+
+const findByID = async (id: string): Promise<IReturnJob> => {
+    try {
+        const jobDocument: IJob | null = await jobAgent.findById(id);
+        if (jobDocument) {
+            return {
+                status: 'success',
+                data: jobDocument
             }
         }
         else {
@@ -74,7 +74,7 @@ const findByID = async (id: string): Promise<IReturnClient> => {
     }
 }
 
-export const clientServices = {
+export const jobServices = {
     create,
     update,
     findByID
