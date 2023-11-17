@@ -138,8 +138,8 @@ const jobFormSchema = new mongoose_1.Schema({
         contentDeliverRightMessage: String,
         websiteGoodBusinessRepresentation: String,
         websiteInstillTrustAndConfidence: String,
-        websiteEastToUpdate: String,
         trackedVisitors: String,
+        websiteEasyToUpdate: String,
         toolsAndAppsToRunWebsite: String,
         newWebsite: String,
         proposedSitemapPrepared: String,
@@ -174,6 +174,7 @@ const jobFormSchema = new mongoose_1.Schema({
         websiteChanges: String,
         FeaturesAndFunctionsToAdd: String,
         websiteSuggestions: String,
+        elementsNeedToBeRemoved: String,
         newWebsiteElementsDesign: String
     },
     appBrief: {
@@ -187,7 +188,7 @@ const jobFormSchema = new mongoose_1.Schema({
         nativeAppOrMobileWebApp: String,
         mandatoryInclusions: String,
         additionalFeatures: String,
-        deliveryDate: Date,
+        deliveryDate: String,
         budget: String,
         additionalInformation: String
     },
@@ -207,7 +208,8 @@ const jobFormSchema = new mongoose_1.Schema({
         bounceRateForPageOrCategory: String,
         idealBounceRate: String,
         bestConversionRatePage: String,
-        competitorUXJourneys: String,
+        competitorUXJourneysLiked: String,
+        competitorUXJourneysNotLiked: String,
         reviewLearningsOptimisationDate: Date,
         additionalInfo: String
     },
@@ -241,7 +243,7 @@ const jobFormSchema = new mongoose_1.Schema({
         expectedDeliverables: String,
         deliverablesNextUse: String,
         currentDeadlinesAndMilestones: String,
-        expectedProjectStartDate: Date,
+        expectedProjectStartDate: String,
         projectDelayActions: String,
         ultimateDecisionMaker: String,
         additionalInfo: String

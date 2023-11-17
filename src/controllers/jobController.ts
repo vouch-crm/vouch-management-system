@@ -6,23 +6,18 @@ const jobRouter: express.Router = express.Router();
 
 const clientAccess = async (req: Request, res: Response) => {
     const clientID: string = req.params.id; 
-    console.log('hi')
-    console.log(req.params.id)
-    console.log(req.body)
-    const requestData = {
+    const jobData = {
         clientAccess: {
-            metaAds: req.body.metaStatus === 'Completed'? true : false,
-            googleAds: req.body.googleAdsStatus === 'Completed'? true : false,
-            tiktokAds: req.body.tiktokStatus === 'Completed'? true : false,
-            googleTagManager: req.body.googleTag === 'Completed'? true : false,
-            googleAnalytics4: req.body.googleAnalytics === 'Completed'? true : false,
-            tracking: req.body.tracking === 'Completed'? true : false,
+            metaAds: req.body.clientAccess.metaStatus === 'Completed'? true : false,
+            googleAds: req.body.clientAccess.googleAdsStatus === 'Completed'? true : false,
+            tiktokAds: req.body.clientAccess.tiktokStatus === 'Completed'? true : false,
+            googleTagManager: req.body.clientAccess.googleTag === 'Completed'? true : false,
+            googleAnalytics4: req.body.clientAccess.googleAnalytics === 'Completed'? true : false,
+            tracking: req.body.clientAccess.tracking === 'Completed'? true : false,
         },
     };
-
-    console.log(requestData)
     
-    const dbResponse: IReturnJob = await jobServices.update(clientID, requestData.clientAccess);
+    const dbResponse: IReturnJob = await jobServices.update(clientID, jobData);
     if (dbResponse.status === 'success') {
         res.status(200).json({
             message: 'job document updated successfuly!',
@@ -64,6 +59,6 @@ const createJob = async (req: Request, res: Response) => {
 }
 
 jobRouter.put('/client-access/:id', clientAccess);
-jobRouter.put('/create-job', createJob);
+jobRouter.post('/create-job', createJob);
 
 export default jobRouter;

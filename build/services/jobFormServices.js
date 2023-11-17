@@ -24,6 +24,27 @@ const create = async (jobFormData) => {
         };
     }
 };
+const findOne = async (clientID) => {
+    try {
+        const jobFormData = await jobFormsModel_1.jobFormsAgent.findOne({ client: clientID }).populate('client');
+        if (!jobFormData) {
+            return {
+                status: 'failed',
+                message: 'job form document was not created'
+            };
+        }
+        return {
+            status: 'success',
+            data: jobFormData
+        };
+    }
+    catch (error) {
+        return {
+            status: 'error',
+            message: `an error occurred while creating a job form document: ${error}`
+        };
+    }
+};
 const update = async (clientID, jobFormData) => {
     try {
         const query = {
@@ -58,5 +79,6 @@ const update = async (clientID, jobFormData) => {
 };
 exports.jobFormServices = {
     create,
-    update
+    update,
+    findOne
 };

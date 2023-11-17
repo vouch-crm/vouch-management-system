@@ -37,11 +37,11 @@ const clientSchema = new mongoose_1.Schema({
             unique: true
         },
         companyName: String,
-        companyRegisterationNumber: Number,
-        vatRegisterationNumber: Number,
+        companyRegisterationNumber: String,
+        vatRegisterationNumber: String,
         companyRegisteredAddress: String,
         companyBillingAddress: String,
-        businessCommenced: Date,
+        businessCommenced: String,
     },
     mainPointOfContact: {
         name: String,

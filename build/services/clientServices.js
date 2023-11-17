@@ -70,8 +70,31 @@ const findByID = async (id) => {
         };
     }
 };
+const find = async () => {
+    try {
+        const clients = await clientModel_1.clientAgent.find();
+        if (clients) {
+            return {
+                status: 'success',
+                data: clients
+            };
+        }
+        else {
+            return {
+                status: 'failed'
+            };
+        }
+    }
+    catch (error) {
+        return {
+            status: 'error',
+            message: `an error occurred: ${error}`
+        };
+    }
+};
 exports.clientServices = {
     create,
     update,
-    findByID
+    findByID,
+    find
 };

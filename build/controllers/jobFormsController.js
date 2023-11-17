@@ -27,6 +27,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const mongoose_1 = __importDefault(require("mongoose"));
 const jobFormServices_1 = require("../services/jobFormServices");
 const s3Services_1 = require("../services/s3Services");
 const multer_1 = __importDefault(require("multer"));
@@ -37,10 +38,33 @@ const jobForm = async (req, res) => {
     const clientID = req.params.id;
     const requestData = req.body;
     requestData['client'] = clientID;
-    const dbResponse = await jobFormServices_1.jobFormServices.update(clientID, requestData);
+    const dbResponse = await jobFormServices_1.jobFormServices.create(requestData);
     if (dbResponse.status === 'success') {
         res.status(201).json({
             message: 'form submitted successfuly!'
+        });
+    }
+    else if (dbResponse.status === 'failed') {
+        res.status(400).json({
+            message: dbResponse.message
+        });
+    }
+    else {
+        res.status(500).json({
+            message: dbResponse.message
+        });
+    }
+};
+const getForm = async (req, res) => {
+    const clientID = req.params.id;
+    const requestData = req.body;
+    requestData['client'] = clientID;
+    const ID = new mongoose_1.default.Types.ObjectId('4edd40c86762e0fb12000003');
+    const dbResponse = await jobFormServices_1.jobFormServices.findOne(clientID);
+    if (dbResponse.status === 'success') {
+        res.status(200).json({
+            message: 'form submitted successfuly!',
+            data: dbResponse
         });
     }
     else if (dbResponse.status === 'failed') {
@@ -94,4 +118,5 @@ const uploadFile = async (req, res) => {
 };
 jobFormRouter.post('/job-form/:id', jobForm);
 jobFormRouter.post('/upload-file', upload.single('file'), uploadFile);
+jobFormRouter.get('/job-form/:id', getForm);
 exports.default = jobFormRouter;

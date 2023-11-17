@@ -40,7 +40,8 @@ const jobSchema = new mongoose_1.Schema({
         googleAds: Boolean,
         tiktokAds: Boolean,
         googleTagManager: Boolean,
-        googleAnalytics4: Boolean
+        googleAnalytics4: Boolean,
+        tracking: Boolean
     },
     additionalInfo: String,
     workflowUpdates: {

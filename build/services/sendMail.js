@@ -6,14 +6,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.mailOptions = exports.transporter = void 0;
 const nodemailer_1 = __importDefault(require("nodemailer"));
 exports.transporter = nodemailer_1.default.createTransport({
-    service: 'SendGrid',
+    host: 'smtp.elasticemail.com',
+    port: 2525,
     auth: {
-        user: 'apikey',
-        pass: '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'
+        user: 'alii403304@gmail.com',
+        pass: '32C59FA4E88856D9ED8592AF13612116429F'
     }
 });
 exports.mailOptions = {
-    from: 'noreply@thealchemist.de',
+    from: 'alii403304@gmail.com',
     to: 'thunderstruck772@gmail.com',
     subject: 'test email',
     text: 'Hello, this is a test email sent using Nodemailer!'
