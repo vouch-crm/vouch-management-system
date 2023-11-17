@@ -31,7 +31,10 @@ const create = async (jobData: IJob): Promise<IReturnJob> => {
 
 const update = async (id: string, jobData: IJob): Promise<IReturnJob> => {
     try {
-        const updatedJob: IJob | null = await jobAgent.findByIdAndUpdate(id, jobData);
+        const query = {
+            client: id
+        }
+        const updatedJob: IJob | null = await jobAgent.findOneAndUpdate(query, jobData, {new: true});
         if (!updatedJob) {
             return {
                 status: 'failed',

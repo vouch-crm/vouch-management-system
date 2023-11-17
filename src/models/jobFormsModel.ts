@@ -1,4 +1,3 @@
-import { String } from "aws-sdk/clients/codebuild";
 import mongoose, { Schema } from "mongoose";
 
 export interface IJobForm {

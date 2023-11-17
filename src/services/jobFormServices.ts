@@ -1,4 +1,5 @@
 import { jobFormsAgent, IJobForm } from "../models/jobFormsModel";
+import { clientAgent, IClient } from "../models/clientModel";
 
 export interface IReturnJobForm {
     status: string,
@@ -33,15 +34,23 @@ const update = async (clientID: string, jobFormData: IJobForm): Promise<IReturnJ
             client: clientID
         }
         const updatedJobForm: IJobForm | null = await jobFormsAgent.findOneAndUpdate(query, jobFormData,
-             { new: true });
-        
+            { new: true });
+
         if (!updatedJobForm) {
-            return {
-                status: 'failed',
-                message: 'document not found'
+            const clientExistCheck: IClient | null = await clientAgent.findById(clientID);
+            if (!clientExistCheck) {
+                return {
+                    status: 'failed',
+                    message: 'document not found'
+                }
             }
+            const createdJobForm: IJobForm = await jobFormsAgent.create(jobFormData);
+            return {
+                status: 'success',
+                data: createdJobForm
+            }  
         }
-        return{
+        return {
             status: 'success',
             data: updatedJobForm
         }
