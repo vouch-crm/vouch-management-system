@@ -26,9 +26,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.jobFormsAgent = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 const jobFormSchema = new mongoose_1.Schema({
-    job: {
+    client: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: 'job',
+        ref: 'client',
         required: true
     },
     paidMediaBrief: {
@@ -43,7 +43,7 @@ const jobFormSchema = new mongoose_1.Schema({
         toneOfVoice: String,
         customerValue: String,
         audienceIdentity: String,
-        audienceAge: Number,
+        audienceAge: String,
         ineterestsAndHobbies: String,
         audienceTargeting: String,
         informationConsumption: String,
@@ -54,11 +54,11 @@ const jobFormSchema = new mongoose_1.Schema({
         customerBrandFeeling: String,
         customerBrandThoughts: String,
         customerBrandAct: String,
-        budget: Number,
+        budget: String,
         timeframe: Date,
         pointOfContact: String,
         activityDates: String,
-        activityDatesBudget: Number,
+        activityDatesBudget: String,
         accessToAnalyticsAndPaidMediaAccounts: {
             type: Boolean,
             default: false
@@ -89,7 +89,7 @@ const jobFormSchema = new mongoose_1.Schema({
         outputRequired: String,
         outputDescription: String,
         referenceFiles: [String],
-        projectBudget: Number,
+        projectBudget: String,
         additionalInformation: String
     },
     brandIdentityBrief: {
@@ -118,7 +118,7 @@ const jobFormSchema = new mongoose_1.Schema({
         brandGuidlines: String,
         existingBrandGuidelines: String,
         additionalInfo: String,
-        budget: Number,
+        budget: String,
         delievryDate: Date
     },
     websiteBriefing: {
@@ -188,7 +188,7 @@ const jobFormSchema = new mongoose_1.Schema({
         mandatoryInclusions: String,
         additionalFeatures: String,
         deliveryDate: Date,
-        budget: Number,
+        budget: String,
         additionalInformation: String
     },
     CROBrief: {

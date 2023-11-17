@@ -6,6 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const clientServices_1 = require("../services/clientServices");
 const jobServices_1 = require("../services/jobServices");
+const sendMail_1 = require("../services/sendMail");
+const multer_1 = __importDefault(require("multer"));
+const upload = (0, multer_1.default)();
 const clientRouter = express_1.default.Router();
 const clientOnBoard = async (req, res) => {
     const requestData = req.body;
@@ -51,6 +54,21 @@ const clientOnBoard = async (req, res) => {
         res.status(500).json({
             message: dbResponse.message
         });
+    }
+};
+const sendMail = async (req, res) => {
+    try {
+        sendMail_1.transporter.sendMail(sendMail_1.mailOptions, (error, info) => {
+            if (error) {
+                throw new Error(error.message);
+            }
+            else {
+                res.status(201).json('Email sent: ' + info.response);
+            }
+        });
+    }
+    catch (error) {
+        console.log(error);
     }
 };
 const clientSetup = async (req, res) => {
