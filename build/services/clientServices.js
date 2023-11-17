@@ -14,14 +14,14 @@ const create = async (clientData) => {
         else {
             return {
                 status: 'failed',
-                message: 'document was not created'
+                message: 'client document was not created'
             };
         }
     }
     catch (error) {
         return {
             status: 'error',
-            message: `an error occurred: ${error}`
+            message: `an error occurred while creating a client document: ${error}`
         };
     }
 };
