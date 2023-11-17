@@ -141,6 +141,7 @@ export interface IJobForm {
         websiteChanges: string,
         FeaturesAndFunctionsToAdd: string,
         websiteSuggestions: string,
+        elementsNeedToBeRemoved: string,
         newWebsiteElementsDesign: string
     },
     appBrief?: {
@@ -154,7 +155,7 @@ export interface IJobForm {
         nativeAppOrMobileWebApp: string,
         mandatoryInclusions: string,
         additionalFeatures: string,
-        deliveryDate: Date,
+        deliveryDate: String,
         budget: string,
         additionalInformation: string
     },
@@ -174,7 +175,8 @@ export interface IJobForm {
         bounceRateForPageOrCategory: string,
         idealBounceRate: string,
         bestConversionRatePage: string,
-        competitorUXJourneys: string,
+        competitorUXJourneysLiked: string,
+        competitorUXJourneysNotLiked: string,
         reviewLearningsOptimisationDate: Date,
         additionalInfo: string
     },
@@ -208,7 +210,7 @@ export interface IJobForm {
         expectedDeliverables: string,
         deliverablesNextUse: string,
         currentDeadlinesAndMilestones: string,
-        expectedProjectStartDate: Date,
+        expectedProjectStartDate: string,
         projectDelayActions: string,
         ultimateDecisionMaker: string,
         additionalInfo: string
@@ -328,8 +330,8 @@ const jobFormSchema: Schema = new Schema({
         contentDeliverRightMessage: String,
         websiteGoodBusinessRepresentation: String,
         websiteInstillTrustAndConfidence: String,
-        websiteEastToUpdate: String,
         trackedVisitors: String,
+        websiteEasyToUpdate: String,
         toolsAndAppsToRunWebsite: String,
         newWebsite: String,
         proposedSitemapPrepared: String,
@@ -364,6 +366,7 @@ const jobFormSchema: Schema = new Schema({
         websiteChanges: String,
         FeaturesAndFunctionsToAdd: String,
         websiteSuggestions: String,
+        elementsNeedToBeRemoved: String,
         newWebsiteElementsDesign: String
     },
     appBrief: {
@@ -377,7 +380,7 @@ const jobFormSchema: Schema = new Schema({
         nativeAppOrMobileWebApp: String,
         mandatoryInclusions: String,
         additionalFeatures: String,
-        deliveryDate: Date,
+        deliveryDate: String,
         budget: String,
         additionalInformation: String
     },
@@ -397,7 +400,8 @@ const jobFormSchema: Schema = new Schema({
         bounceRateForPageOrCategory: String,
         idealBounceRate: String,
         bestConversionRatePage: String,
-        competitorUXJourneys: String,
+        competitorUXJourneysLiked: String,
+        competitorUXJourneysNotLiked: String,
         reviewLearningsOptimisationDate: Date,
         additionalInfo: String
     },
@@ -431,7 +435,7 @@ const jobFormSchema: Schema = new Schema({
         expectedDeliverables: String,
         deliverablesNextUse: String,
         currentDeadlinesAndMilestones: String,
-        expectedProjectStartDate: Date,
+        expectedProjectStartDate: String,
         projectDelayActions: String,
         ultimateDecisionMaker: String,
         additionalInfo: String

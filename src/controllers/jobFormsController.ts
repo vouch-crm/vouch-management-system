@@ -12,7 +12,7 @@ const jobForm = async (req: Request, res: Response): Promise<void> => {
     const clientID: string = req.params.id;
     const requestData: IJobForm = req.body;
     requestData['client'] = clientID;
-    const dbResponse: IReturnJobForm = await jobFormServices.update(clientID, requestData);
+    const dbResponse: IReturnJobForm = await jobFormServices.create(requestData);
     if (dbResponse.status === 'success') {
         res.status(201).json({
             message: 'form submitted successfuly!'

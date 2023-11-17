@@ -35,7 +35,8 @@ const clientOnBoard = async (req: Request, res: Response) => {
         const dbResponse2: IReturnJob = await jobServices.create(jobData);
         if (dbResponse2.status === 'success') {
             res.status(201).json({
-                message: 'Client Onboarded Successfuly!'
+                message: 'Client Onboarded Successfuly!',
+                data: dbResponse.data
             });
         }
         else if (dbResponse2.status === 'failed') {
