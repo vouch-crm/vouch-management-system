@@ -10,7 +10,7 @@ const app: express.Application = express();
 const PORT: string = process.env.PORT as string;
 
 app.use(bodyParser.json());
-app.use(clientRouter);
+app.use('/client', clientRouter);
 
 app.get('/', (_req: Request, res: Response): void => {
     res.send('Server Started!');
