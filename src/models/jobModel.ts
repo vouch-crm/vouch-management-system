@@ -4,8 +4,8 @@ export interface IJob {
     id?: string,
     clientSector: string,
     vouchAccountLead: [string],
-    additionalTeamOnAccount: [string],
-    coreServices?: [string],
+    additionalTeamOnAccount: any[],
+    coreServices?: string[],
     client?: string
     clientAccess?: {
         metaAds: Boolean,
@@ -13,6 +13,7 @@ export interface IJob {
         tiktokAds: Boolean,
         googleTagManager: Boolean,
         googleAnalytics4: Boolean,
+        tracking: Boolean
     },
     additionalInfo?: string,
     workflowUpdates?: boolean,
@@ -58,7 +59,8 @@ const jobSchema: Schema = new Schema({
         googleAds: Boolean,
         tiktokAds: Boolean,
         googleTagManager: Boolean,
-        googleAnalytics4: Boolean
+        googleAnalytics4: Boolean,
+        tracking: Boolean
     },
     additionalInfo: String,
     workflowUpdates: {

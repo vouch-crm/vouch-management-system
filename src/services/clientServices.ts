@@ -74,8 +74,33 @@ const findByID = async (id: string): Promise<IReturnClient> => {
     }
 }
 
+const find = async (): Promise<IReturnClient> => {
+    try {
+        const clients: any= await clientAgent.find();
+        if (clients) {
+            return {
+                status: 'success',
+                data: clients
+            }
+        }
+        else {
+            return {
+                status: 'failed'
+            }
+        }
+    } catch (error) {
+        return {
+            status: 'error',
+            message: `an error occurred: ${error}`
+        }
+    }
+}
+
+
+
 export const clientServices = {
     create,
     update,
-    findByID
+    findByID,
+    find
 }

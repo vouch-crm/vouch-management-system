@@ -4,7 +4,8 @@ import { clientAgent, IClient } from "../models/clientModel";
 export interface IReturnJobForm {
     status: string,
     data?: IJobForm,
-    message?: string
+    message?: string,
+    client?: string
 }
 
 const create = async (jobFormData: IJobForm): Promise<IReturnJobForm> => {
@@ -19,6 +20,27 @@ const create = async (jobFormData: IJobForm): Promise<IReturnJobForm> => {
         return {
             status: 'success',
             data: newJobFormEntry
+        }
+    } catch (error) {
+        return {
+            status: 'error',
+            message: `an error occurred while creating a job form document: ${error}`
+        }
+    }
+}
+
+const findOne = async (clientID: any): Promise<IReturnJobForm> => {
+    try {
+        const jobFormData: any = await jobFormsAgent.findOne({client: clientID}).populate('client');
+        if (!jobFormData) {
+            return {
+                status: 'failed',
+                message: 'job form document was not created'
+            }
+        }
+        return {
+            status: 'success',
+            data: jobFormData
         }
     } catch (error) {
         return {
@@ -64,5 +86,6 @@ const update = async (clientID: string, jobFormData: IJobForm): Promise<IReturnJ
 
 export const jobFormServices = {
     create,
-    update
+    update,
+    findOne
 }

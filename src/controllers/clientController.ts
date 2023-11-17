@@ -12,10 +12,11 @@ const clientRouter: express.Router = express.Router();
 
 const clientOnBoard = async (req: Request, res: Response) => {
     const requestData = req.body;
+    console.log(req.body)
     const clientData: IClient = {
         clientBasicInfo: {
-            name: requestData.clientBasicInfo.name,
-            email: requestData.clientBasicInfo.email
+            name: requestData.nameOnBoard,
+            email: requestData.email
         }
     }
 
@@ -23,11 +24,19 @@ const clientOnBoard = async (req: Request, res: Response) => {
 
     if (dbResponse.status === 'success') {
         console.log(`the created client id: ${dbResponse.data?.id}`);
+        console.log(requestData.checkboxes)
+        let coreServices = []
+        for (const key in requestData.checkboxes) {
+            if (requestData.checkboxes[key] === true) {
+                coreServices.push(key)
+            }
+        }
+        console.log(coreServices)
         const jobData: IJob = {
-            clientSector: requestData.clientSector,
-            vouchAccountLead: requestData.vouchAccountLead,
-            additionalTeamOnAccount: requestData.additionalTeamOnAccount,
-            coreServices: requestData.coreServices,
+            clientSector: `${requestData.selectedSectorOne} / ${requestData.selectedSectorTwo}`,
+            vouchAccountLead: requestData.accountLead,
+            additionalTeamOnAccount: [requestData.additionalTeam, requestData.SecondAdditionalTeam, requestData.ThirdAdditionalTeam],
+            coreServices,
             client: dbResponse.data?.id
         }
         const dbResponse2: IReturnJob = await jobServices.create(jobData);
@@ -76,13 +85,42 @@ const sendMail = async (req: Request, res: Response) => {
 
 const clientSetup = async (req: Request, res: Response) => {
     const id: string = req.params.id;
-    const requestData: IClient = req.body;
+    const requestData: IClient = {
+        clientBasicInfo: {
+            name: req.body.name,
+            email: req.body.email,
+            companyName: req.body.companyName,
+            companyRegisterationNumber: req.body.companyRegistrationNumber,
+            vatRegisterationNumber: req.body.vatRegistrationNumber,
+            companyRegisteredAddress: req.body.companyAddress,
+            companyBillingAddress: req.body.billingAddress,
+            businessCommenced: req.body.businessCommenced,
+        },
+        mainPointOfContact: {
+            name: req.body.mainPointOfContact,
+            position: req.body.position,
+            email: req.body.emailContact,
+            telephoneNumber: req.body.TelephoneNo,
+            officeAddress: req.body.officeAddress,
+        },
+        accountContactDetails: {
+            name: req.body.mainPointOfContactDetails,
+            position: req.body.positionDetails,
+            email: req.body.emailContactDetails,
+            telephoneNumber: req.body.TelephoneNoDetails,
+            officeAddress: req.body.officeAddressDetails,
+        },
+        additionalInfo: req.body.additionalInfo,
+        workflowUpdates: req.body.agreeWorkflow === 'check'? true : false,
+        marketingUpdates: req.body.agreeEmails === 'check'? true : false,
+    };
 
     const dbResponse: IReturnClient = await clientServices.update(id, requestData);
 
     if (dbResponse.status === 'success') {
         res.status(200).json({
-            message: 'client updated successfuly!'
+            message: 'client updated successfuly!',
+            data: dbResponse
         });
     }
     else if (dbResponse.status === 'failed') {
@@ -119,8 +157,32 @@ const getClient = async (req: Request, res: Response) => {
     }
 }
 
+const getClients = async (req: Request, res: Response) => {
+    const id: string = req.params.id;
+
+    const dbResponse: IReturnClient = await clientServices.find();
+
+    if (dbResponse.status === 'success') {
+        res.status(200).json({
+            data: dbResponse.data
+        });
+    }
+    else if (dbResponse.status === 'failed') {
+        res.status(404).json({
+            message: 'client not found'
+        });
+    }
+    else {
+        res.status(500).json({
+            message: dbResponse.message
+        });
+    }
+}
+
 clientRouter.post('/client-onboard', clientOnBoard);
-clientRouter.put('/client-setup', clientSetup);
+clientRouter.put('/client-setup/:id', clientSetup);
 clientRouter.get('/client/:id', getClient);
+clientRouter.get('/clients', getClients);
+clientRouter.post('/send-mail', sendMail);
 
 export default clientRouter;

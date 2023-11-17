@@ -15,7 +15,7 @@ const PORT: string = process.env.PORT as string;
 app.use(cors())
 app.use(bodyParser.json());
 app.use('/client', clientRouter);
-app.use(jobRouter);
+// app.use(jobRouter);
 app.use(jobFormRouter);
 
 app.get('/', (_req: Request, res: Response): void => {

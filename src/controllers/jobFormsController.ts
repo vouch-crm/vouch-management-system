@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express'
+import mongoose from 'mongoose'
 import { jobFormServices, IReturnJobForm } from '../services/jobFormServices'
-import { IJobForm } from '../models/jobFormsModel'
+import { IJobForm, jobFormsAgent } from '../models/jobFormsModel'
 import { s3 } from '../services/s3Services';
 import multer from 'multer'
 import * as mime from 'mime'
@@ -16,6 +17,30 @@ const jobForm = async (req: Request, res: Response): Promise<void> => {
     if (dbResponse.status === 'success') {
         res.status(201).json({
             message: 'form submitted successfuly!'
+        });
+    }
+    else if (dbResponse.status === 'failed') {
+        res.status(400).json({
+            message: dbResponse.message
+        });
+    }
+    else {
+        res.status(500).json({
+            message: dbResponse.message
+        });
+    }
+}
+
+const getForm = async (req: Request, res: Response): Promise<void> => {
+    const clientID: string = req.params.id;
+    const requestData = req.body;
+    requestData['client'] = clientID;
+    const ID = new mongoose.Types.ObjectId('4edd40c86762e0fb12000003')
+    const dbResponse: any = await jobFormServices.findOne(clientID);
+    if (dbResponse.status === 'success') {
+        res.status(200).json({
+            message: 'form submitted successfuly!',
+            data: dbResponse
         });
     }
     else if (dbResponse.status === 'failed') {
@@ -72,5 +97,6 @@ const uploadFile = async (req: Request, res: Response) => {
 
 jobFormRouter.post('/job-form/:id', jobForm);
 jobFormRouter.post('/upload-file', upload.single('file'), uploadFile);
+jobFormRouter.get('/job-form/:id', getForm);
 
 export default jobFormRouter;

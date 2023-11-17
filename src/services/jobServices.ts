@@ -29,7 +29,7 @@ const create = async (jobData: IJob): Promise<IReturnJob> => {
     }
 }
 
-const update = async (id: string, jobData: IJob): Promise<IReturnJob> => {
+const update = async (id: string, jobData: any): Promise<IReturnJob> => {
     try {
         const query = {
             client: id
