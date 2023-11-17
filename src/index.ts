@@ -11,10 +11,7 @@ const app: express.Application = express();
 const PORT: string = process.env.PORT as string;
 
 app.use(bodyParser.json());
-
 app.use('/client', clientRouter);
-
-app.use(clientRouter);
 app.use(jobFormRouter);
 
 app.get('/', (_req: Request, res: Response): void => {

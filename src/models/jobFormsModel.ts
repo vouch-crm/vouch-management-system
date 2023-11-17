@@ -1,8 +1,9 @@
+import { String } from "aws-sdk/clients/codebuild";
 import mongoose, { Schema } from "mongoose";
 
 export interface IJobForm {
     id?: string,
-    job?: string,
+    client?: string,
     paidMediaBrief?: {
         email: string,
         brandName: string,
@@ -15,7 +16,7 @@ export interface IJobForm {
         toneOfVoice: string,
         customerValue: string,
         audienceIdentity: string,
-        audienceAge: Number,
+        audienceAge: string,
         ineterestsAndHobbies: string,
         audienceTargeting: string,
         informationConsumption: string,
@@ -26,11 +27,11 @@ export interface IJobForm {
         customerBrandFeeling: string,
         customerBrandThoughts: string,
         customerBrandAct: string,
-        budget: Number,
+        budget: string,
         timeframe: Date,
         pointOfContact: string,
         activityDates: string,
-        activityDatesBudget: Number,
+        activityDatesBudget: string,
         accessToAnalyticsAndPaidMediaAccounts: boolean,
         channelSelection: [string],
         channelGoals: string,
@@ -55,7 +56,7 @@ export interface IJobForm {
         outputRequired: string,
         outputDescription: string,
         referenceFiles: [string],
-        projectBudget: Number,
+        projectBudget: string,
         additionalInformation: string
     },
     brandIdentityBrief?: {
@@ -84,7 +85,7 @@ export interface IJobForm {
         brandGuidlines: string,
         existingBrandGuidelines: string,
         additionalInfo: string,
-        budget: Number,
+        budget: string,
         delievryDate: Date
     },
     websiteBriefing?: {
@@ -154,7 +155,7 @@ export interface IJobForm {
         mandatoryInclusions: string,
         additionalFeatures: string,
         deliveryDate: Date,
-        budget: Number,
+        budget: string,
         additionalInformation: string
     },
     CROBrief?: {
@@ -215,9 +216,9 @@ export interface IJobForm {
 }
 
 const jobFormSchema: Schema = new Schema({
-    job: {
+    client: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'job',
+        ref: 'client',
         required: true
     },
     paidMediaBrief: {
@@ -232,7 +233,7 @@ const jobFormSchema: Schema = new Schema({
         toneOfVoice: String,
         customerValue: String,
         audienceIdentity: String,
-        audienceAge: Number,
+        audienceAge: String,
         ineterestsAndHobbies: String,
         audienceTargeting: String,
         informationConsumption: String,
@@ -243,11 +244,11 @@ const jobFormSchema: Schema = new Schema({
         customerBrandFeeling: String,
         customerBrandThoughts: String,
         customerBrandAct: String,
-        budget: Number,
+        budget: String,
         timeframe: Date,
         pointOfContact: String,
         activityDates: String,
-        activityDatesBudget: Number,
+        activityDatesBudget: String,
         accessToAnalyticsAndPaidMediaAccounts: {
             type: Boolean,
             default: false
@@ -278,7 +279,7 @@ const jobFormSchema: Schema = new Schema({
         outputRequired: String,
         outputDescription: String,
         referenceFiles: [String],
-        projectBudget: Number,
+        projectBudget: String,
         additionalInformation: String
     },
     brandIdentityBrief: {
@@ -307,7 +308,7 @@ const jobFormSchema: Schema = new Schema({
         brandGuidlines: String,
         existingBrandGuidelines: String,
         additionalInfo: String,
-        budget: Number,
+        budget: String,
         delievryDate: Date
     },
     websiteBriefing: {
@@ -377,7 +378,7 @@ const jobFormSchema: Schema = new Schema({
         mandatoryInclusions: String,
         additionalFeatures: String,
         deliveryDate: Date,
-        budget: Number,
+        budget: String,
         additionalInformation: String
     },
     CROBrief: {

@@ -3,26 +3,10 @@ import { clientServices, IReturnClient } from '../services/clientServices';
 import { jobServices, IReturnJob } from '../services/jobServices';
 import { IClient } from '../models/clientModel';
 import { transporter, mailOptions } from '../services/sendMail';
-import { s3 } from '../services/uploadFile';
+import { s3 } from '../services/s3Services';
 import multer from 'multer'
+import * as mime from 'mime'
 const upload = multer();
-
-interface S3Error {
-    code?: string;
-    message: string;
-}
-
-interface S3Data {
-    Location: string;
-    Bucket: string;
-    Key: string;
-}
-
-interface UploadParams {
-    Body: string | Buffer;
-    Bucket: string;
-    Key: string;
-}
 
 import { IJob } from '../models/jobModel';
 
@@ -88,31 +72,6 @@ const sendMail = async (req: Request, res: Response) => {
         })
     } catch (error) {
         console.log(error)
-    }
-}
-
-const uploadFile = async (req: Request, res: Response) => {
-    try {
-        const test = req.body
-        console.log(test)
-        const uploadParams: UploadParams = {
-            Bucket: 'vouch-crm',
-            Key: req.file?.originalname || '',
-            Body: req.file?.buffer || '',
-        };
-        s3.upload(uploadParams, (err: S3Error, data: S3Data) => {
-            if (err) {
-                console.error(err);
-                res.status(500).send('Error uploading file to S3');
-            } else {
-                console.log('File uploaded to S3. Location:', data.Location);
-                res.send('File uploaded successfully!');
-            }
-        });
-        res.status(201)
-    } catch (error) {
-        console.log(error)
-        res.status(500)
     }
 }
 

@@ -27,6 +27,33 @@ const create = async (jobFormData: IJobForm): Promise<IReturnJobForm> => {
     }
 }
 
+const update = async (clientID: string, jobFormData: IJobForm): Promise<IReturnJobForm> => {
+    try {
+        const query = {
+            client: clientID
+        }
+        const updatedJobForm: IJobForm | null = await jobFormsAgent.findOneAndUpdate(query, jobFormData,
+             { new: true });
+        
+        if (!updatedJobForm) {
+            return {
+                status: 'failed',
+                message: 'document not found'
+            }
+        }
+        return{
+            status: 'success',
+            data: updatedJobForm
+        }
+    } catch (error) {
+        return {
+            status: 'error',
+            message: `error occurred while updating job form document: ${error}`
+        }
+    }
+}
+
 export const jobFormServices = {
-    create
+    create,
+    update
 }

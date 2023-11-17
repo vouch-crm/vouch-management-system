@@ -1,15 +1,18 @@
 import express, { Request, Response } from 'express'
 import { jobFormServices, IReturnJobForm } from '../services/jobFormServices'
 import { IJobForm } from '../models/jobFormsModel'
+import { s3 } from '../services/s3Services';
+import multer from 'multer'
+import * as mime from 'mime'
+const upload = multer();
 
 const jobFormRouter: express.Router = express.Router();
 
 const jobForm = async (req: Request, res: Response): Promise<void> => {
-    const jobID: string = req.params.id;
+    const clientID: string = req.params.id;
     const requestData: IJobForm = req.body;
-    requestData['job'] = jobID;
-    console.log(requestData);
-    const dbResponse: IReturnJobForm = await jobFormServices.create(requestData);
+    requestData['client'] = clientID;
+    const dbResponse: IReturnJobForm = await jobFormServices.update(clientID, requestData);
     if (dbResponse.status === 'success') {
         res.status(201).json({
             message: 'form submitted successfuly!'
@@ -27,6 +30,47 @@ const jobForm = async (req: Request, res: Response): Promise<void> => {
     }
 }
 
+const uploadFile = async (req: Request, res: Response) => {
+    try {
+        const clientID: string = req.query.id as string;
+        const fieldName: string = req.query.fieldName as string;
+        const formName: string = req.query.formName as string;
+        const uploadParams = {
+            Bucket: 'vouch-crm',
+            Key: req.file?.originalname || '',
+            Body: req.file?.buffer || '',
+            ContentType: mime.getType(req.file?.originalname || '') as string
+        };
+       
+        const result = await s3.upload(uploadParams).promise();
+        const jobFormData: IJobForm = {
+            client: clientID,
+            [formName]: {
+                [fieldName]: result.Location
+            }
+        }
+        const dbResponse: IReturnJobForm = await jobFormServices.create(jobFormData);
+        if (dbResponse.status === 'failed') {
+            return res.status(400).json({
+                message: dbResponse.message
+            });
+        }
+        else if (dbResponse.status === 'error') {
+            return res.status(500).json({
+                message: dbResponse.message
+            });
+        }
+        res.status(201).json({
+            message: 'file uploaded successfuly!'
+        });
+
+    } catch (error) {
+        console.log(error)
+        res.status(500)
+    }
+}
+
 jobFormRouter.post('/job-form/:id', jobForm);
+jobFormRouter.post('/upload-file', upload.single('file'), uploadFile);
 
 export default jobFormRouter;
