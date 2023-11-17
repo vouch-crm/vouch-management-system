@@ -6,6 +6,7 @@ import clientRouter from './controllers/clientController';
 import jobFormRouter from './controllers/jobFormsController';
 import cors from 'cors'
 
+
 dotenv.config();
 
 const app: express.Application = express();
@@ -14,6 +15,7 @@ const PORT: string = process.env.PORT as string;
 app.use(cors())
 app.use(bodyParser.json());
 app.use('/client', clientRouter);
+app.use(jobRouter);
 app.use(jobFormRouter);
 
 app.get('/', (_req: Request, res: Response): void => {

@@ -50,6 +50,66 @@ const jobSchema = new mongoose_1.Schema({
     marketingUpdates: {
         type: Boolean,
         default: false
+    },
+    bookingForm: String,
+    SLA: String,
+    budgetSetup: {
+        managementFee: Number,
+        percentageMediaSpend: Number,
+        projectCost: Number,
+        ROASTarget: Number
+    },
+    totalClientMediaSpend: String,
+    campaignGoalSetup: [String],
+    jobSetupTimesheet: {
+        fbInstagramAdManagement: {
+            type: Boolean,
+            default: false
+        },
+        externalMeeting: {
+            type: Boolean,
+            default: false
+        },
+        internalMeeting: {
+            type: Boolean,
+            default: false
+        },
+        contentCreation: {
+            type: Boolean,
+            default: false
+        },
+        strategyAndPlanning: {
+            type: Boolean,
+            default: false
+        },
+        SEO: {
+            type: Boolean,
+            default: false
+        },
+        Reporting: {
+            type: Boolean,
+            default: false
+        },
+        contentShoots: {
+            type: Boolean,
+            default: false
+        },
+        webDevelopment: {
+            type: Boolean,
+            default: false
+        },
+        contractorTime: {
+            type: Boolean,
+            default: false
+        },
+        socialListening: {
+            type: Boolean,
+            default: false
+        },
+        PPC: {
+            type: Boolean,
+            default: false
+        }
     }
 });
 exports.jobAgent = mongoose_1.default.model('job', jobSchema);

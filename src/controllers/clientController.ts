@@ -3,9 +3,7 @@ import { clientServices, IReturnClient } from '../services/clientServices';
 import { jobServices, IReturnJob } from '../services/jobServices';
 import { IClient } from '../models/clientModel';
 import { transporter, mailOptions } from '../services/sendMail';
-import { s3 } from '../services/s3Services';
 import multer from 'multer'
-import * as mime from 'mime'
 const upload = multer();
 
 import { IJob } from '../models/jobModel';

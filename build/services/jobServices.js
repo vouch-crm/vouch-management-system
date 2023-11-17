@@ -27,7 +27,10 @@ const create = async (jobData) => {
 };
 const update = async (id, jobData) => {
     try {
-        const updatedJob = await jobModel_1.jobAgent.findByIdAndUpdate(id, jobData);
+        const query = {
+            client: id
+        };
+        const updatedJob = await jobModel_1.jobAgent.findOneAndUpdate(query, jobData, { new: true });
         if (!updatedJob) {
             return {
                 status: 'failed',

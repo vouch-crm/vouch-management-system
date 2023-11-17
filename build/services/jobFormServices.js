@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.jobFormServices = void 0;
 const jobFormsModel_1 = require("../models/jobFormsModel");
+const clientModel_1 = require("../models/clientModel");
 const create = async (jobFormData) => {
     try {
         const newJobFormEntry = await jobFormsModel_1.jobFormsAgent.create(jobFormData);
@@ -23,6 +24,39 @@ const create = async (jobFormData) => {
         };
     }
 };
+const update = async (clientID, jobFormData) => {
+    try {
+        const query = {
+            client: clientID
+        };
+        const updatedJobForm = await jobFormsModel_1.jobFormsAgent.findOneAndUpdate(query, jobFormData, { new: true });
+        if (!updatedJobForm) {
+            const clientExistCheck = await clientModel_1.clientAgent.findById(clientID);
+            if (!clientExistCheck) {
+                return {
+                    status: 'failed',
+                    message: 'document not found'
+                };
+            }
+            const createdJobForm = await jobFormsModel_1.jobFormsAgent.create(jobFormData);
+            return {
+                status: 'success',
+                data: createdJobForm
+            };
+        }
+        return {
+            status: 'success',
+            data: updatedJobForm
+        };
+    }
+    catch (error) {
+        return {
+            status: 'error',
+            message: `error occurred while updating job form document: ${error}`
+        };
+    }
+};
 exports.jobFormServices = {
-    create
+    create,
+    update
 };
