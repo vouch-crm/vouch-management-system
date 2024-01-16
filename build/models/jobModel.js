@@ -52,16 +52,24 @@ const jobSchema = new mongoose_1.Schema({
         type: Boolean,
         default: false
     },
-    bookingForm: String,
+    contract: String,
     SLA: String,
-    budgetSetup: {
-        managementFee: Number,
-        percentageMediaSpend: Number,
-        projectCost: Number,
-        ROASTarget: Number
-    },
+    budgetSetup: [
+        {
+            month: String,
+            managementFee: Number,
+            percentageMediaSpend: Number,
+            projectCost: Number,
+            ROASTarget: Number
+        }
+    ],
     totalClientMediaSpend: String,
-    campaignGoalSetup: [String],
+    campaignGoalSetup: {
+        awareness: Boolean,
+        sales: Boolean,
+        booking: Boolean,
+        leads: Boolean
+    },
     jobSetupTimesheet: {
         fbInstagramAdManagement: {
             type: Boolean,
@@ -111,6 +119,6 @@ const jobSchema = new mongoose_1.Schema({
             type: Boolean,
             default: false
         }
-    }
+    },
 });
 exports.jobAgent = mongoose_1.default.model('job', jobSchema);

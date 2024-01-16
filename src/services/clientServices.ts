@@ -31,7 +31,7 @@ const create = async (clientData: IClient): Promise<IReturnClient> => {
 
 const update = async (id: string, clientData: IClient): Promise<IReturnClient> => {
     try {
-        const updatedClient: IClient | null = await clientAgent.findByIdAndUpdate(id, clientData);
+        const updatedClient: IClient | null = await clientAgent.findByIdAndUpdate(id, clientData, {new: true});
         if (!updatedClient) {
             return {
                 status: 'failed',

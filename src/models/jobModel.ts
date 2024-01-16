@@ -1,4 +1,4 @@
-import mongoose, {Schema} from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 export interface IJob {
     id?: string,
@@ -18,16 +18,22 @@ export interface IJob {
     additionalInfo?: string,
     workflowUpdates?: boolean,
     marketingUpdates?: boolean,
-    bookingForm?: string,
+    contract?: string,
     SLA?: string,
     budgetSetup?: {
+        month: String,
         managementFee: Number,
         percentageMediaSpend: Number,
         projectCost: Number,
         ROASTarget: Number
-    },
+    }[],
     totalClientMediaSpend?: string,
-    campaignGoalSetup?: [string],
+    campaignGoalSetup?: {
+        awareness: boolean,
+        sales: boolean,
+        booking: boolean,
+        leads: boolean
+    },
     jobSetupTimesheet?: {
         fbInstagramAdManagement: boolean,
         externalMeeting: boolean,
@@ -41,7 +47,7 @@ export interface IJob {
         contractorTime: boolean,
         socialListening: boolean,
         PPC: boolean
-    }
+    },
 }
 
 const jobSchema: Schema = new Schema({
@@ -68,19 +74,27 @@ const jobSchema: Schema = new Schema({
         default: false
     },
     marketingUpdates: {
-            type: Boolean,
-            default: false
+        type: Boolean,
+        default: false
     },
-    bookingForm: String,
+    contract: String,
     SLA: String,
-    budgetSetup: {
-        managementFee: Number,
-        percentageMediaSpend: Number,
-        projectCost: Number,
-        ROASTarget: Number
-    },
+    budgetSetup: [
+        {
+            month: String,
+            managementFee: Number,
+            percentageMediaSpend: Number,
+            projectCost: Number,
+            ROASTarget: Number
+        }
+    ],
     totalClientMediaSpend: String,
-    campaignGoalSetup: [String],
+    campaignGoalSetup: {
+        awareness: Boolean,
+        sales: Boolean,
+        booking: Boolean,
+        leads: Boolean
+    },
     jobSetupTimesheet: {
         fbInstagramAdManagement: {
             type: Boolean,
@@ -130,7 +144,8 @@ const jobSchema: Schema = new Schema({
             type: Boolean,
             default: false
         }
-    }
+    },
+
 });
 
 export const jobAgent = mongoose.model<IJob>('job', jobSchema);

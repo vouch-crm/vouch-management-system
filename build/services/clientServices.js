@@ -27,7 +27,7 @@ const create = async (clientData) => {
 };
 const update = async (id, clientData) => {
     try {
-        const updatedClient = await clientModel_1.clientAgent.findByIdAndUpdate(id, clientData);
+        const updatedClient = await clientModel_1.clientAgent.findByIdAndUpdate(id, clientData, { new: true });
         if (!updatedClient) {
             return {
                 status: 'failed',

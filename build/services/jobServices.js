@@ -77,8 +77,31 @@ const findByID = async (id) => {
         };
     }
 };
+const findOne = async (id) => {
+    try {
+        const jobDocument = await jobModel_1.jobAgent.findOne({ client: id });
+        if (jobDocument) {
+            return {
+                status: 'success',
+                data: jobDocument
+            };
+        }
+        else {
+            return {
+                status: 'failed'
+            };
+        }
+    }
+    catch (error) {
+        return {
+            status: 'error',
+            message: `an error occurred: ${error}`
+        };
+    }
+};
 exports.jobServices = {
     create,
     update,
-    findByID
+    findByID,
+    findOne
 };
