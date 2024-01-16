@@ -10,7 +10,6 @@ const jobRouter: express.Router = express.Router();
 
 const clientAccess = async (req: Request, res: Response) => {
     const clientID: string = req.params.id;
-    console.log(req.body)
     try {
         const jobData = {
             clientAccess: {
