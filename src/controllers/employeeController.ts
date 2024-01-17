@@ -50,8 +50,8 @@ const getAll = async (req: Request, res: Response) => {
 }
 
 const del = async (req: Request, res: Response) => {
-    const id: string = req.params.id
-    const dbResponse: IReturnEmployee = await employeeServices.del(id)
+    const id: string = req.params.id;
+    const dbResponse: IReturnEmployee = await employeeServices.del(id);
 
     if (dbResponse.status === 'Failed') {
         return res.status(404).json({
@@ -68,8 +68,30 @@ const del = async (req: Request, res: Response) => {
     })
 }
 
+const update = async (req: Request, res: Response) => {
+    const id: string = req.params.id;
+    const updatedEmployee: IEmployee = req.body;
+    const dbResponse: IReturnEmployee = await employeeServices.update(id, updatedEmployee)
+
+    if (dbResponse.status === 'Failed') {
+        return res.status(404).json({
+            message: dbResponse.message
+        })
+    } else if (dbResponse.status === 'Error') {
+        return res.status(400).json({
+            message: dbResponse.message
+        })
+    }
+
+    res.status(200).json({
+        message: dbResponse.message,
+        data: dbResponse.data
+    })
+}
+
 employeeRouter.post('/employee', create);
 employeeRouter.get('/employee', getAll);
 employeeRouter.delete('/employee/:id', del);
+employeeRouter.put('/employee/:id', update);
 
 export default employeeRouter;

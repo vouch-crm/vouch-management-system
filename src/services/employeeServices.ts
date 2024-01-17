@@ -78,10 +78,35 @@ const del = async (id: string): Promise<IReturnEmployee> => {
     }
 }
 
+const update = async (id: string, employeeData: IEmployee): Promise<IReturnEmployee> => {
+    try {
+        const updatedEmployee: IEmployee | null = await employeeAgent.findByIdAndUpdate(id, employeeData, {new: true});
+
+        if (!updatedEmployee) {
+            return {
+                status: 'Failed',
+                message: `Could not find an employee with ID: ${id}`
+            }
+        }
+
+        return {
+            status: 'Success',
+            message: `Employee updated successfuly!`,
+            data: updatedEmployee
+        }
+    } catch (error) {
+        return {
+            status: 'Error',
+            message: `Error while updating employee with ID: ${id}: ${error}`
+        }
+    }
+}
+
 export const employeeServices = {
     passwordGenerator,
     generateProbationDate,
     create,
     getAll,
-    del
+    del,
+    update
 }
