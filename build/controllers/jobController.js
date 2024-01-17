@@ -11,7 +11,6 @@ const upload = (0, multer_1.default)();
 const jobRouter = express_1.default.Router();
 const clientAccess = async (req, res) => {
     const clientID = req.params.id;
-    console.log(req.body);
     try {
         const jobData = {
             clientAccess: {

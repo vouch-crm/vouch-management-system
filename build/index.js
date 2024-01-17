@@ -10,6 +10,7 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const clientController_1 = __importDefault(require("./controllers/clientController"));
 const jobFormsController_1 = __importDefault(require("./controllers/jobFormsController"));
 const jobController_1 = __importDefault(require("./controllers/jobController"));
+const employeeController_1 = __importDefault(require("./controllers/employeeController"));
 const cors_1 = __importDefault(require("cors"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -19,6 +20,7 @@ app.use(body_parser_1.default.json());
 app.use('/client', clientController_1.default);
 app.use(jobController_1.default);
 app.use(jobFormsController_1.default);
+app.use(employeeController_1.default);
 app.get('/', (_req, res) => {
     res.send('Server Started!');
 });
