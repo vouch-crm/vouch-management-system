@@ -5,6 +5,7 @@ import bodyParser from 'body-parser';
 import clientRouter from './controllers/clientController';
 import jobFormRouter from './controllers/jobFormsController';
 import jobRouter from './controllers/jobController';
+import employeeRouter from './controllers/employeeController';
 import cors from 'cors'
 
 
@@ -18,6 +19,7 @@ app.use(bodyParser.json());
 app.use('/client', clientRouter);
 app.use(jobRouter);
 app.use(jobFormRouter);
+app.use(employeeRouter);
 
 app.get('/', (_req: Request, res: Response): void => {
     res.send('Server Started!');
