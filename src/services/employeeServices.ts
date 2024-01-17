@@ -3,7 +3,7 @@ import { employeeAgent, IEmployee } from "../models/employeeModel";
 export interface IReturnEmployee {
     status: string,
     message?: string,
-    data?: IEmployee
+    data?: any
 }
 
 const passwordGenerator = (email: string): string => {
@@ -37,8 +37,51 @@ const create = async (employeeData: IEmployee): Promise<IReturnEmployee> => {
     }
 }
 
+const getAll = async (): Promise<IReturnEmployee> => {
+    try {
+        const employees: IEmployee[] = await employeeAgent.find();
+
+        return {
+            status: 'Success',
+            data: employees
+        }
+    } catch (error) {
+        return {
+            status: 'Error',
+            message: `Error getting all employees: ${error}`
+        }
+    }
+}
+
+// delete is a keyword, not allowed as a function name
+const del = async (id: string): Promise<IReturnEmployee> => {
+    try {
+        const deletedEmployee = await employeeAgent.findByIdAndDelete(id);
+
+        if (deletedEmployee) {
+            return {
+                status: 'Success',
+                data: deletedEmployee,
+                message: 'Employee deleted successfuly!'
+            };
+        } else {
+            return {
+                status: 'Failed',
+                message: `Employee with ID: ${id} not found`
+            };
+        }
+    } catch (error) {
+        return {
+            status: 'Error',
+            message: `Error deleting employee with id: ${id}: ${error}`
+        };
+    }
+}
+
 export const employeeServices = {
     passwordGenerator,
     generateProbationDate,
-    create
+    create,
+    getAll,
+    del
 }
