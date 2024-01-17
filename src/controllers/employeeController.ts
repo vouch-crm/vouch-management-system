@@ -1,6 +1,7 @@
 import express, {Request, Response} from 'express'
 import { employeeServices, IReturnEmployee } from '../services/employeeServices'
 import {IEmployee} from '../models/employeeModel'
+import { validationFunctions } from '../middlewares/validation'
 
 const employeeRouter = express.Router();
 
@@ -10,11 +11,6 @@ const create = async (req: Request, res: Response) => {
     if (!requestData.joinDate || requestData.joinDate === "") {
         return res.status(400).json({
             'message': 'join date not provided!'
-        })
-    }
-    if (!requestData.email || requestData.email === "") {
-        return res.status(400).json({
-            'message': 'email not provided!'
         })
     }
 
@@ -89,7 +85,8 @@ const update = async (req: Request, res: Response) => {
     })
 }
 
-employeeRouter.post('/employee', create);
+employeeRouter.post('/employee', validationFunctions.createEmployeeBodyValidationRules(),
+    validationFunctions.validationMiddleware, create);
 employeeRouter.get('/employee', getAll);
 employeeRouter.delete('/employee/:id', del);
 employeeRouter.put('/employee/:id', update);

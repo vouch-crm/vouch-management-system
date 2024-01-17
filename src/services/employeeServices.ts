@@ -1,4 +1,5 @@
 import { employeeAgent, IEmployee } from "../models/employeeModel";
+import { MongoError } from 'mongodb';
 
 export interface IReturnEmployee {
     status: string,
@@ -30,6 +31,12 @@ const create = async (employeeData: IEmployee): Promise<IReturnEmployee> => {
         }
         
     } catch (error) {
+        if (error instanceof MongoError && error.code === 11000) {
+            return {
+                status: 'Error',
+                message: `This email: ${employeeData.email} already exists!`
+            }    
+        }
         return {
             status: 'Error',
             message: `Error creating an employee: ${error}`
@@ -58,18 +65,18 @@ const del = async (id: string): Promise<IReturnEmployee> => {
     try {
         const deletedEmployee = await employeeAgent.findByIdAndDelete(id);
 
-        if (deletedEmployee) {
-            return {
-                status: 'Success',
-                data: deletedEmployee,
-                message: 'Employee deleted successfuly!'
-            };
-        } else {
+        if (!deletedEmployee) {
             return {
                 status: 'Failed',
                 message: `Employee with ID: ${id} not found`
             };
         }
+        
+        return {
+            status: 'Success',
+            data: deletedEmployee,
+            message: 'Employee deleted successfuly!'
+        }; 
     } catch (error) {
         return {
             status: 'Error',

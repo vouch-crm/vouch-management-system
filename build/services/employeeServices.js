@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.employeeServices = void 0;
 const employeeModel_1 = require("../models/employeeModel");
+const mongodb_1 = require("mongodb");
 const passwordGenerator = (email) => {
     const basePassword = email.substring(0, email.indexOf('@'));
     const defaultPassword = `@${basePassword}123`;
@@ -22,6 +23,12 @@ const create = async (employeeData) => {
         };
     }
     catch (error) {
+        if (error instanceof mongodb_1.MongoError && error.code === 11000) {
+            return {
+                status: 'Error',
+                message: `This email: ${employeeData.email} already exists!`
+            };
+        }
         return {
             status: 'Error',
             message: `Error creating an employee: ${error}`
@@ -47,19 +54,17 @@ const getAll = async () => {
 const del = async (id) => {
     try {
         const deletedEmployee = await employeeModel_1.employeeAgent.findByIdAndDelete(id);
-        if (deletedEmployee) {
-            return {
-                status: 'Success',
-                data: deletedEmployee,
-                message: 'Employee deleted successfuly!'
-            };
-        }
-        else {
+        if (!deletedEmployee) {
             return {
                 status: 'Failed',
                 message: `Employee with ID: ${id} not found`
             };
         }
+        return {
+            status: 'Success',
+            data: deletedEmployee,
+            message: 'Employee deleted successfuly!'
+        };
     }
     catch (error) {
         return {
@@ -68,10 +73,33 @@ const del = async (id) => {
         };
     }
 };
+const update = async (id, employeeData) => {
+    try {
+        const updatedEmployee = await employeeModel_1.employeeAgent.findByIdAndUpdate(id, employeeData, { new: true });
+        if (!updatedEmployee) {
+            return {
+                status: 'Failed',
+                message: `Could not find an employee with ID: ${id}`
+            };
+        }
+        return {
+            status: 'Success',
+            message: `Employee updated successfuly!`,
+            data: updatedEmployee
+        };
+    }
+    catch (error) {
+        return {
+            status: 'Error',
+            message: `Error while updating employee with ID: ${id}: ${error}`
+        };
+    }
+};
 exports.employeeServices = {
     passwordGenerator,
     generateProbationDate,
     create,
     getAll,
-    del
+    del,
+    update
 };
