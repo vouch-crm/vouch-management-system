@@ -9,11 +9,6 @@ const validation_1 = require("../middlewares/validation");
 const employeeRouter = express_1.default.Router();
 const create = async (req, res) => {
     const requestData = req.body;
-    if (!requestData.joinDate || requestData.joinDate === "") {
-        return res.status(400).json({
-            'message': 'join date not provided!'
-        });
-    }
     const newEmployee = requestData;
     newEmployee.probationDate = employeeServices_1.employeeServices.generateProbationDate(newEmployee.joinDate);
     newEmployee.password = employeeServices_1.employeeServices.passwordGenerator(newEmployee.email);

@@ -8,12 +8,6 @@ const employeeRouter = express.Router();
 const create = async (req: Request, res: Response) => {
     const requestData = req.body;
 
-    if (!requestData.joinDate || requestData.joinDate === "") {
-        return res.status(400).json({
-            'message': 'join date not provided!'
-        })
-    }
-
     const newEmployee: IEmployee = requestData;
     newEmployee.probationDate = employeeServices.generateProbationDate(newEmployee.joinDate);
     newEmployee.password = employeeServices.passwordGenerator(newEmployee.email);

@@ -15,7 +15,9 @@ const validationMiddleware = async (req, res, next) => {
     if (errors.isEmpty()) {
         return next();
     }
-    return res.status(400).json({ error: errors.array()[0].msg });
+    const extractedErrors = [];
+    errors.array().map(err => extractedErrors.push({ 'error': err.msg }));
+    return res.status(400).json({ errors: extractedErrors });
 };
 exports.validationFunctions = {
     createEmployeeBodyValidationRules,
