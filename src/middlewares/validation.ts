@@ -16,7 +16,9 @@ const validationMiddleware = async (req: Request, res: Response, next: NextFunct
         return next()
       }
     
-    return res.status(400).json({error: errors.array()[0].msg});
+    const extractedErrors: any = []
+    errors.array().map(err => extractedErrors.push({'error': err.msg}))
+    return res.status(400).json({errors: extractedErrors});
 }
 
 export const validationFunctions = {
