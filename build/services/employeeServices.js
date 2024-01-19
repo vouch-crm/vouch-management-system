@@ -5,7 +5,7 @@ const employeeModel_1 = require("../models/employeeModel");
 const mongodb_1 = require("mongodb");
 const passwordGenerator = (email) => {
     const basePassword = email.substring(0, email.indexOf('@'));
-    const defaultPassword = `@${basePassword}123`;
+    const defaultPassword = `@${basePassword}`;
     return defaultPassword;
 };
 const generateProbationDate = (joinDate) => {

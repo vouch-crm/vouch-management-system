@@ -5,13 +5,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const employeeServices_1 = require("../services/employeeServices");
+const hashingServices_1 = require("../services/hashingServices");
 const validation_1 = require("../middlewares/validation");
 const employeeRouter = express_1.default.Router();
 const create = async (req, res) => {
     const requestData = req.body;
     const newEmployee = requestData;
     newEmployee.probationDate = employeeServices_1.employeeServices.generateProbationDate(newEmployee.joinDate);
-    newEmployee.password = employeeServices_1.employeeServices.passwordGenerator(newEmployee.email);
+    newEmployee.password = await hashingServices_1.hashingServices.hashPassword(employeeServices_1.employeeServices.passwordGenerator(newEmployee.email));
     const dbResponse = await employeeServices_1.employeeServices.create(newEmployee);
     if (dbResponse.status === 'Error') {
         return res.status(400).json({

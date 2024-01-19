@@ -1,5 +1,6 @@
 import express, {Request, Response} from 'express'
 import { employeeServices, IReturnEmployee } from '../services/employeeServices'
+import { hashingServices } from '../services/hashingServices'
 import {IEmployee} from '../models/employeeModel'
 import { validationFunctions } from '../middlewares/validation'
 
@@ -10,7 +11,8 @@ const create = async (req: Request, res: Response) => {
 
     const newEmployee: IEmployee = requestData;
     newEmployee.probationDate = employeeServices.generateProbationDate(newEmployee.joinDate);
-    newEmployee.password = employeeServices.passwordGenerator(newEmployee.email);
+    newEmployee.password = await hashingServices.hashPassword(
+        employeeServices.passwordGenerator(newEmployee.email));
 
     const dbResponse: IReturnEmployee = await employeeServices.create(newEmployee);
     if (dbResponse.status === 'Error') {

@@ -9,7 +9,7 @@ export interface IReturnEmployee {
 
 const passwordGenerator = (email: string): string => {
     const basePassword = email.substring(0, email.indexOf('@'));
-    const defaultPassword = `@${basePassword}123`;
+    const defaultPassword = `@${basePassword}`;
 
     return defaultPassword;
 }
