@@ -1,20 +1,35 @@
 import mongoose, { Schema } from "mongoose";
 
-export interface IEmployee {
-    id?: string,
-    name?: string,
+type EmployeeDocument = {
+    firstName: string,
+    lastName: string,
     joinDate: Date,
     email: string,
-    employmentType?: string,
-    title?: string,
-    phoneNumber?: string,
-    linkedinAccount?: string,
-    team?: string,
-    probationDate?: Date,
-    password?: string,
-    gender?: string,
-    DOB?: Date,
-    nationality?: string
+    employmentType: string,
+    title: string,
+    phoneNumber: string,
+    linkedinAccount: string,
+    team: string,
+    probationDate: Date,
+    password: string,
+    gender: string,
+    DOB: Date,
+    nationality: string
+}
+
+type EmployeeInput = {
+    firstName: EmployeeDocument['firstName'],
+    lastName: EmployeeDocument['lastName'],
+    joinDate: EmployeeDocument['joinDate'],
+    email: EmployeeDocument['email'],
+    employmentType: EmployeeDocument['employmentType'],
+    title: EmployeeDocument['title'],
+    phoneNumber: EmployeeDocument['phoneNumber'],
+    linkedinAccount: EmployeeDocument['linkedinAccount'],
+    team: EmployeeDocument['team'],
+    gender: EmployeeDocument['gender'],
+    DOB: EmployeeDocument['DOB'],
+    nationality: EmployeeDocument['nationality']
 }
 
 const employeeSchema: Schema = new Schema({
@@ -43,4 +58,6 @@ const employeeSchema: Schema = new Schema({
     nationality: String,
 });
 
-export const employeeAgent = mongoose.model<IEmployee>('employee', employeeSchema);
+const EmployeeAgent = mongoose.model<EmployeeDocument>('Employee', employeeSchema);
+
+export { EmployeeDocument, EmployeeInput, EmployeeAgent }

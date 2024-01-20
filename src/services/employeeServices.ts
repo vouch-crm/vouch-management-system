@@ -1,10 +1,10 @@
-import { employeeAgent, IEmployee } from "../models/employeeModel";
+import { EmployeeAgent, EmployeeDocument } from "../models/employeeModel";
 import { MongoError } from 'mongodb';
 
-export interface IReturnEmployee {
+export type EmployeeReturn = {
     status: string,
-    message?: string,
-    data?: any
+    message: string | null,
+    data: Record<string, any> | null
 }
 
 const passwordGenerator = (email: string): string => {
@@ -20,9 +20,9 @@ const generateProbationDate = (joinDate: Date): Date => {
     return newDate
 }
 
-const create = async (employeeData: IEmployee): Promise<IReturnEmployee> => {
+const create = async (employeeData: EmployeeDocument): Promise<EmployeeReturn> => {
     try {
-        const newEmployee: IEmployee = await employeeAgent.create(employeeData);
+        const newEmployee: EmployeeDocument = await EmployeeAgent.create(employeeData);
 
         return {
             status: 'Success',
@@ -34,41 +34,46 @@ const create = async (employeeData: IEmployee): Promise<IReturnEmployee> => {
         if (error instanceof MongoError && error.code === 11000) {
             return {
                 status: 'Error',
-                message: `This email: ${employeeData.email} already exists!`
+                message: `This email: ${employeeData.email} already exists!`,
+                data: null
             }    
         }
         return {
             status: 'Error',
-            message: `Error creating an employee: ${error}`
+            message: `Error creating an employee: ${error}`,
+            data: null
         }
     }
 }
 
-const getAll = async (): Promise<IReturnEmployee> => {
+const getAll = async (): Promise<EmployeeReturn> => {
     try {
-        const employees: IEmployee[] = await employeeAgent.find();
+        const employees: EmployeeDocument[] = await EmployeeAgent.find();
 
         return {
             status: 'Success',
-            data: employees
+            data: employees,
+            message: null
         }
     } catch (error) {
         return {
             status: 'Error',
-            message: `Error getting all employees: ${error}`
+            message: `Error getting all employees: ${error}`,
+            data: null
         }
     }
 }
 
 // delete is a keyword, not allowed as a function name
-const del = async (id: string): Promise<IReturnEmployee> => {
+const del = async (id: string): Promise<EmployeeReturn> => {
     try {
-        const deletedEmployee = await employeeAgent.findByIdAndDelete(id);
+        const deletedEmployee = await EmployeeAgent.findByIdAndDelete(id);
 
         if (!deletedEmployee) {
             return {
                 status: 'Failed',
-                message: `Employee with ID: ${id} not found`
+                message: `Employee with ID: ${id} not found`,
+                data: null
             };
         }
         
@@ -80,19 +85,21 @@ const del = async (id: string): Promise<IReturnEmployee> => {
     } catch (error) {
         return {
             status: 'Error',
-            message: `Error deleting employee with id: ${id}: ${error}`
+            message: `Error deleting employee with id: ${id}: ${error}`,
+            data: null
         };
     }
 }
 
-const update = async (id: string, employeeData: IEmployee): Promise<IReturnEmployee> => {
+const update = async (id: string, employeeData: Record<string, any>): Promise<EmployeeReturn> => {
     try {
-        const updatedEmployee: IEmployee | null = await employeeAgent.findByIdAndUpdate(id, employeeData, {new: true});
+        const updatedEmployee = await EmployeeAgent.findByIdAndUpdate(id, employeeData, {new: true});
 
         if (!updatedEmployee) {
             return {
                 status: 'Failed',
-                message: `Could not find an employee with ID: ${id}`
+                message: `Could not find an employee with ID: ${id}`,
+                data: null
             }
         }
 
@@ -104,7 +111,8 @@ const update = async (id: string, employeeData: IEmployee): Promise<IReturnEmplo
     } catch (error) {
         return {
             status: 'Error',
-            message: `Error while updating employee with ID: ${id}: ${error}`
+            message: `Error while updating employee with ID: ${id}: ${error}`,
+            data: null
         }
     }
 }
