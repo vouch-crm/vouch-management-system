@@ -10,10 +10,25 @@ const validation_1 = require("../middlewares/validation");
 const employeeRouter = express_1.default.Router();
 const create = async (req, res) => {
     const requestData = req.body;
-    const newEmployee = requestData;
-    newEmployee.probationDate = employeeServices_1.employeeServices.generateProbationDate(newEmployee.joinDate);
-    newEmployee.password = await hashingServices_1.hashingServices.hashPassword(employeeServices_1.employeeServices.passwordGenerator(newEmployee.email));
-    const dbResponse = await employeeServices_1.employeeServices.create(newEmployee);
+    const probationDate = employeeServices_1.employeeServices.generateProbationDate(requestData.joinDate);
+    const password = await hashingServices_1.hashingServices.hashPassword(employeeServices_1.employeeServices.passwordGenerator(requestData.email));
+    const employeeData = {
+        firstName: requestData.firstName,
+        lastName: requestData.lastName,
+        joinDate: requestData.joinDate,
+        email: requestData.email,
+        employmentType: requestData.employmentType,
+        title: requestData.title,
+        phoneNumber: requestData.phoneNumber,
+        linkedinAccount: requestData.linkedinAccount,
+        team: requestData.team,
+        probationDate: probationDate,
+        password: password,
+        gender: requestData.gender,
+        DOB: requestData.DOB,
+        nationality: requestData.nationality
+    };
+    const dbResponse = await employeeServices_1.employeeServices.create(employeeData);
     if (dbResponse.status === 'Error') {
         return res.status(400).json({
             message: dbResponse.message

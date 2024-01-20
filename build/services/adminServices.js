@@ -4,7 +4,7 @@ exports.adminServices = void 0;
 const adminModel_1 = require("../models/adminModel");
 const create = async (adminData) => {
     try {
-        const newAdmin = await adminModel_1.adminAgent.create(adminData);
+        const newAdmin = await adminModel_1.AdminAgent.create(adminData);
         return {
             status: 'Success',
             data: newAdmin,
@@ -14,28 +14,32 @@ const create = async (adminData) => {
     catch (error) {
         return {
             status: 'Error',
-            message: `Error creating an admin: ${error}`
+            message: `Error creating an admin: ${error}`,
+            data: null
         };
     }
 };
 const findByEmail = async (email) => {
     try {
-        const admin = await adminModel_1.adminAgent.findOne({ email });
+        const admin = await adminModel_1.AdminAgent.findOne({ email });
         if (!admin) {
             return {
                 status: 'Failed',
-                message: `No matching admin`
+                message: `No matching admin`,
+                data: null
             };
         }
         return {
             status: 'Success',
-            data: admin
+            data: admin,
+            message: null
         };
     }
     catch (error) {
         return {
             status: 'Error',
-            message: `Error finding an admin: ${error}`
+            message: `Error finding an admin: ${error}`,
+            data: null
         };
     }
 };

@@ -15,7 +15,7 @@ const generateProbationDate = (joinDate) => {
 };
 const create = async (employeeData) => {
     try {
-        const newEmployee = await employeeModel_1.employeeAgent.create(employeeData);
+        const newEmployee = await employeeModel_1.EmployeeAgent.create(employeeData);
         return {
             status: 'Success',
             message: 'Employee Created Successfuly!',
@@ -26,38 +26,43 @@ const create = async (employeeData) => {
         if (error instanceof mongodb_1.MongoError && error.code === 11000) {
             return {
                 status: 'Error',
-                message: `This email: ${employeeData.email} already exists!`
+                message: `This email: ${employeeData.email} already exists!`,
+                data: null
             };
         }
         return {
             status: 'Error',
-            message: `Error creating an employee: ${error}`
+            message: `Error creating an employee: ${error}`,
+            data: null
         };
     }
 };
 const getAll = async () => {
     try {
-        const employees = await employeeModel_1.employeeAgent.find();
+        const employees = await employeeModel_1.EmployeeAgent.find();
         return {
             status: 'Success',
-            data: employees
+            data: employees,
+            message: null
         };
     }
     catch (error) {
         return {
             status: 'Error',
-            message: `Error getting all employees: ${error}`
+            message: `Error getting all employees: ${error}`,
+            data: null
         };
     }
 };
 // delete is a keyword, not allowed as a function name
 const del = async (id) => {
     try {
-        const deletedEmployee = await employeeModel_1.employeeAgent.findByIdAndDelete(id);
+        const deletedEmployee = await employeeModel_1.EmployeeAgent.findByIdAndDelete(id);
         if (!deletedEmployee) {
             return {
                 status: 'Failed',
-                message: `Employee with ID: ${id} not found`
+                message: `Employee with ID: ${id} not found`,
+                data: null
             };
         }
         return {
@@ -69,17 +74,19 @@ const del = async (id) => {
     catch (error) {
         return {
             status: 'Error',
-            message: `Error deleting employee with id: ${id}: ${error}`
+            message: `Error deleting employee with id: ${id}: ${error}`,
+            data: null
         };
     }
 };
 const update = async (id, employeeData) => {
     try {
-        const updatedEmployee = await employeeModel_1.employeeAgent.findByIdAndUpdate(id, employeeData, { new: true });
+        const updatedEmployee = await employeeModel_1.EmployeeAgent.findByIdAndUpdate(id, employeeData, { new: true });
         if (!updatedEmployee) {
             return {
                 status: 'Failed',
-                message: `Could not find an employee with ID: ${id}`
+                message: `Could not find an employee with ID: ${id}`,
+                data: null
             };
         }
         return {
@@ -91,7 +98,8 @@ const update = async (id, employeeData) => {
     catch (error) {
         return {
             status: 'Error',
-            message: `Error while updating employee with ID: ${id}: ${error}`
+            message: `Error while updating employee with ID: ${id}: ${error}`,
+            data: null
         };
     }
 };

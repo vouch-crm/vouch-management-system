@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.employeeAgent = void 0;
+exports.EmployeeAgent = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 const employeeSchema = new mongoose_1.Schema({
     name: {
@@ -50,4 +50,5 @@ const employeeSchema = new mongoose_1.Schema({
     DOB: Date,
     nationality: String,
 });
-exports.employeeAgent = mongoose_1.default.model('employee', employeeSchema);
+const EmployeeAgent = mongoose_1.default.model('Employee', employeeSchema);
+exports.EmployeeAgent = EmployeeAgent;

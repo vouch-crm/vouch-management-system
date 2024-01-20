@@ -21,13 +21,16 @@ const login = async (req, res) => {
             error: dbResponse.message
         });
     }
-    const passwordChecker = await hashingServices_1.hashingServices.verifyHash(requestData.password, dbResponse.data.password);
+    const adminPassword = dbResponse.data?.password;
+    const passwordChecker = await hashingServices_1.hashingServices.verifyHash(requestData.password, adminPassword);
     if (!passwordChecker) {
         res.status(400).json({
             message: 'Invalid email or password!'
         });
     }
-    const tokenResponse = await tokenServices_1.tokenServices.generateToken(dbResponse.data.id, dbResponse.data.email);
+    const adminID = dbResponse.data?.id;
+    const adminEmail = dbResponse.data?.email;
+    const tokenResponse = await tokenServices_1.tokenServices.generateToken(adminID, adminEmail);
     if (tokenResponse.status === 'Success') {
         res.status(200).json({
             token: tokenResponse.token
