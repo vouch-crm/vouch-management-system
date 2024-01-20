@@ -11,6 +11,8 @@ const clientController_1 = __importDefault(require("./controllers/clientControll
 const jobFormsController_1 = __importDefault(require("./controllers/jobFormsController"));
 const jobController_1 = __importDefault(require("./controllers/jobController"));
 const employeeController_1 = __importDefault(require("./controllers/employeeController"));
+const adminController_1 = __importDefault(require("./controllers/adminController"));
+const utils_1 = require("./services/utils");
 const cors_1 = __importDefault(require("cors"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -21,6 +23,7 @@ app.use('/client', clientController_1.default);
 app.use(jobController_1.default);
 app.use(jobFormsController_1.default);
 app.use(employeeController_1.default);
+app.use(adminController_1.default);
 app.get('/', (_req, res) => {
     res.send('Server Started!');
 });
@@ -35,6 +38,7 @@ const connectDB = async () => {
     }
 };
 connectDB();
+utils_1.utils.createAdmin();
 app.listen(PORT, () => {
     console.log(`Server Running On Port: ${PORT}`);
 });
