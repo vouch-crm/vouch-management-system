@@ -13,7 +13,7 @@ const hashPassword = async (password: string): Promise<string> => {
 }
 
 const verifyHash = async (password: string, hashedPassword: string): Promise<boolean> => {
-    const check = await bcrypt.compare(password, hashedPassword)
+    const check = await bcrypt.compare(password + secretKey, hashedPassword)
 
     return check
 }

@@ -6,6 +6,7 @@ import clientRouter from './controllers/clientController';
 import jobFormRouter from './controllers/jobFormsController';
 import jobRouter from './controllers/jobController';
 import employeeRouter from './controllers/employeeController';
+import adminRouter from './controllers/adminController';
 import { utils } from './services/utils';
 import cors from 'cors'
 
@@ -21,6 +22,7 @@ app.use('/client', clientRouter);
 app.use(jobRouter);
 app.use(jobFormRouter);
 app.use(employeeRouter);
+app.use(adminRouter);
 
 app.get('/', (_req: Request, res: Response): void => {
     res.send('Server Started!');
