@@ -1,23 +1,32 @@
 import mongoose, {Schema} from 'mongoose'
 
-export interface IAdmin {
-    id?: string,
-    name: string,
-    email: string,
-    password: string
+type AdminDocument = {
+    email: string;
+    name: string;
+    password: string;
+}
+
+type AdminInput = {
+    email: AdminDocument['email'];
+    password: AdminDocument['password'];
 }
 
 const adminSchema: Schema = new Schema({
     email: {
         type: String,
+        required: true,
         unique: true
     },
     name: {
-        type: String
+        type: String,
+        required: true
     },
     password: {
-        type: String
+        type: String,
+        required: true
     }
 });
 
-export const adminAgent = mongoose.model<IAdmin>('admin', adminSchema);
+const AdminAgent = mongoose.model<AdminDocument>('Admin', adminSchema);
+
+export { AdminDocument, AdminInput, AdminAgent }

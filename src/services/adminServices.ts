@@ -1,14 +1,14 @@
-import { adminAgent, IAdmin } from '../models/adminModel'
+import { AdminDocument, AdminAgent } from '../models/adminModel'
 
-export interface IRetrunAdmin {
+export type AdminReturn = {
     status: string,
-    message?: string,
-    data?: any
+    message: string | null,
+    data: Record<string, any> | null
 }
 
-const create = async (adminData: IAdmin): Promise<IRetrunAdmin> => {
+const create = async (adminData: AdminDocument): Promise<AdminReturn> => {
     try {
-        const newAdmin = await adminAgent.create(adminData);
+        const newAdmin: AdminDocument = await AdminAgent.create(adminData);
 
         return {
             status: 'Success',
@@ -18,29 +18,33 @@ const create = async (adminData: IAdmin): Promise<IRetrunAdmin> => {
     } catch (error) {
         return {
             status: 'Error',
-            message: `Error creating an admin: ${error}`
+            message: `Error creating an admin: ${error}`,
+            data: null
         }
     }
 }
 
-const findByEmail = async (email: string): Promise<IRetrunAdmin> => {
+const findByEmail = async (email: string): Promise<AdminReturn> => {
     try {
-        const admin = await adminAgent.findOne({ email });
+        const admin = await AdminAgent.findOne({ email });
 
         if (!admin) {
             return {
                 status: 'Failed',
-                message: `No matching admin`
+                message: `No matching admin`,
+                data: null
             }
         }
         return {
             status: 'Success',
-            data: admin
+            data: admin,
+            message: null
         }
     } catch (error) {
         return {
             status: 'Error',
-            message: `Error finding an admin: ${error}`
+            message: `Error finding an admin: ${error}`,
+            data: null
         }
     }
 }

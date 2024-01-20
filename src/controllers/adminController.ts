@@ -1,14 +1,15 @@
 import express, {Request, Response} from 'express'
-import { adminServices, IRetrunAdmin } from '../services/adminServices';
+import { adminServices, AdminReturn } from '../services/adminServices';
+import { AdminInput } from '../models/adminModel';
 import { hashingServices } from '../services/hashingServices';
 import { tokenServices } from '../services/tokenServices';
 
 const adminRouter = express.Router();
 
 const login = async (req: Request, res:Response) => {
-    const requestData = req.body;
+    const requestData: AdminInput = req.body;
 
-    const dbResponse: IRetrunAdmin = await adminServices.findByEmail(requestData.email);
+    const dbResponse = await adminServices.findByEmail(requestData.email);
     if (dbResponse.status === 'Failed') {
         return res.status(404).json({
             message: 'Invalid email or password'
@@ -18,16 +19,19 @@ const login = async (req: Request, res:Response) => {
             error: dbResponse.message
         });
     }
-
+    
+    const adminPassword: string = dbResponse.data?.password as string;
     const passwordChecker: boolean = await hashingServices.verifyHash(
-        requestData.password, dbResponse.data.password);
+        requestData.password, adminPassword);
     if (!passwordChecker) {
         res.status(400).json({
             message: 'Invalid email or password!'
         });
     }
 
-    const tokenResponse = await tokenServices.generateToken(dbResponse.data.id, dbResponse.data.email);
+    const adminID: string = dbResponse.data?.id as string;
+    const adminEmail: string = dbResponse.data?.email as string;
+    const tokenResponse = await tokenServices.generateToken(adminID, adminEmail);
     if (tokenResponse.status === 'Success') {
         res.status(200).json({
             token: tokenResponse.token

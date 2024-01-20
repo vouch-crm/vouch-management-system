@@ -1,7 +1,7 @@
 import dotenv from 'dotenv'
-import { adminServices, IRetrunAdmin } from './adminServices';
+import { adminServices, AdminReturn } from './adminServices';
 import { hashingServices } from './hashingServices';
-import {IAdmin} from '../models/adminModel'
+import {AdminDocument} from '../models/adminModel'
 
 dotenv.config();
 
@@ -10,19 +10,19 @@ const createAdmin = async (): Promise<void> => {
     const email = process.env.ADMIN_EMAIL as string;
     const password = process.env.ADMIN_PASSWORD as string;
 
-    const isAdminExist: IRetrunAdmin = await adminServices.findByEmail(email);
+    const isAdminExist: AdminReturn = await adminServices.findByEmail(email);
     if (isAdminExist.status === 'Success') {
         console.log('we are in the admin exist condition');
         return
     }
 
     const hashedPassword: string = await hashingServices.hashPassword(password);
-    const adminData: IAdmin = {
+    const adminData: AdminDocument = {
         name: name,
         email: email,
         password: hashedPassword
     }
-    const dbResponse: IRetrunAdmin = await adminServices.create(adminData);
+    const dbResponse: AdminReturn = await adminServices.create(adminData);
 }
 
 export const utils = {
