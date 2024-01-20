@@ -6,6 +6,7 @@ import clientRouter from './controllers/clientController';
 import jobFormRouter from './controllers/jobFormsController';
 import jobRouter from './controllers/jobController';
 import employeeRouter from './controllers/employeeController';
+import { utils } from './services/utils';
 import cors from 'cors'
 
 
@@ -36,6 +37,7 @@ const connectDB = async (): Promise<void> => {
 }
 
 connectDB();
+utils.createAdmin()
 
 app.listen(PORT, (): void => {
     console.log(`Server Running On Port: ${PORT}`);

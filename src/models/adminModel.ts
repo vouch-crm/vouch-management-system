@@ -9,7 +9,8 @@ export interface IAdmin {
 
 const adminSchema: Schema = new Schema({
     email: {
-        type: String
+        type: String,
+        unique: true
     },
     name: {
         type: String
@@ -19,4 +20,4 @@ const adminSchema: Schema = new Schema({
     }
 });
 
-export const adminAgent = mongoose.model<IAdmin>('employee', adminSchema);
+export const adminAgent = mongoose.model<IAdmin>('admin', adminSchema);
