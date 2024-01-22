@@ -59,7 +59,9 @@ const employeeSchema = new mongoose_1.Schema({
     maritalStatus: String,
     personalEmail: String,
     personalMobile: String,
-    address: String
+    address: String,
+    image: String,
+    status: String
 });
 const EmployeeAgent = mongoose_1.default.model('Employee', employeeSchema);
 exports.EmployeeAgent = EmployeeAgent;

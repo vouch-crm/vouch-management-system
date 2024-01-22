@@ -25,7 +25,9 @@ type EmployeeDocument = {
     maritalStatus?: string,
     personalEmail?: string,
     personalMobile?: string,
-    address?: string
+    address?: string,
+    image?: string,
+    status?: string
 }
 
 type EmployeeInput = {
@@ -52,6 +54,8 @@ type EmployeeInput = {
     personalEmail?: EmployeeDocument['personalEmail'],
     personalMobile?: EmployeeDocument['personalMobile'],
     address?: EmployeeDocument['address'],
+    image?: EmployeeDocument['image'],
+    status?: EmployeeDocument['status']
 }
 
 const employeeSchema: Schema = new Schema({
@@ -88,7 +92,9 @@ const employeeSchema: Schema = new Schema({
     maritalStatus: String,
     personalEmail: String,
     personalMobile: String,
-    address: String
+    address: String,
+    image: String,
+    status: String
 });
 
 const EmployeeAgent = mongoose.model<EmployeeDocument>('Employee', employeeSchema);
