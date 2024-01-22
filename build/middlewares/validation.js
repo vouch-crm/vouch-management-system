@@ -7,7 +7,10 @@ const createEmployeeBodyValidationRules = () => {
         (0, express_validator_1.body)('joinDate').exists().withMessage('JoinDate not provided').isDate()
             .withMessage('Invalid value for joinDate field'),
         (0, express_validator_1.body)('email').exists().withMessage('Email not provided').isEmail()
-            .withMessage('Invalid value for email field')
+            .withMessage('Invalid value for email field'),
+        (0, express_validator_1.body)('firstName').exists().withMessage('First-name not provided'),
+        (0, express_validator_1.body)('lastName').exists().withMessage('Last-name not provided'),
+        (0, express_validator_1.body)('title').exists().withMessage('Title not provided')
     ];
 };
 const validationMiddleware = async (req, res, next) => {

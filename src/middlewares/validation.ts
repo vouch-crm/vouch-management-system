@@ -6,7 +6,10 @@ const createEmployeeBodyValidationRules = () => {
         body('joinDate').exists().withMessage('JoinDate not provided').isDate()
             .withMessage('Invalid value for joinDate field'),
         body('email').exists().withMessage('Email not provided').isEmail()
-            .withMessage('Invalid value for email field')
+            .withMessage('Invalid value for email field'),
+        body('firstName').exists().withMessage('First-name not provided'),
+        body('lastName').exists().withMessage('Last-name not provided'),
+        body('title').exists().withMessage('Title not provided')
     ]
   }
 

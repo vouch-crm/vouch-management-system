@@ -49,6 +49,17 @@ const employeeSchema = new mongoose_1.Schema({
     gender: String,
     DOB: Date,
     nationality: String,
+    twitterAccount: String,
+    facebookAccount: String,
+    pronouns: String,
+    location: String,
+    manager: String,
+    noticePeriod: Number,
+    paymentCurrency: String,
+    maritalStatus: String,
+    personalEmail: String,
+    personalMobile: String,
+    address: String
 });
 const EmployeeAgent = mongoose_1.default.model('Employee', employeeSchema);
 exports.EmployeeAgent = EmployeeAgent;

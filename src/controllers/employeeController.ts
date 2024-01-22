@@ -13,22 +13,25 @@ const create = async (req: Request, res: Response) => {
     const password = await hashingServices.hashPassword(
         employeeServices.passwordGenerator(requestData.email));
 
-    const employeeData: EmployeeDocument = {
-        firstName: requestData.firstName,
-        lastName: requestData.lastName,
-        joinDate: requestData.joinDate,
-        email: requestData.email,
-        employmentType: requestData.employmentType,
-        title: requestData.title,
-        phoneNumber: requestData.phoneNumber,
-        linkedinAccount: requestData.linkedinAccount,
-        team: requestData.team,
-        probationDate: probationDate,
-        password: password,
-        gender: requestData.gender,
-        DOB: requestData.DOB,
-        nationality: requestData.nationality
-    }
+    // const employeeData: EmployeeDocument = {
+    //     firstName: requestData.firstName,
+    //     lastName: requestData.lastName,
+    //     joinDate: requestData.joinDate,
+    //     email: requestData.email,
+    //     employmentType: requestData.employmentType,
+    //     title: requestData.title,
+    //     phoneNumber: requestData.phoneNumber,
+    //     linkedinAccount: requestData.linkedinAccount,
+    //     team: requestData.team,
+    //     probationDate: probationDate,
+    //     password: password,
+    //     gender: requestData.gender,
+    //     DOB: requestData.DOB,
+    //     nationality: requestData.nationality
+    // }
+    const employeeData: EmployeeDocument = requestData;
+    employeeData.probationDate = probationDate;
+    employeeData.password = password;
 
     const dbResponse: EmployeeReturn = await employeeServices.create(employeeData);
     if (dbResponse.status === 'Error') {
