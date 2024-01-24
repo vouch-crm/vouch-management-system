@@ -49,7 +49,33 @@ const findByEmail = async (email: string): Promise<AdminReturn> => {
     }
 }
 
+const findByID = async (ID: string): Promise<AdminReturn> => {
+    try {
+        const admin = await AdminAgent.findById(ID);
+
+        if (!admin) {
+            return {
+                status: 'Failed',
+                message: `No matching admin`,
+                data: null
+            }
+        }
+        return {
+            status: 'Success',
+            data: admin,
+            message: null
+        }
+    } catch (error) {
+        return {
+            status: 'Error',
+            message: `Error finding an admin: ${error}`,
+            data: null
+        }
+    }
+} 
+
 export const adminServices = {
     create,
-    findByEmail
+    findByEmail,
+    findByID
 }
