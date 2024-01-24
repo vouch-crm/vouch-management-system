@@ -37,6 +37,30 @@ const create = async (employeeData) => {
         };
     }
 };
+const getEmployeeByID = async (ID) => {
+    try {
+        const employee = await employeeModel_1.EmployeeAgent.findById(ID);
+        if (!employee) {
+            return {
+                status: 'Failed',
+                message: `Could not find employee with ID: ${ID}`,
+                data: null
+            };
+        }
+        return {
+            status: 'Success',
+            message: null,
+            data: employee
+        };
+    }
+    catch (error) {
+        return {
+            status: 'Success',
+            message: `error getting employee with ID:${ID}: ${error}`,
+            data: null
+        };
+    }
+};
 const getAll = async () => {
     try {
         const employees = await employeeModel_1.EmployeeAgent.find();
@@ -109,5 +133,6 @@ exports.employeeServices = {
     create,
     getAll,
     del,
-    update
+    update,
+    getEmployeeByID
 };

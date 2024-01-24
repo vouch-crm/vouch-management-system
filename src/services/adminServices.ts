@@ -72,10 +72,37 @@ const findByID = async (ID: string): Promise<AdminReturn> => {
             data: null
         }
     }
-} 
+}
+
+const del = async (id: string): Promise<AdminReturn> => {
+    try {
+        const deletedAdmin = await AdminAgent.findByIdAndDelete(id);
+
+        if (!deletedAdmin) {
+            return {
+                status: 'Failed',
+                message: `Admin with ID: ${id} not found`,
+                data: null
+            };
+        }
+        
+        return {
+            status: 'Success',
+            data: deletedAdmin,
+            message: 'Admin deleted successfuly!'
+        }; 
+    } catch (error) {
+        return {
+            status: 'Error',
+            message: `Error deleting admin with id: ${id}: ${error}`,
+            data: null
+        };
+    }
+}
 
 export const adminServices = {
     create,
     findByEmail,
-    findByID
+    findByID,
+    del
 }
