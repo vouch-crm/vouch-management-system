@@ -1,5 +1,6 @@
 import { AdminDocument, AdminAgent } from '../models/adminModel'
 import { MongoError } from 'mongodb'
+import { adminRoles } from './enums'
 
 export type AdminReturn = {
     status: string,
@@ -7,8 +8,14 @@ export type AdminReturn = {
     data: Record<string, any> | null
 }
 
-const create = async (adminData: AdminDocument): Promise<AdminReturn> => {
+const create = async ({ email, name, password, role = adminRoles.ADMIN }: AdminDocument): Promise<AdminReturn> => {
     try {
+        const adminData: AdminDocument = {
+            name: name,
+            email: email,
+            password: password,
+            role: role
+        }
         const newAdmin: AdminDocument = await AdminAgent.create(adminData);
 
         return {
@@ -20,7 +27,7 @@ const create = async (adminData: AdminDocument): Promise<AdminReturn> => {
         if (error instanceof MongoError && error.code === 11000) {
             return {
                 status: 'Error',
-                message: `This email: ${adminData.email} already exists!`,
+                message: `This email: ${email} already exists!`,
                 data: null
             }
         }

@@ -4,11 +4,13 @@ type AdminDocument = {
     email: string;
     name: string;
     password: string;
+    role?: string
 }
 
 type AdminInput = {
     email: AdminDocument['email'];
     password: AdminDocument['password'];
+    role?: AdminDocument['role']
 }
 
 const adminSchema: Schema = new Schema({
@@ -22,6 +24,10 @@ const adminSchema: Schema = new Schema({
         required: true
     },
     password: {
+        type: String,
+        required: true
+    },
+    role: {
         type: String,
         required: true
     }

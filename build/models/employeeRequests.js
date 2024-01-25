@@ -23,26 +23,18 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AdminAgent = void 0;
+exports.EmployeeRequestAgent = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const adminSchema = new mongoose_1.Schema({
-    email: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    name: {
-        type: String,
+const employeeRequestSchema = new mongoose_1.Schema({
+    type: String,
+    status: String,
+    empID: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: 'Employee',
         required: true
     },
-    password: {
-        type: String,
-        required: true
-    },
-    role: {
-        type: String,
-        required: true
-    }
+    requestedDay: Date
 });
-const AdminAgent = mongoose_1.default.model('Admin', adminSchema);
-exports.AdminAgent = AdminAgent;
+const EmployeeRequestAgent = mongoose_1.default
+    .model('EmployeeRequest', employeeRequestSchema);
+exports.EmployeeRequestAgent = EmployeeRequestAgent;

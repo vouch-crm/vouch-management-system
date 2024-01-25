@@ -92,7 +92,7 @@ const update = async (req, res) => {
     });
 };
 employeeRouter.post('/employee', validation_1.validationFunctions.createEmployeeBodyValidationRules(), validation_1.validationFunctions.validationMiddleware, create);
-employeeRouter.get('/employee', adminMiddleware_1.checkIfAdmin, getAll);
+employeeRouter.get('/employee', adminMiddleware_1.checkIfSuperadmin, getAll);
 employeeRouter.get('/employee/:id', getEmployeeByID);
 employeeRouter.delete('/employee/:id', del);
 employeeRouter.put('/employee/:id', update);

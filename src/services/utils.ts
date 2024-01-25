@@ -2,6 +2,7 @@ import dotenv from 'dotenv'
 import { adminServices, AdminReturn } from './adminServices';
 import { hashingServices } from './hashingServices';
 import {AdminDocument} from '../models/adminModel'
+import { adminRoles } from './enums';
 
 dotenv.config();
 
@@ -17,10 +18,12 @@ const createAdmin = async (): Promise<void> => {
     }
 
     const hashedPassword: string = await hashingServices.hashPassword(password);
+    const role: string = adminRoles.SUPERADMIN;
     const adminData: AdminDocument = {
         name: name,
         email: email,
-        password: hashedPassword
+        password: hashedPassword,
+        role: role
     }
     const dbResponse: AdminReturn = await adminServices.create(adminData);
 }

@@ -3,7 +3,7 @@ import { employeeServices, EmployeeReturn } from '../services/employeeServices'
 import { hashingServices } from '../services/hashingServices'
 import { EmployeeDocument, EmployeeInput } from '../models/employeeModel'
 import { validationFunctions } from '../middlewares/validation'
-import { checkIfAdmin } from '../middlewares/adminMiddleware'
+import { checkIfAdmin, checkIfSuperadmin } from '../middlewares/adminMiddleware'
 
 const employeeRouter = express.Router();
 
@@ -106,7 +106,7 @@ const update = async (req: Request, res: Response) => {
 
 employeeRouter.post('/employee', validationFunctions.createEmployeeBodyValidationRules(),
     validationFunctions.validationMiddleware, create);
-employeeRouter.get('/employee', checkIfAdmin, getAll);
+employeeRouter.get('/employee', checkIfSuperadmin, getAll);
 employeeRouter.get('/employee/:id', getEmployeeByID);
 employeeRouter.delete('/employee/:id', del);
 employeeRouter.put('/employee/:id', update);

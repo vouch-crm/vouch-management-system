@@ -2,8 +2,16 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.adminServices = void 0;
 const adminModel_1 = require("../models/adminModel");
-const create = async (adminData) => {
+const mongodb_1 = require("mongodb");
+const enums_1 = require("./enums");
+const create = async ({ email, name, password, role = enums_1.adminRoles.ADMIN }) => {
     try {
+        const adminData = {
+            name: name,
+            email: email,
+            password: password,
+            role: role
+        };
         const newAdmin = await adminModel_1.AdminAgent.create(adminData);
         return {
             status: 'Success',
@@ -12,6 +20,13 @@ const create = async (adminData) => {
         };
     }
     catch (error) {
+        if (error instanceof mongodb_1.MongoError && error.code === 11000) {
+            return {
+                status: 'Error',
+                message: `This email: ${email} already exists!`,
+                data: null
+            };
+        }
         return {
             status: 'Error',
             message: `Error creating an admin: ${error}`,
