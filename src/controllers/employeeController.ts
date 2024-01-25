@@ -104,11 +104,11 @@ const update = async (req: Request, res: Response) => {
     });
 }
 
-employeeRouter.post('/employee', validationFunctions.createEmployeeBodyValidationRules(),
+employeeRouter.post('/employee', checkIfAdmin, validationFunctions.createEmployeeBodyValidationRules(),
     validationFunctions.validationMiddleware, create);
-employeeRouter.get('/employee', checkIfSuperadmin, getAll);
-employeeRouter.get('/employee/:id', getEmployeeByID);
-employeeRouter.delete('/employee/:id', del);
-employeeRouter.put('/employee/:id', update);
+employeeRouter.get('/employee', checkIfAdmin, getAll);
+employeeRouter.get('/employee/:id', checkIfAdmin, getEmployeeByID);
+employeeRouter.delete('/employee/:id', checkIfAdmin, del);
+employeeRouter.put('/employee/:id', checkIfAdmin, update);
 
 export default employeeRouter;

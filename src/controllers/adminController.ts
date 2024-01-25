@@ -47,7 +47,7 @@ const login = async (req: Request, res:Response) => {
 }
 
 const create = async (req: Request, res: Response) => {
-    const requestData: AdminDocument = req.body
+    const requestData: AdminDocument = req.body;
     const hashedPassword: string = await hashingServices.hashPassword(requestData.password);
     requestData.password = hashedPassword;
     const dbResponse: AdminReturn = await adminServices.create(requestData);

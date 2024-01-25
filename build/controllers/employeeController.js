@@ -91,9 +91,9 @@ const update = async (req, res) => {
         data: dbResponse.data
     });
 };
-employeeRouter.post('/employee', validation_1.validationFunctions.createEmployeeBodyValidationRules(), validation_1.validationFunctions.validationMiddleware, create);
-employeeRouter.get('/employee', adminMiddleware_1.checkIfSuperadmin, getAll);
-employeeRouter.get('/employee/:id', getEmployeeByID);
-employeeRouter.delete('/employee/:id', del);
-employeeRouter.put('/employee/:id', update);
+employeeRouter.post('/employee', adminMiddleware_1.checkIfAdmin, validation_1.validationFunctions.createEmployeeBodyValidationRules(), validation_1.validationFunctions.validationMiddleware, create);
+employeeRouter.get('/employee', adminMiddleware_1.checkIfAdmin, getAll);
+employeeRouter.get('/employee/:id', adminMiddleware_1.checkIfAdmin, getEmployeeByID);
+employeeRouter.delete('/employee/:id', adminMiddleware_1.checkIfAdmin, del);
+employeeRouter.put('/employee/:id', adminMiddleware_1.checkIfAdmin, update);
 exports.default = employeeRouter;
