@@ -7,6 +7,8 @@ const express_1 = __importDefault(require("express"));
 const adminServices_1 = require("../services/adminServices");
 const hashingServices_1 = require("../services/hashingServices");
 const tokenServices_1 = require("../services/tokenServices");
+const enums_1 = require("../services/enums");
+const adminMiddleware_1 = require("../middlewares/adminMiddleware");
 const adminRouter = express_1.default.Router();
 const login = async (req, res) => {
     const requestData = req.body;
@@ -42,5 +44,39 @@ const login = async (req, res) => {
         });
     }
 };
-adminRouter.post('/admin', login);
+const create = async (req, res) => {
+    const requestData = req.body;
+    const hashedPassword = await hashingServices_1.hashingServices.hashPassword(requestData.password);
+    requestData.password = hashedPassword;
+    const dbResponse = await adminServices_1.adminServices.create(requestData);
+    if (dbResponse.status !== enums_1.serviceStatuses.SUCCESS) {
+        return res.status(400).json({
+            error: dbResponse.message
+        });
+    }
+    res.status(201).json({
+        message: dbResponse.message,
+        data: dbResponse.data
+    });
+};
+const del = async (req, res) => {
+    const ID = req.params.id;
+    const dbResponse = await adminServices_1.adminServices.del(ID);
+    if (dbResponse.status === enums_1.serviceStatuses.FAILED) {
+        return res.status(404).json({
+            message: dbResponse.message
+        });
+    }
+    else if (dbResponse.status === enums_1.serviceStatuses.ERROR) {
+        return res.status(400).json({
+            error: dbResponse.message
+        });
+    }
+    res.status(200).json({
+        message: 'Admin deleted successfuly!'
+    });
+};
+adminRouter.post('/admin-login', login);
+adminRouter.post('/admin', adminMiddleware_1.checkIfSuperadmin, create);
+adminRouter.delete('/admin/:id', adminMiddleware_1.checkIfSuperadmin, del);
 exports.default = adminRouter;

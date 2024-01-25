@@ -1,8 +1,10 @@
 import express, {Request, Response} from 'express'
 import { adminServices, AdminReturn } from '../services/adminServices';
-import { AdminInput } from '../models/adminModel';
+import { AdminDocument, AdminInput } from '../models/adminModel';
 import { hashingServices } from '../services/hashingServices';
 import { tokenServices } from '../services/tokenServices';
+import { serviceStatuses } from '../services/enums';
+import { checkIfSuperadmin } from '../middlewares/adminMiddleware';
 
 const adminRouter = express.Router();
 
@@ -44,5 +46,42 @@ const login = async (req: Request, res:Response) => {
     }
 }
 
-adminRouter.post('/admin', login);
+const create = async (req: Request, res: Response) => {
+    const requestData: AdminDocument = req.body
+    const hashedPassword: string = await hashingServices.hashPassword(requestData.password);
+    requestData.password = hashedPassword;
+    const dbResponse: AdminReturn = await adminServices.create(requestData);
+    if (dbResponse.status !== serviceStatuses.SUCCESS) {
+        return res.status(400).json({
+            error: dbResponse.message
+        });
+    }
+
+    res.status(201).json({
+        message: dbResponse.message,
+        data: dbResponse.data
+    });
+}
+
+const del = async (req: Request, res: Response) => {
+    const ID: string = req.params.id;
+    const dbResponse: AdminReturn = await adminServices.del(ID);
+    if (dbResponse.status === serviceStatuses.FAILED) {
+        return res.status(404).json({
+            message: dbResponse.message
+        });
+    } else if (dbResponse.status === serviceStatuses.ERROR) {
+        return res.status(400).json({
+            error: dbResponse.message
+        });
+    }
+
+    res.status(200).json({
+        message: 'Admin deleted successfuly!'
+    });
+}
+
+adminRouter.post('/admin-login', login);
+adminRouter.post('/admin', checkIfSuperadmin, create);
+adminRouter.delete('/admin/:id', checkIfSuperadmin, del);
 export default adminRouter;
