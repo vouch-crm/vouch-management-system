@@ -1,4 +1,5 @@
 import { AdminDocument, AdminAgent } from '../models/adminModel'
+import { MongoError } from 'mongodb'
 
 export type AdminReturn = {
     status: string,
@@ -16,6 +17,14 @@ const create = async (adminData: AdminDocument): Promise<AdminReturn> => {
             message: 'Admin created successfuly!'
         }
     } catch (error) {
+        if (error instanceof MongoError && error.code === 11000) {
+            return {
+                status: 'Error',
+                message: `This email: ${adminData.email} already exists!`,
+                data: null
+            }
+        }
+
         return {
             status: 'Error',
             message: `Error creating an admin: ${error}`,
@@ -85,12 +94,12 @@ const del = async (id: string): Promise<AdminReturn> => {
                 data: null
             };
         }
-        
+
         return {
             status: 'Success',
             data: deletedAdmin,
             message: 'Admin deleted successfuly!'
-        }; 
+        };
     } catch (error) {
         return {
             status: 'Error',
