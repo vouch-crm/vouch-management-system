@@ -59,6 +59,11 @@ type EmployeeInput = {
     status?: EmployeeDocument['status']
 }
 
+type EmployeeLogin = {
+    email: string,
+    password: string
+}
+
 const employeeSchema: Schema = new Schema({
     firstName: String,
     lastName: String,
@@ -101,4 +106,4 @@ const employeeSchema: Schema = new Schema({
 
 const EmployeeAgent = mongoose.model<EmployeeDocument>('Employee', employeeSchema);
 
-export { EmployeeDocument, EmployeeInput, EmployeeAgent }
+export { EmployeeDocument, EmployeeInput, EmployeeAgent, EmployeeLogin }

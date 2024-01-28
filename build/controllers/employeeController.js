@@ -8,6 +8,7 @@ const employeeServices_1 = require("../services/employeeServices");
 const hashingServices_1 = require("../services/hashingServices");
 const validation_1 = require("../middlewares/validation");
 const adminMiddleware_1 = require("../middlewares/adminMiddleware");
+const tokenServices_1 = require("../services/tokenServices");
 const employeeRouter = express_1.default.Router();
 const create = async (req, res) => {
     const requestData = req.body;
@@ -26,6 +27,40 @@ const create = async (req, res) => {
         message: dbResponse.message,
         data: dbResponse.data
     });
+};
+const login = async (req, res) => {
+    const requestData = req.body;
+    const dbResponse = await employeeServices_1.employeeServices.getEmployeeByEmail(requestData.email);
+    if (dbResponse.status === 'Failed') {
+        return res.status(404).json({
+            message: 'Invalid email or password'
+        });
+    }
+    else if (dbResponse.status === 'Error') {
+        return res.status(400).json({
+            error: dbResponse.message
+        });
+    }
+    const employeePassword = dbResponse.data?.password;
+    const passwordChecker = await hashingServices_1.hashingServices.verifyHash(requestData.password, employeePassword);
+    if (!passwordChecker) {
+        res.status(400).json({
+            message: 'Invalid email or password!'
+        });
+    }
+    const employeeID = dbResponse.data?.id;
+    const employeeEmail = dbResponse.data?.email;
+    const tokenResponse = tokenServices_1.tokenServices.generateToken(employeeID, employeeEmail);
+    if (tokenResponse.status === 'Success') {
+        res.status(200).json({
+            token: tokenResponse.token
+        });
+    }
+    else {
+        res.status(400).json({
+            message: tokenResponse.message
+        });
+    }
 };
 const getAll = async (req, res) => {
     const dbResponse = await employeeServices_1.employeeServices.getAll();
@@ -92,6 +127,7 @@ const update = async (req, res) => {
     });
 };
 employeeRouter.post('/employee', adminMiddleware_1.checkIfAdmin, validation_1.validationFunctions.createEmployeeBodyValidationRules(), validation_1.validationFunctions.validationMiddleware, create);
+employeeRouter.post('/employee-login', login);
 employeeRouter.get('/employee', adminMiddleware_1.checkIfAdmin, getAll);
 employeeRouter.get('/employee/:id', adminMiddleware_1.checkIfAdmin, getEmployeeByID);
 employeeRouter.delete('/employee/:id', adminMiddleware_1.checkIfAdmin, del);

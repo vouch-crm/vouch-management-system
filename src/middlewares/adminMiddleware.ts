@@ -1,4 +1,4 @@
-import { adminServices, AdminReturn } from "../services/adminServices";
+import { employeeServices, EmployeeReturn } from "../services/employeeServices";
 import { adminRoles } from "../services/enums";
 import { tokenServices, tokenReturn } from "../services/tokenServices";
 import { Request, Response, NextFunction } from 'express'
@@ -18,10 +18,17 @@ const checkIfAdmin = async (req: Request, res: Response, next: NextFunction) => 
     }
 
     const adminID: string = decodedToken.decoded?.id as string;
-    const dbResponse: AdminReturn = await adminServices.findByID(adminID);
+    const dbResponse: EmployeeReturn = await employeeServices.getEmployeeByID(adminID);
     if (dbResponse.status === 'Failed') {
         return res.status(404).json({
             message: dbResponse.message
+        });
+    }
+
+    const role: string = dbResponse.data?.role;
+    if (role !== adminRoles.ADMIN && role !== adminRoles.SUPERADMIN) {
+        return res.status(401).json({
+            message: 'Unauthorized access!'
         });
     }
 
@@ -43,7 +50,7 @@ const checkIfSuperadmin = async (req: Request, res: Response, next: NextFunction
     }
 
     const adminID: string = decodedToken.decoded?.id as string;
-    const dbResponse: AdminReturn = await adminServices.findByID(adminID);
+    const dbResponse: EmployeeReturn = await employeeServices.getEmployeeByID(adminID);
     if (dbResponse.status === 'Failed') {
         return res.status(404).json({
             message: dbResponse.message
