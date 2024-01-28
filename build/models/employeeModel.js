@@ -26,12 +26,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.EmployeeAgent = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 const employeeSchema = new mongoose_1.Schema({
-    name: {
-        type: String
-    },
-    joinDate: {
-        type: Date
-    },
+    firstName: String,
+    lastName: String,
+    joinDate: Date,
     email: {
         type: String,
         unique: true
@@ -61,7 +58,11 @@ const employeeSchema = new mongoose_1.Schema({
     personalMobile: String,
     address: String,
     image: String,
-    status: String
+    status: String,
+    role: {
+        type: String,
+        default: null
+    }
 });
 const EmployeeAgent = mongoose_1.default.model('Employee', employeeSchema);
 exports.EmployeeAgent = EmployeeAgent;

@@ -111,5 +111,8 @@ const del = async (ID) => {
 };
 exports.employeeRequestServices = {
     create,
-    getAll
+    getAll,
+    getByID,
+    update,
+    del
 };

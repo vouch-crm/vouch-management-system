@@ -61,6 +61,30 @@ const getEmployeeByID = async (ID) => {
         };
     }
 };
+const getEmployeeByEmail = async (email) => {
+    try {
+        const employee = await employeeModel_1.EmployeeAgent.findOne({ email });
+        if (!employee) {
+            return {
+                status: 'Failed',
+                message: `Could not find employee with email: ${email}`,
+                data: null
+            };
+        }
+        return {
+            status: 'Success',
+            message: null,
+            data: employee
+        };
+    }
+    catch (error) {
+        return {
+            status: 'Success',
+            message: `error getting employee with email:${email}: ${error}`,
+            data: null
+        };
+    }
+};
 const getAll = async () => {
     try {
         const employees = await employeeModel_1.EmployeeAgent.find();
@@ -134,5 +158,6 @@ exports.employeeServices = {
     getAll,
     del,
     update,
-    getEmployeeByID
+    getEmployeeByID,
+    getEmployeeByEmail
 };

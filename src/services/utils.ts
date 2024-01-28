@@ -1,17 +1,21 @@
 import dotenv from 'dotenv'
-import { adminServices, AdminReturn } from './adminServices';
+import { employeeServices, EmployeeReturn } from './employeeServices';
 import { hashingServices } from './hashingServices';
-import {AdminDocument} from '../models/adminModel'
-import { adminRoles } from './enums';
+import { EmployeeDocument } from '../models/employeeModel';
+import { adminRoles, employmentType } from './enums';
 
 dotenv.config();
 
 const createAdmin = async (): Promise<void> => {
-    const name = process.env.ADMIN_NAME as string;
+    const firstName = process.env.ADMIN_FIRST_NAME as string;
+    const lastName = process.env.ADMIN_LAST_NAME as string;
+    const joinDate: Date = new Date();
+    const employment = employmentType.FULLTIME;
+    const title = 'CEO';
     const email = process.env.ADMIN_EMAIL as string;
     const password = process.env.ADMIN_PASSWORD as string;
 
-    const isAdminExist: AdminReturn = await adminServices.findByEmail(email);
+    const isAdminExist: EmployeeReturn = await employeeServices.getEmployeeByEmail(email);
     if (isAdminExist.status === 'Success') {
         console.log('we are in the admin exist condition');
         return
@@ -19,13 +23,17 @@ const createAdmin = async (): Promise<void> => {
 
     const hashedPassword: string = await hashingServices.hashPassword(password);
     const role: string = adminRoles.SUPERADMIN;
-    const adminData: AdminDocument = {
-        name: name,
+    const adminData: EmployeeDocument = {
+        firstName: firstName,
+        lastName: lastName,
         email: email,
+        joinDate: joinDate,
         password: hashedPassword,
+        employmentType: employment,
+        title: title,
         role: role
     }
-    const dbResponse: AdminReturn = await adminServices.create(adminData);
+    const dbResponse: EmployeeReturn = await employeeServices.create(adminData);
 }
 
 export const utils = {

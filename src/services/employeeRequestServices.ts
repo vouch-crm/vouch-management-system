@@ -124,5 +124,8 @@ const del = async (ID: string): Promise<employeeRequestReturn> => {
 
 export const employeeRequestServices = {
     create,
-    getAll
+    getAll,
+    getByID,
+    update,
+    del
 }

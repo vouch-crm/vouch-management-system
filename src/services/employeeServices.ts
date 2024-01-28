@@ -72,6 +72,32 @@ const getEmployeeByID = async (ID: string): Promise<EmployeeReturn> => {
     }
 }
 
+const getEmployeeByEmail = async (email: string): Promise<EmployeeReturn> => {
+    try {
+        const employee: EmployeeDocument | null = await EmployeeAgent.findOne({email});
+
+        if (!employee) {
+            return {
+                status: 'Failed',
+                message: `Could not find employee with email: ${email}`,
+                data: null
+            }
+        }
+
+        return {
+            status: 'Success',
+            message: null,
+            data: employee
+        }
+    } catch (error) {
+        return {
+            status: 'Success',
+            message: `error getting employee with email:${email}: ${error}`,
+            data: null
+        }
+    }
+}
+
 const getAll = async (): Promise<EmployeeReturn> => {
     try {
         const employees: EmployeeDocument[] = await EmployeeAgent.find();
@@ -150,5 +176,6 @@ export const employeeServices = {
     getAll,
     del,
     update,
-    getEmployeeByID
+    getEmployeeByID,
+    getEmployeeByEmail
 }
