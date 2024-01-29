@@ -1,5 +1,5 @@
-import {body, validationResult} from 'express-validator'
-import {Request, Response, NextFunction} from 'express'
+import { body, validationResult } from 'express-validator'
+import { Request, Response, NextFunction } from 'express'
 
 const createEmployeeBodyValidationRules = () => {
     return [
@@ -11,20 +11,30 @@ const createEmployeeBodyValidationRules = () => {
         body('lastName').exists().withMessage('Last-name not provided'),
         body('title').exists().withMessage('Title not provided')
     ]
-  }
+}
+
+const createEmployeeRequestBodyValidationRules = () => {
+    return [
+        body('requestedDay').exists().withMessage('requestedDay not provided').isDate()
+            .withMessage('Invalid value for requestedDay field'),
+        body('type').exists().withMessage('type not provided'),
+        body('empID').exists().withMessage('empID not provided'),
+    ]
+}
 
 const validationMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (errors.isEmpty()) {
         return next()
-      }
-    
+    }
+
     const extractedErrors: any = []
-    errors.array().map(err => extractedErrors.push({'error': err.msg}))
-    return res.status(400).json({errors: extractedErrors});
+    errors.array().map(err => extractedErrors.push({ 'error': err.msg }))
+    return res.status(400).json({ errors: extractedErrors });
 }
 
 export const validationFunctions = {
     createEmployeeBodyValidationRules,
-    validationMiddleware
+    validationMiddleware,
+    createEmployeeRequestBodyValidationRules
 }

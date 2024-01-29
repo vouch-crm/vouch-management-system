@@ -13,6 +13,14 @@ const createEmployeeBodyValidationRules = () => {
         (0, express_validator_1.body)('title').exists().withMessage('Title not provided')
     ];
 };
+const createEmployeeRequestBodyValidationRules = () => {
+    return [
+        (0, express_validator_1.body)('requestedDay').exists().withMessage('requestedDay not provided').isDate()
+            .withMessage('Invalid value for requestedDay field'),
+        (0, express_validator_1.body)('type').exists().withMessage('type not provided'),
+        (0, express_validator_1.body)('empID').exists().withMessage('empID not provided'),
+    ];
+};
 const validationMiddleware = async (req, res, next) => {
     const errors = (0, express_validator_1.validationResult)(req);
     if (errors.isEmpty()) {
@@ -24,5 +32,6 @@ const validationMiddleware = async (req, res, next) => {
 };
 exports.validationFunctions = {
     createEmployeeBodyValidationRules,
-    validationMiddleware
+    validationMiddleware,
+    createEmployeeRequestBodyValidationRules
 };
