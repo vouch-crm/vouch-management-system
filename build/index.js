@@ -30,7 +30,9 @@ app.use(jobFormsController_1.default);
 app.use(employeeController_1.default);
 app.use(adminController_1.default);
 app.get('/', (_req, res) => {
-    res.send('Server Started!');
+    res.status(200).json({
+        message: 'Server Started!'
+    });
 });
 const connectDB = async () => {
     try {

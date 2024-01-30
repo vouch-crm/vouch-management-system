@@ -32,7 +32,9 @@ app.use(employeeRouter);
 app.use(adminRouter);
 
 app.get('/', (_req: Request, res: Response): void => {
-    res.send('Server Started!');
+    res.status(200).json({
+        message: 'Server Started!'
+    });
 });
 
 const connectDB = async (): Promise<void> => {
