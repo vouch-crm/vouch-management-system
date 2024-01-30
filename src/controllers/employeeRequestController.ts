@@ -3,6 +3,7 @@ import { employeeRequests, serviceStatuses } from '../services/enums';
 import { EmployeeRequestDocument } from '../models/employeeRequests';
 import { employeeRequestReturn, employeeRequestServices } from '../services/employeeRequestServices';
 import { validationFunctions } from '../middlewares/validation';
+import { checkIfAdmin } from '../middlewares/adminMiddleware';
 
 const empRequestRouter = express.Router();
 
@@ -50,7 +51,89 @@ const create = async (req: Request, res: Response) => {
     });
 }
 
-empRequestRouter.post('employee-request', validationFunctions.createEmployeeRequestBodyValidationRules(),
+const getAll = async (req: Request, res: Response) => {
+    const requests: employeeRequestReturn = await employeeRequestServices.getAll();
+    if (requests.status !== serviceStatuses.SUCCESS) {
+        return res.status(400).json({
+            message: requests.message
+        });
+    }
+
+    res.status(200).json({
+        data: requests.data
+    });
+}
+
+const getByID = async (req: Request, res: Response) => {
+    const ID = req.params.id;
+    const request: employeeRequestReturn = await employeeRequestServices.getByID(ID);
+    if (request.status === serviceStatuses.FAILED) {
+        return res.status(404).json({
+            message: request.message
+        });
+    } else if (request.status === serviceStatuses.ERROR) {
+        return res.status(400).json({
+            message: request.message
+        });
+    }
+
+    res.status(200).json({
+        data: request.data
+    });
+}
+
+const update = async (req: Request, res: Response) => {
+    const ID = req.params.id;
+    const status = req.body.status;
+    if (status !== 'Accepted' && status !== 'Rejected') {
+        return res.status(400).json({
+            message: 'Invalid status'
+        });
+    }
+    const requestStatus = {
+        status: status
+    }
+    const request: employeeRequestReturn = await employeeRequestServices.update(ID, requestStatus);
+    
+    if (request.status === serviceStatuses.FAILED) {
+        return res.status(404).json({
+            message: request.message
+        });
+    } else if (request.status === serviceStatuses.ERROR) {
+        return res.status(400).json({
+            message: request.message
+        });
+    }
+
+    res.status(200).json({
+        message: request.message,
+        data: request.data
+    });
+}
+
+const del = async (req: Request, res: Response) => {
+    const ID = req.params.id;
+    const request: employeeRequestReturn = await employeeRequestServices.del(ID);
+    if (request.status === serviceStatuses.FAILED) {
+        return res.status(404).json({
+            message: request.message
+        });
+    } else if (request.status === serviceStatuses.ERROR) {
+        return res.status(400).json({
+            message: request.message
+        });
+    }
+
+    res.status(200).json({
+        message: request.message
+    });
+}
+
+empRequestRouter.post('/employee-request', validationFunctions.createEmployeeRequestBodyValidationRules(),
     validationFunctions.validationMiddleware, create);
+empRequestRouter.get('/employee-request', checkIfAdmin, getAll);
+empRequestRouter.get('/employee-request/:id', checkIfAdmin, getByID);
+empRequestRouter.put('/employee-request/:id', checkIfAdmin, update);
+empRequestRouter.delete('/employee-request/:id', checkIfAdmin, del);
 
 export default empRequestRouter;
