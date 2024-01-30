@@ -14,9 +14,14 @@ const employeeController_1 = __importDefault(require("./controllers/employeeCont
 const adminController_1 = __importDefault(require("./controllers/adminController"));
 const utils_1 = require("./services/utils");
 const cors_1 = __importDefault(require("cors"));
+const morgan_1 = __importDefault(require("morgan"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT;
+app.use(express_1.default.json({ limit: '5mb' }));
+app.use((0, morgan_1.default)('combined', {
+    skip: (req) => req.method === "OPTIONS",
+}));
 app.use((0, cors_1.default)());
 app.use(body_parser_1.default.json());
 app.use('/client', clientController_1.default);

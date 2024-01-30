@@ -1,5 +1,5 @@
-import express, { Request, Response } from 'express'
-import dotenv from 'dotenv'
+import express, { Request, Response } from 'express';
+import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import clientRouter from './controllers/clientController';
@@ -8,7 +8,8 @@ import jobRouter from './controllers/jobController';
 import employeeRouter from './controllers/employeeController';
 import adminRouter from './controllers/adminController';
 import { utils } from './services/utils';
-import cors from 'cors'
+import cors from 'cors';
+import morgan from 'morgan';
 
 
 dotenv.config();
@@ -16,6 +17,12 @@ dotenv.config();
 const app: express.Application = express();
 const PORT: string = process.env.PORT as string;
 
+app.use(express.json({ limit: '5mb' }));
+app.use(
+    morgan('combined', {
+        skip: (req: Request) => req.method === "OPTIONS",
+    })
+);
 app.use(cors())
 app.use(bodyParser.json());
 app.use('/client', clientRouter);

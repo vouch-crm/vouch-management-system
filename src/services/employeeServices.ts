@@ -1,5 +1,6 @@
 import { EmployeeAgent, EmployeeDocument } from "../models/employeeModel";
 import { MongoError } from 'mongodb';
+import { adminRoles } from "./enums";
 
 export type EmployeeReturn = {
     status: string,
@@ -9,7 +10,7 @@ export type EmployeeReturn = {
 
 const passwordGenerator = (email: string): string => {
     const basePassword = email.substring(0, email.indexOf('@'));
-    const defaultPassword = `@${basePassword}`;
+    const defaultPassword = `emp-password-${basePassword}`;
 
     return defaultPassword;
 }
@@ -119,16 +120,26 @@ const getAll = async (): Promise<EmployeeReturn> => {
 // delete is a keyword, not allowed as a function name
 const del = async (id: string): Promise<EmployeeReturn> => {
     try {
-        const deletedEmployee = await EmployeeAgent.findByIdAndDelete(id);
-
-        if (!deletedEmployee) {
+        const employee: EmployeeDocument | null = await EmployeeAgent.findById(id);
+        if (!employee) {
             return {
                 status: 'Failed',
                 message: `Employee with ID: ${id} not found`,
                 data: null
             };
         }
-        
+
+        if (employee.role === adminRoles.ADMIN || employee.role === adminRoles.SUPERADMIN) {
+            return {
+                status: 'Error',
+                message: 'Unauthorized admin deletion!',
+                data: null
+            };    
+        }
+
+        const deletedEmployee: EmployeeDocument | null = await 
+            EmployeeAgent.findByIdAndDelete(id);
+
         return {
             status: 'Success',
             data: deletedEmployee,

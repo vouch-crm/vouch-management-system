@@ -3,9 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.employeeServices = void 0;
 const employeeModel_1 = require("../models/employeeModel");
 const mongodb_1 = require("mongodb");
+const enums_1 = require("./enums");
 const passwordGenerator = (email) => {
     const basePassword = email.substring(0, email.indexOf('@'));
-    const defaultPassword = `@${basePassword}`;
+    const defaultPassword = `emp-password-${basePassword}`;
     return defaultPassword;
 };
 const generateProbationDate = (joinDate) => {
@@ -105,14 +106,22 @@ const getAll = async () => {
 // delete is a keyword, not allowed as a function name
 const del = async (id) => {
     try {
-        const deletedEmployee = await employeeModel_1.EmployeeAgent.findByIdAndDelete(id);
-        if (!deletedEmployee) {
+        const employee = await employeeModel_1.EmployeeAgent.findById(id);
+        if (!employee) {
             return {
                 status: 'Failed',
                 message: `Employee with ID: ${id} not found`,
                 data: null
             };
         }
+        if (employee.role === enums_1.adminRoles.ADMIN || employee.role === enums_1.adminRoles.SUPERADMIN) {
+            return {
+                status: 'Error',
+                message: 'Unauthorized admin deletion!',
+                data: null
+            };
+        }
+        const deletedEmployee = await employeeModel_1.EmployeeAgent.findByIdAndDelete(id);
         return {
             status: 'Success',
             data: deletedEmployee,
