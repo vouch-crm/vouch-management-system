@@ -3,8 +3,7 @@ import { Request, Response, NextFunction } from 'express'
 
 const createEmployeeBodyValidationRules = () => {
     return [
-        body('joinDate').exists().withMessage('JoinDate not provided').isDate()
-            .withMessage('Invalid value for joinDate field'),
+        body('joinDate').exists().withMessage('JoinDate not provided'),
         body('email').exists().withMessage('Email not provided').isEmail()
             .withMessage('Invalid value for email field'),
         body('firstName').exists().withMessage('First-name not provided'),

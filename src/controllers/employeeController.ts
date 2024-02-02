@@ -5,6 +5,15 @@ import { EmployeeDocument, EmployeeInput, EmployeeLogin } from '../models/employ
 import { validationFunctions } from '../middlewares/validation'
 import { checkIfAdmin } from '../middlewares/adminMiddleware'
 import { tokenServices } from '../services/tokenServices'
+import { s3 } from '../services/s3Services';
+import multer from "multer";
+import { imageFilter } from '../services/multerImageFilter'
+
+const upload = multer({
+    fileFilter: imageFilter
+});
+
+
 
 const employeeRouter = express.Router();
 
@@ -60,7 +69,8 @@ const login = async (req: Request, res: Response) => {
     const tokenResponse = tokenServices.generateToken(employeeID, employeeEmail);
     if (tokenResponse.status === 'Success') {
         res.status(200).json({
-            token: tokenResponse.token
+            token: tokenResponse.token,
+            data: dbResponse.data
         });
     }
     else {
@@ -143,6 +153,40 @@ const update = async (req: Request, res: Response) => {
     });
 }
 
+const uploadImage = async (req: Request, res: Response) => {
+    try {
+        const employeeID: string = req.query.id as string;
+        const uploadParams = {
+            Bucket: 'vouch-crm',
+            Key: req.file?.originalname || '',
+            Body: req.file?.buffer || '',
+        };
+
+        const result = await s3.upload(uploadParams).promise();
+        const employeeData = {
+            image: result.Location
+        }
+        const dbResponse: EmployeeReturn = await employeeServices.update(employeeID, employeeData);
+        if (dbResponse.status === 'failed') {
+            return res.status(400).json({
+                message: dbResponse.message
+            });
+        }
+        else if (dbResponse.status === 'error') {
+            return res.status(500).json({
+                message: dbResponse.message
+            });
+        }
+        res.status(201).json({
+            message: 'file uploaded successfuly!'
+        });
+
+    } catch (error) {
+        console.log(error)
+        res.status(500)
+    }
+}
+
 employeeRouter.post('/employee', checkIfAdmin, validationFunctions.createEmployeeBodyValidationRules(),
     validationFunctions.validationMiddleware, create);
 employeeRouter.post('/employee-login', login);
@@ -150,5 +194,6 @@ employeeRouter.get('/employee', checkIfAdmin, getAll);
 employeeRouter.get('/employee/:id', checkIfAdmin, getEmployeeByID);
 employeeRouter.delete('/employee/:id', checkIfAdmin, del);
 employeeRouter.put('/employee/:id', checkIfAdmin, update);
+employeeRouter.post('/employee-image', upload.single('file'), uploadImage);
 
 export default employeeRouter;
