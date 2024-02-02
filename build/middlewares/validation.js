@@ -4,8 +4,7 @@ exports.validationFunctions = void 0;
 const express_validator_1 = require("express-validator");
 const createEmployeeBodyValidationRules = () => {
     return [
-        (0, express_validator_1.body)('joinDate').exists().withMessage('JoinDate not provided').isDate()
-            .withMessage('Invalid value for joinDate field'),
+        (0, express_validator_1.body)('joinDate').exists().withMessage('JoinDate not provided'),
         (0, express_validator_1.body)('email').exists().withMessage('Email not provided').isEmail()
             .withMessage('Invalid value for email field'),
         (0, express_validator_1.body)('firstName').exists().withMessage('First-name not provided'),

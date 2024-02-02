@@ -9,6 +9,12 @@ const hashingServices_1 = require("../services/hashingServices");
 const validation_1 = require("../middlewares/validation");
 const adminMiddleware_1 = require("../middlewares/adminMiddleware");
 const tokenServices_1 = require("../services/tokenServices");
+const s3Services_1 = require("../services/s3Services");
+const multer_1 = __importDefault(require("multer"));
+const multerImageFilter_1 = require("../services/multerImageFilter");
+const upload = (0, multer_1.default)({
+    fileFilter: multerImageFilter_1.imageFilter
+});
 const employeeRouter = express_1.default.Router();
 const create = async (req, res) => {
     const requestData = req.body;
@@ -44,7 +50,7 @@ const login = async (req, res) => {
     const employeePassword = dbResponse.data?.password;
     const passwordChecker = await hashingServices_1.hashingServices.verifyHash(requestData.password, employeePassword);
     if (!passwordChecker) {
-        res.status(400).json({
+        return res.status(400).json({
             message: 'Invalid email or password!'
         });
     }
@@ -53,8 +59,10 @@ const login = async (req, res) => {
     const tokenResponse = tokenServices_1.tokenServices.generateToken(employeeID, employeeEmail);
     if (tokenResponse.status === 'Success') {
         res.status(200).json({
-            token: tokenResponse.token
+            token: tokenResponse.token,
+            data: dbResponse.data
         });
+        console.log(dbResponse.data);
     }
     else {
         res.status(400).json({
@@ -126,10 +134,43 @@ const update = async (req, res) => {
         data: dbResponse.data
     });
 };
+const uploadImage = async (req, res) => {
+    try {
+        const employeeID = req.query.id;
+        const uploadParams = {
+            Bucket: 'vouch-crm',
+            Key: req.file?.originalname || '',
+            Body: req.file?.buffer || '',
+        };
+        const result = await s3Services_1.s3.upload(uploadParams).promise();
+        const employeeData = {
+            image: result.Location
+        };
+        const dbResponse = await employeeServices_1.employeeServices.update(employeeID, employeeData);
+        if (dbResponse.status === 'failed') {
+            return res.status(400).json({
+                message: dbResponse.message
+            });
+        }
+        else if (dbResponse.status === 'error') {
+            return res.status(500).json({
+                message: dbResponse.message
+            });
+        }
+        res.status(201).json({
+            message: 'file uploaded successfuly!'
+        });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500);
+    }
+};
 employeeRouter.post('/employee', adminMiddleware_1.checkIfAdmin, validation_1.validationFunctions.createEmployeeBodyValidationRules(), validation_1.validationFunctions.validationMiddleware, create);
 employeeRouter.post('/employee-login', login);
 employeeRouter.get('/employee', adminMiddleware_1.checkIfAdmin, getAll);
 employeeRouter.get('/employee/:id', adminMiddleware_1.checkIfAdmin, getEmployeeByID);
 employeeRouter.delete('/employee/:id', adminMiddleware_1.checkIfAdmin, del);
 employeeRouter.put('/employee/:id', adminMiddleware_1.checkIfAdmin, update);
+employeeRouter.post('/employee-image', upload.single('file'), uploadImage);
 exports.default = employeeRouter;

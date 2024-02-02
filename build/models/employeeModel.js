@@ -53,7 +53,7 @@ const employeeSchema = new mongoose_1.Schema({
     manager: String,
     noticePeriod: Number,
     paymentCurrency: String,
-    maritalStatus: String,
+    martialStatus: String,
     personalEmail: String,
     personalMobile: String,
     address: String,
