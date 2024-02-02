@@ -60,7 +60,7 @@ const login = async (req: Request, res: Response) => {
     const passwordChecker: boolean = await hashingServices.verifyHash(
         requestData.password, employeePassword);
     if (!passwordChecker) {
-        res.status(400).json({
+        return res.status(400).json({
             message: 'Invalid email or password!'
         });
     }
