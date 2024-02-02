@@ -39,7 +39,6 @@ const create = async (req: Request, res: Response) => {
         message: dbResponse.message,
         data: dbResponse.data
     })
-    console.log(dbResponse.data)
 }
 
 const login = async (req: Request, res: Response) => {
@@ -73,6 +72,8 @@ const login = async (req: Request, res: Response) => {
             token: tokenResponse.token,
             data: dbResponse.data
         });
+    console.log(dbResponse.data)
+
     }
     else {
         res.status(400).json({
