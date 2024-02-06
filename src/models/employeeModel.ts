@@ -29,6 +29,7 @@ type EmployeeDocument = {
     image?: string,
     status?: string,
     role?: string
+    hourlyRate?: number
 }
 
 type EmployeeInput = {
@@ -57,6 +58,7 @@ type EmployeeInput = {
     address?: EmployeeDocument['address'],
     image?: EmployeeDocument['image'],
     status?: EmployeeDocument['status']
+    hourlyRate?: EmployeeDocument['hourlyRate']
 }
 
 type EmployeeLogin = {
@@ -98,6 +100,7 @@ const employeeSchema: Schema = new Schema({
     address: String,
     image: String,
     status: String,
+    hourlyRate: Number,
     role: {
         type: String,
         default: null
