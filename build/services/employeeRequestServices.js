@@ -61,30 +61,6 @@ const getByID = async (ID) => {
         };
     }
 };
-const update = async (ID, requestData) => {
-    try {
-        const updatedRequest = await employeeRequests_1.EmployeeRequestAgent.findByIdAndUpdate(ID, requestData, { new: true });
-        if (!updatedRequest) {
-            return {
-                status: enums_1.serviceStatuses.FAILED,
-                message: `No matching requests for ID = ${ID}`,
-                data: null
-            };
-        }
-        return {
-            status: enums_1.serviceStatuses.SUCCESS,
-            message: 'Request updated successfuly!',
-            data: updatedRequest
-        };
-    }
-    catch (error) {
-        return {
-            status: enums_1.serviceStatuses.ERROR,
-            message: `Error updating request with ID = ${ID} : ${error}`,
-            data: null
-        };
-    }
-};
 const del = async (ID) => {
     try {
         const deletedRequest = await employeeRequests_1.EmployeeRequestAgent.findByIdAndDelete(ID);
@@ -113,6 +89,5 @@ exports.employeeRequestServices = {
     create,
     getAll,
     getByID,
-    update,
     del
 };

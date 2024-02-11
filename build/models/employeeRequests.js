@@ -27,7 +27,6 @@ exports.EmployeeRequestAgent = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 const employeeRequestSchema = new mongoose_1.Schema({
     type: String,
-    status: String,
     empID: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: 'Employee',

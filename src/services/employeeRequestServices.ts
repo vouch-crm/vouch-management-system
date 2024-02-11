@@ -70,33 +70,6 @@ const getByID = async (ID: string): Promise<employeeRequestReturn> => {
     }
 }
 
-const update = async (
-    ID: string, requestData: Record<string, any> ): Promise<employeeRequestReturn> => {
-        try {
-            const updatedRequest: EmployeeRequestDocument | null = await EmployeeRequestAgent.findByIdAndUpdate(
-                ID, requestData, {new: true});
-            if (!updatedRequest) {
-                return {
-                    status: serviceStatuses.FAILED,
-                    message: `No matching requests for ID = ${ID}`,
-                    data: null
-                }
-            }
-
-            return {
-                status: serviceStatuses.SUCCESS,
-                message: 'Request updated successfuly!',
-                data: updatedRequest
-            }
-        } catch (error) {
-            return {
-                status: serviceStatuses.ERROR,
-                message: `Error updating request with ID = ${ID} : ${error}`,
-                data: null
-            }
-        }
-    }
-
 const del = async (ID: string): Promise<employeeRequestReturn> => {
     try {
         const deletedRequest: EmployeeRequestDocument | null = await EmployeeRequestAgent.findByIdAndDelete(ID);
@@ -126,6 +99,5 @@ export const employeeRequestServices = {
     create,
     getAll,
     getByID,
-    update,
     del
 }

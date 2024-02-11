@@ -9,7 +9,6 @@ const empRequestRouter = express.Router();
 
 const create = async (req: Request, res: Response) => {
     const requestData = req.body;
-    const status = 'pending';
     let requestType: string;
     switch (requestData.type) {
         case employeeRequests.EARLYLEAVE:
@@ -32,7 +31,6 @@ const create = async (req: Request, res: Response) => {
 
     const employeeRequestData: EmployeeRequestDocument = {
         type: requestData.type,
-        status: status,
         requestedDay: requestData.requestedDay,
         empID: requestData.empID,       
     }
@@ -82,35 +80,6 @@ const getByID = async (req: Request, res: Response) => {
     });
 }
 
-const update = async (req: Request, res: Response) => {
-    const ID = req.params.id;
-    const status = req.body.status;
-    if (status !== 'Accepted' && status !== 'Rejected') {
-        return res.status(400).json({
-            message: 'Invalid status'
-        });
-    }
-    const requestStatus = {
-        status: status
-    }
-    const request: employeeRequestReturn = await employeeRequestServices.update(ID, requestStatus);
-    
-    if (request.status === serviceStatuses.FAILED) {
-        return res.status(404).json({
-            message: request.message
-        });
-    } else if (request.status === serviceStatuses.ERROR) {
-        return res.status(400).json({
-            message: request.message
-        });
-    }
-
-    res.status(200).json({
-        message: request.message,
-        data: request.data
-    });
-}
-
 const del = async (req: Request, res: Response) => {
     const ID = req.params.id;
     const request: employeeRequestReturn = await employeeRequestServices.del(ID);
@@ -133,7 +102,6 @@ empRequestRouter.post('/employee-request', validationFunctions.createEmployeeReq
     validationFunctions.validationMiddleware, create);
 empRequestRouter.get('/employee-request', checkIfAdmin, getAll);
 empRequestRouter.get('/employee-request/:id', checkIfAdmin, getByID);
-empRequestRouter.put('/employee-request/:id', checkIfAdmin, update);
 empRequestRouter.delete('/employee-request/:id', checkIfAdmin, del);
 
 export default empRequestRouter;
