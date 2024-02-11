@@ -59,9 +59,19 @@ const employeeSchema = new mongoose_1.Schema({
     address: String,
     image: String,
     status: String,
+    hourlyRate: Number,
     role: {
         type: String,
         default: null
+    },
+    financialData: {
+        bankName: String,
+        branchName: String,
+        sortCode: String,
+        accountNumber: String,
+        accountHolderName: String,
+        buildingSociety: String,
+        buildingSocietyRef: String
     }
 });
 const EmployeeAgent = mongoose_1.default.model('Employee', employeeSchema);

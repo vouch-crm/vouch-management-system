@@ -29,7 +29,16 @@ type EmployeeDocument = {
     image?: string,
     status?: string,
     role?: string
-    hourlyRate?: number
+    hourlyRate?: number,
+    financialData?: {
+        bankName: string,
+        branchName: string,
+        sortCode: string,
+        accountNumber: string,
+        accountHolderName: string,
+        buildingSociety: string,
+        buildingSocietyRef: string
+    }
 }
 
 type EmployeeInput = {
@@ -104,6 +113,15 @@ const employeeSchema: Schema = new Schema({
     role: {
         type: String,
         default: null
+    },
+    financialData: {
+        bankName: String,
+        branchName: String,
+        sortCode: String,
+        accountNumber: String,
+        accountHolderName: String,
+        buildingSociety: String,
+        buildingSocietyRef: String
     }
 });
 

@@ -195,7 +195,7 @@ employeeRouter.post('/employee-login', login);
 employeeRouter.get('/employee', checkIfAdmin, getAll);
 employeeRouter.get('/employee/:id', checkIfAdmin, getEmployeeByID);
 employeeRouter.delete('/employee/:id', checkIfAdmin, del);
-employeeRouter.put('/employee/:id', checkIfAdmin, update);
+employeeRouter.put('/employee/:id', update);
 employeeRouter.post('/employee-image', upload.single('file'), uploadImage);
 
 export default employeeRouter;

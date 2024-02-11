@@ -171,6 +171,6 @@ employeeRouter.post('/employee-login', login);
 employeeRouter.get('/employee', adminMiddleware_1.checkIfAdmin, getAll);
 employeeRouter.get('/employee/:id', adminMiddleware_1.checkIfAdmin, getEmployeeByID);
 employeeRouter.delete('/employee/:id', adminMiddleware_1.checkIfAdmin, del);
-employeeRouter.put('/employee/:id', adminMiddleware_1.checkIfAdmin, update);
+employeeRouter.put('/employee/:id', update);
 employeeRouter.post('/employee-image', upload.single('file'), uploadImage);
 exports.default = employeeRouter;
