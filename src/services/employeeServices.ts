@@ -66,7 +66,7 @@ const getEmployeeByID = async (ID: string): Promise<EmployeeReturn> => {
         }
     } catch (error) {
         return {
-            status: 'Success',
+            status: 'Error',
             message: `error getting employee with ID:${ID}: ${error}`,
             data: null
         }

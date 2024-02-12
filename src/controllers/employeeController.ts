@@ -1,19 +1,22 @@
-import express, { Request, Response } from 'express'
-import { employeeServices, EmployeeReturn } from '../services/employeeServices'
-import { hashingServices } from '../services/hashingServices'
-import { EmployeeDocument, EmployeeInput, EmployeeLogin } from '../models/employeeModel'
-import { validationFunctions } from '../middlewares/validation'
-import { checkIfAdmin } from '../middlewares/adminMiddleware'
-import { tokenServices } from '../services/tokenServices'
-import { s3 } from '../services/s3Services';
+import express, { Request, Response } from 'express';
+import { employeeServices, EmployeeReturn } from '../services/employeeServices';
+import { hashingServices } from '../services/hashingServices';
+import {EmployeeDocument, EmployeeInput, EmployeeLogin } from '../models/employeeModel';
+import { validationFunctions } from '../middlewares/validation';
+import { checkIfAdmin } from '../middlewares/adminMiddleware';
+import { tokenServices } from '../services/tokenServices';
+import { s3 } from '../services/s3Config';
 import multer from "multer";
-import { imageFilter } from '../services/multerImageFilter'
+import { imageFilter } from '../services/multerImageFilter';
+import { serviceStatuses } from '../services/enums';
+import { S3Services } from '../services/s3Services';
 
 const upload = multer({
     fileFilter: imageFilter
 });
 
-
+const storage = multer.memoryStorage();
+const uploadMulter = multer({ storage });
 
 const employeeRouter = express.Router();
 
@@ -189,6 +192,47 @@ const uploadImage = async (req: Request, res: Response) => {
     }
 }
 
+const uploadFile = async (req: Request, res: Response) => {
+    if(!req.file) {
+        return res.status(400).json({
+            message: 'No file uploaded!'
+        });
+    }
+
+    const ID = req.params.id;
+    const dbResponse = await employeeServices.getEmployeeByID(ID);
+    if (dbResponse.status === serviceStatuses.FAILED) {
+        return res.status(404).json({
+            message: dbResponse.message
+        });
+    }
+
+    const fileContent = req.file.buffer;
+    const contentType = req.file.mimetype;
+    const fileName = `${ID}-Performance-Doc`;
+    const s3Response = await S3Services.uploadFile(fileContent, fileName, contentType);
+    if(s3Response.status !== serviceStatuses.SUCCESS) {
+        return res.status(400).json({
+            message: s3Response.message
+        });
+    }
+
+    const performanceDocURL = s3Response.data as string;
+    const employeeData = {
+        performanceDocument: performanceDocURL
+    }
+    const dbResponse2 = await employeeServices.update(ID, employeeData);
+    if (dbResponse2.status !== serviceStatuses.SUCCESS) {
+        return res.status(400).json({
+            message: dbResponse2.message
+        });
+    }
+
+    res.status(200).json({
+        message: dbResponse2.message
+    });
+}
+
 employeeRouter.post('/employee', checkIfAdmin, validationFunctions.createEmployeeBodyValidationRules(),
     validationFunctions.validationMiddleware, create);
 employeeRouter.post('/employee-login', login);
@@ -197,5 +241,6 @@ employeeRouter.get('/employee/:id', checkIfAdmin, getEmployeeByID);
 employeeRouter.delete('/employee/:id', checkIfAdmin, del);
 employeeRouter.put('/employee/:id', update);
 employeeRouter.post('/employee-image', upload.single('file'), uploadImage);
+employeeRouter.put('/employee-upload-performance/:id', uploadMulter.single('file'), uploadFile);
 
 export default employeeRouter;

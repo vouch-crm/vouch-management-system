@@ -9,12 +9,16 @@ const hashingServices_1 = require("../services/hashingServices");
 const validation_1 = require("../middlewares/validation");
 const adminMiddleware_1 = require("../middlewares/adminMiddleware");
 const tokenServices_1 = require("../services/tokenServices");
-const s3Services_1 = require("../services/s3Services");
+const s3Config_1 = require("../services/s3Config");
 const multer_1 = __importDefault(require("multer"));
 const multerImageFilter_1 = require("../services/multerImageFilter");
+const enums_1 = require("../services/enums");
+const s3Services_1 = require("../services/s3Services");
 const upload = (0, multer_1.default)({
     fileFilter: multerImageFilter_1.imageFilter
 });
+const storage = multer_1.default.memoryStorage();
+const uploadMulter = (0, multer_1.default)({ storage });
 const employeeRouter = express_1.default.Router();
 const create = async (req, res) => {
     const requestData = req.body;
@@ -142,7 +146,7 @@ const uploadImage = async (req, res) => {
             Key: req.file?.originalname || '',
             Body: req.file?.buffer || '',
         };
-        const result = await s3Services_1.s3.upload(uploadParams).promise();
+        const result = await s3Config_1.s3.upload(uploadParams).promise();
         const employeeData = {
             image: result.Location
         };
@@ -166,6 +170,42 @@ const uploadImage = async (req, res) => {
         res.status(500);
     }
 };
+const uploadFile = async (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({
+            message: 'No file uploaded!'
+        });
+    }
+    const ID = req.params.id;
+    const dbResponse = await employeeServices_1.employeeServices.getEmployeeByID(ID);
+    if (dbResponse.status === enums_1.serviceStatuses.FAILED) {
+        return res.status(404).json({
+            message: dbResponse.message
+        });
+    }
+    const fileContent = req.file.buffer;
+    const contentType = req.file.mimetype;
+    const fileName = `${ID}-Performance-Doc`;
+    const s3Response = await s3Services_1.S3Services.uploadFile(fileContent, fileName, contentType);
+    if (s3Response.status !== enums_1.serviceStatuses.SUCCESS) {
+        return res.status(400).json({
+            message: s3Response.message
+        });
+    }
+    const performanceDocURL = s3Response.data;
+    const employeeData = {
+        performanceDocument: performanceDocURL
+    };
+    const dbResponse2 = await employeeServices_1.employeeServices.update(ID, employeeData);
+    if (dbResponse2.status !== enums_1.serviceStatuses.SUCCESS) {
+        return res.status(400).json({
+            message: dbResponse2.message
+        });
+    }
+    res.status(200).json({
+        message: dbResponse2.message
+    });
+};
 employeeRouter.post('/employee', adminMiddleware_1.checkIfAdmin, validation_1.validationFunctions.createEmployeeBodyValidationRules(), validation_1.validationFunctions.validationMiddleware, create);
 employeeRouter.post('/employee-login', login);
 employeeRouter.get('/employee', adminMiddleware_1.checkIfAdmin, getAll);
@@ -173,4 +213,5 @@ employeeRouter.get('/employee/:id', adminMiddleware_1.checkIfAdmin, getEmployeeB
 employeeRouter.delete('/employee/:id', adminMiddleware_1.checkIfAdmin, del);
 employeeRouter.put('/employee/:id', update);
 employeeRouter.post('/employee-image', upload.single('file'), uploadImage);
+employeeRouter.put('/employee-upload-performance/:id', uploadMulter.single('file'), uploadFile);
 exports.default = employeeRouter;

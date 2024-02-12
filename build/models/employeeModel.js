@@ -72,7 +72,8 @@ const employeeSchema = new mongoose_1.Schema({
         accountHolderName: String,
         buildingSociety: String,
         buildingSocietyRef: String
-    }
+    },
+    performanceDocument: String
 });
 const EmployeeAgent = mongoose_1.default.model('Employee', employeeSchema);
 exports.EmployeeAgent = EmployeeAgent;

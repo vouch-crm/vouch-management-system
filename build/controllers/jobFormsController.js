@@ -29,7 +29,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const jobFormServices_1 = require("../services/jobFormServices");
-const s3Services_1 = require("../services/s3Services");
+const s3Config_1 = require("../services/s3Config");
 const multer_1 = __importDefault(require("multer"));
 const mime = __importStar(require("mime"));
 const upload = (0, multer_1.default)();
@@ -89,7 +89,7 @@ const uploadFile = async (req, res) => {
             Body: req.file?.buffer || '',
             ContentType: mime.getType(req.file?.originalname || '')
         };
-        const result = await s3Services_1.s3.upload(uploadParams).promise();
+        const result = await s3Config_1.s3.upload(uploadParams).promise();
         const jobFormData = {
             client: clientID,
             [formName]: {

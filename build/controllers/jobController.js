@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const jobServices_1 = require("../services/jobServices");
-const s3Services_1 = require("../services/s3Services");
+const s3Config_1 = require("../services/s3Config");
 const multer_1 = __importDefault(require("multer"));
 const upload = (0, multer_1.default)();
 const jobRouter = express_1.default.Router();
@@ -114,7 +114,7 @@ const uploadFile = async (req, res) => {
             Key: req.file?.originalname || '',
             Body: req.file?.buffer || '',
         };
-        const result = await s3Services_1.s3.upload(uploadParams).promise();
+        const result = await s3Config_1.s3.upload(uploadParams).promise();
         const jobData = {
             client: clientID,
             [fieldName]: result.Location

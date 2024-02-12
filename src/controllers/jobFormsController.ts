@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express'
 import mongoose from 'mongoose'
 import { jobFormServices, IReturnJobForm } from '../services/jobFormServices'
 import { IJobForm, jobFormsAgent } from '../models/jobFormsModel'
-import { s3 } from '../services/s3Services';
+import { s3 } from '../services/s3Config';
 import multer from 'multer'
 import * as mime from 'mime'
 const upload = multer();

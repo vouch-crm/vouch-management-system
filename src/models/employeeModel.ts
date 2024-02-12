@@ -38,7 +38,8 @@ type EmployeeDocument = {
         accountHolderName: string,
         buildingSociety: string,
         buildingSocietyRef: string
-    }
+    },
+    performanceDocument?: string
 }
 
 type EmployeeInput = {
@@ -122,7 +123,8 @@ const employeeSchema: Schema = new Schema({
         accountHolderName: String,
         buildingSociety: String,
         buildingSocietyRef: String
-    }
+    },
+    performanceDocument: String
 });
 
 const EmployeeAgent = mongoose.model<EmployeeDocument>('Employee', employeeSchema);
