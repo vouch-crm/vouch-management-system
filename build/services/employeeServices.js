@@ -62,6 +62,19 @@ const getEmployeeByID = async (ID) => {
         };
     }
 };
+const checkEmployeeExist = async (ID) => {
+    try {
+        const employee = await employeeModel_1.EmployeeAgent.findById(ID);
+        if (!employee) {
+            return false;
+        }
+        return true;
+    }
+    catch (error) {
+        console.error(`Error checking employee existence: ${error}`);
+        return false;
+    }
+};
 const getEmployeeByEmail = async (email) => {
     try {
         const employee = await employeeModel_1.EmployeeAgent.findOne({ email });
@@ -168,5 +181,6 @@ exports.employeeServices = {
     del,
     update,
     getEmployeeByID,
+    checkEmployeeExist,
     getEmployeeByEmail
 };

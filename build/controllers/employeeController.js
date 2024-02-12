@@ -177,10 +177,10 @@ const uploadFile = async (req, res) => {
         });
     }
     const ID = req.params.id;
-    const dbResponse = await employeeServices_1.employeeServices.getEmployeeByID(ID);
-    if (dbResponse.status === enums_1.serviceStatuses.FAILED) {
+    const empExist = await employeeServices_1.employeeServices.checkEmployeeExist(ID);
+    if (!empExist) {
         return res.status(404).json({
-            message: dbResponse.message
+            message: `No employee with ID: ${ID}`
         });
     }
     const fileContent = req.file.buffer;

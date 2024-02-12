@@ -200,10 +200,10 @@ const uploadFile = async (req: Request, res: Response) => {
     }
 
     const ID = req.params.id;
-    const dbResponse = await employeeServices.getEmployeeByID(ID);
-    if (dbResponse.status === serviceStatuses.FAILED) {
+    const empExist = await employeeServices.checkEmployeeExist(ID);
+    if (!empExist) {
         return res.status(404).json({
-            message: dbResponse.message
+            message: `No employee with ID: ${ID}`
         });
     }
 

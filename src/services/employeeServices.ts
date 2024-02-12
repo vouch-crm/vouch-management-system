@@ -73,6 +73,21 @@ const getEmployeeByID = async (ID: string): Promise<EmployeeReturn> => {
     }
 }
 
+const checkEmployeeExist = async (ID: string): Promise<boolean> => {
+    try {
+        const employee: EmployeeDocument | null = await EmployeeAgent.findById(ID);
+
+        if (!employee) {
+            return false;
+        }
+
+        return true;
+    } catch (error) {
+        console.error(`Error checking employee existence: ${error}`);
+        return false;
+    }
+}
+
 const getEmployeeByEmail = async (email: string): Promise<EmployeeReturn> => {
     try {
         const employee: EmployeeDocument | null = await EmployeeAgent.findOne({email});
@@ -188,5 +203,6 @@ export const employeeServices = {
     del,
     update,
     getEmployeeByID,
+    checkEmployeeExist,
     getEmployeeByEmail
 }
