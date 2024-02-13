@@ -105,15 +105,13 @@ const del = async (req: Request, res: Response) => {
 
     res.status(200).json({
         message: dbResponse.message,
-        data: dbResponse.data
     });
 }
 
 salaryUpdatesRouter.post('/employee-salary', checkIfAdmin, validationFunctions
-    .createSalaryUpdateBodyValidationRules, create);
-salaryUpdatesRouter.get('/employee-salary', checkIfAdmin, validationFunctions
-    .createSalaryUpdateBodyValidationRules, getAll);
-salaryUpdatesRouter.put('/employee-salary', checkIfAdmin, validationFunctions
-    .createSalaryUpdateBodyValidationRules, update);
-salaryUpdatesRouter.delete('/employee-salary', checkIfAdmin, validationFunctions
-    .createSalaryUpdateBodyValidationRules, del);
+    .createSalaryUpdateBodyValidationRules(), validationFunctions.validationMiddleware, create);
+salaryUpdatesRouter.get('/employee-salary', checkIfAdmin, getAll);
+salaryUpdatesRouter.put('/employee-salary/:id', checkIfAdmin, update);
+salaryUpdatesRouter.delete('/employee-salary/:id', checkIfAdmin, del);
+
+export default salaryUpdatesRouter;

@@ -99,14 +99,11 @@ const del = async (req, res) => {
     }
     res.status(200).json({
         message: dbResponse.message,
-        data: dbResponse.data
     });
 };
 salaryUpdatesRouter.post('/employee-salary', adminMiddleware_1.checkIfAdmin, validation_1.validationFunctions
-    .createSalaryUpdateBodyValidationRules, create);
-salaryUpdatesRouter.get('/employee-salary', adminMiddleware_1.checkIfAdmin, validation_1.validationFunctions
-    .createSalaryUpdateBodyValidationRules, getAll);
-salaryUpdatesRouter.put('/employee-salary', adminMiddleware_1.checkIfAdmin, validation_1.validationFunctions
-    .createSalaryUpdateBodyValidationRules, update);
-salaryUpdatesRouter.delete('/employee-salary', adminMiddleware_1.checkIfAdmin, validation_1.validationFunctions
-    .createSalaryUpdateBodyValidationRules, del);
+    .createSalaryUpdateBodyValidationRules(), validation_1.validationFunctions.validationMiddleware, create);
+salaryUpdatesRouter.get('/employee-salary', adminMiddleware_1.checkIfAdmin, getAll);
+salaryUpdatesRouter.put('/employee-salary/:id', adminMiddleware_1.checkIfAdmin, update);
+salaryUpdatesRouter.delete('/employee-salary/:id', adminMiddleware_1.checkIfAdmin, del);
+exports.default = salaryUpdatesRouter;

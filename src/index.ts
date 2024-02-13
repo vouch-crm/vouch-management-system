@@ -7,6 +7,7 @@ import jobFormRouter from './controllers/jobFormsController';
 import jobRouter from './controllers/jobController';
 import employeeRouter from './controllers/employeeController';
 import adminRouter from './controllers/adminController';
+import salaryUpdatesRouter from './controllers/salaryUpdatesController';
 import { utils } from './services/utils';
 import cors from 'cors';
 import morgan from 'morgan';
@@ -30,6 +31,7 @@ app.use(jobRouter);
 app.use(jobFormRouter);
 app.use(employeeRouter);
 app.use(adminRouter);
+app.use(salaryUpdatesRouter);
 
 app.get('/', (_req: Request, res: Response): void => {
     res.status(200).json({
