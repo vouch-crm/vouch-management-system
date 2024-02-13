@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.employmentType = exports.employeeRequests = exports.serviceStatuses = exports.adminRoles = void 0;
+exports.basis = exports.payFrequency = exports.employmentType = exports.employeeRequests = exports.serviceStatuses = exports.adminRoles = void 0;
 var adminRoles;
 (function (adminRoles) {
     adminRoles["SUPERADMIN"] = "superadmin";
@@ -25,3 +25,19 @@ var employmentType;
     employmentType["PARTTIME"] = "part-time";
     employmentType["CONTRACTOR"] = "contractor";
 })(employmentType || (exports.employmentType = employmentType = {}));
+var payFrequency;
+(function (payFrequency) {
+    payFrequency["WEEKLY"] = "weekly";
+    payFrequency["MONTHLY"] = "monthly";
+    payFrequency["FOUR_WEEKLY"] = "4-weekly";
+    payFrequency["BI_WEEKLY"] = "bi-weekly";
+    payFrequency["BI_MONTHLY"] = "bi-monthly";
+})(payFrequency || (exports.payFrequency = payFrequency = {}));
+var basis;
+(function (basis) {
+    basis["PER_HOUR"] = "per hour";
+    basis["PER_DAY"] = "per day";
+    basis["PER_WEEK"] = "per week";
+    basis["PER_MONTH"] = "per month";
+    basis["PER_ANNUM"] = "per annum";
+})(basis || (exports.basis = basis = {}));

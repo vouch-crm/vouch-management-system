@@ -21,3 +21,19 @@ export enum employmentType {
     PARTTIME = 'part-time',
     CONTRACTOR = 'contractor'
 }
+
+export enum payFrequency {
+    WEEKLY = 'weekly',
+    MONTHLY = 'monthly',
+    FOUR_WEEKLY = '4-weekly',
+    BI_WEEKLY = 'bi-weekly',
+    BI_MONTHLY = 'bi-monthly'
+}
+
+export enum basis {
+    PER_HOUR = 'per hour',
+    PER_DAY = 'per day',
+    PER_WEEK = 'per week',
+    PER_MONTH = 'per month',
+    PER_ANNUM = 'per annum'
+}

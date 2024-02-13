@@ -21,6 +21,18 @@ const createEmployeeRequestBodyValidationRules = () => {
     ]
 }
 
+const createSalaryUpdateBodyValidationRules = () => {
+    return [
+        body('empID').exists().withMessage('empID not provided'),
+        body('amount').exists().withMessage('amount not provided').isNumeric()
+            .withMessage('Invalid value for amount field'),
+        body('basis').exists().withMessage('basis not provided'),
+        body('payFrequency').exists().withMessage('payFrequency not provided'),
+        body('startDate').exists().withMessage('startDate not provided').isDate()
+            .withMessage('Invalid value for startDate'),
+    ]
+}
+
 const validationMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (errors.isEmpty()) {
@@ -35,5 +47,6 @@ const validationMiddleware = async (req: Request, res: Response, next: NextFunct
 export const validationFunctions = {
     createEmployeeBodyValidationRules,
     validationMiddleware,
-    createEmployeeRequestBodyValidationRules
+    createEmployeeRequestBodyValidationRules,
+    createSalaryUpdateBodyValidationRules
 }

@@ -20,6 +20,17 @@ const createEmployeeRequestBodyValidationRules = () => {
         (0, express_validator_1.body)('empID').exists().withMessage('empID not provided'),
     ];
 };
+const createSalaryUpdateBodyValidationRules = () => {
+    return [
+        (0, express_validator_1.body)('empID').exists().withMessage('empID not provided'),
+        (0, express_validator_1.body)('amount').exists().withMessage('amount not provided').isNumeric()
+            .withMessage('Invalid value for amount field'),
+        (0, express_validator_1.body)('basis').exists().withMessage('basis not provided'),
+        (0, express_validator_1.body)('payFrequency').exists().withMessage('payFrequency not provided'),
+        (0, express_validator_1.body)('startDate').exists().withMessage('startDate not provided').isDate()
+            .withMessage('Invalid value for startDate'),
+    ];
+};
 const validationMiddleware = async (req, res, next) => {
     const errors = (0, express_validator_1.validationResult)(req);
     if (errors.isEmpty()) {
@@ -32,5 +43,6 @@ const validationMiddleware = async (req, res, next) => {
 exports.validationFunctions = {
     createEmployeeBodyValidationRules,
     validationMiddleware,
-    createEmployeeRequestBodyValidationRules
+    createEmployeeRequestBodyValidationRules,
+    createSalaryUpdateBodyValidationRules
 };
