@@ -123,7 +123,7 @@ const del = async (ID: string): Promise<employeeTrainingReturn> => {
     }
 }
 
-export const salaryUpdatesServices = {
+export const employeeTrainingServices = {
     create,
     getAll,
     getByID,

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.salaryUpdatesServices = void 0;
+exports.employeeTrainingServices = void 0;
 const employeeTraining_1 = require("../models/employeeTraining");
 const enums_1 = require("./enums");
 const create = async (trainingData) => {
@@ -111,7 +111,7 @@ const del = async (ID) => {
         };
     }
 };
-exports.salaryUpdatesServices = {
+exports.employeeTrainingServices = {
     create,
     getAll,
     getByID,

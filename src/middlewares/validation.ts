@@ -33,6 +33,14 @@ const createSalaryUpdateBodyValidationRules = () => {
     ]
 }
 
+const createTrainingBodyValidationRules = () => {
+    return [
+        body('empID').exists().withMessage('empID not provided'),
+        body('trainingTitle').exists().withMessage('trainingTitle not provided'),
+        body('trainingType').exists().withMessage('trainingType not provided')
+    ]
+}
+
 const validationMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (errors.isEmpty()) {
@@ -48,5 +56,6 @@ export const validationFunctions = {
     createEmployeeBodyValidationRules,
     validationMiddleware,
     createEmployeeRequestBodyValidationRules,
-    createSalaryUpdateBodyValidationRules
+    createSalaryUpdateBodyValidationRules,
+    createTrainingBodyValidationRules
 }

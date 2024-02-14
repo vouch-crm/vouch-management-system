@@ -31,6 +31,13 @@ const createSalaryUpdateBodyValidationRules = () => {
             .withMessage('Invalid value for startDate'),
     ];
 };
+const createTrainingBodyValidationRules = () => {
+    return [
+        (0, express_validator_1.body)('empID').exists().withMessage('empID not provided'),
+        (0, express_validator_1.body)('trainingTitle').exists().withMessage('trainingTitle not provided'),
+        (0, express_validator_1.body)('trainingType').exists().withMessage('trainingType not provided')
+    ];
+};
 const validationMiddleware = async (req, res, next) => {
     const errors = (0, express_validator_1.validationResult)(req);
     if (errors.isEmpty()) {
@@ -44,5 +51,6 @@ exports.validationFunctions = {
     createEmployeeBodyValidationRules,
     validationMiddleware,
     createEmployeeRequestBodyValidationRules,
-    createSalaryUpdateBodyValidationRules
+    createSalaryUpdateBodyValidationRules,
+    createTrainingBodyValidationRules
 };
