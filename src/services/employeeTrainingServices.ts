@@ -71,6 +71,24 @@ const getByID = async (ID: string): Promise<employeeTrainingReturn> => {
     }
 }
 
+const getEmployeeTraining = async (empID: string): Promise<employeeTrainingReturn> => {
+    try {
+        const employeeTrainings = await EmployeeTrainingAgent.find({empID: empID})
+            .populate('empID', 'firstName email title');
+        return {
+            status: serviceStatuses.SUCCESS,
+            message: null,
+            data: employeeTrainings
+        }
+    } catch (error) {
+        return {
+            status: serviceStatuses.ERROR,
+            message: `Error fetching data: ${error}`,
+            data: null
+        }
+    }
+}
+
 const update = async (id: string, salaryData: Record<string, any>): Promise<employeeTrainingReturn> => {
     try {
         const updatedTraining = await EmployeeTrainingAgent.findByIdAndUpdate(id, salaryData, {new: true});
@@ -127,6 +145,7 @@ export const employeeTrainingServices = {
     create,
     getAll,
     getByID,
+    getEmployeeTraining,
     update,
     del
 }

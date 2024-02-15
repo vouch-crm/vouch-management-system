@@ -65,6 +65,18 @@ const getAll = async (req, res) => {
         data: salaries.data
     });
 };
+const getEmployeeSalary = async (req, res) => {
+    const empID = req.params.id;
+    const dbResponse = await salaryUpdatesServices_1.salaryUpdatesServices.getEmployeeSalary(empID);
+    if (dbResponse.status !== enums_1.serviceStatuses.SUCCESS) {
+        return res.status(400).json({
+            message: dbResponse.message
+        });
+    }
+    res.status(200).json({
+        data: dbResponse.data
+    });
+};
 const update = async (req, res) => {
     const ID = req.params.id;
     const updatedData = req.body;
@@ -104,6 +116,7 @@ const del = async (req, res) => {
 salaryUpdatesRouter.post('/employee-salary', adminMiddleware_1.checkIfAdmin, validation_1.validationFunctions
     .createSalaryUpdateBodyValidationRules(), validation_1.validationFunctions.validationMiddleware, create);
 salaryUpdatesRouter.get('/employee-salary', adminMiddleware_1.checkIfAdmin, getAll);
+salaryUpdatesRouter.get('/employee-all-salaries/:id', adminMiddleware_1.checkIfAdmin, getEmployeeSalary);
 salaryUpdatesRouter.put('/employee-salary/:id', adminMiddleware_1.checkIfAdmin, update);
 salaryUpdatesRouter.delete('/employee-salary/:id', adminMiddleware_1.checkIfAdmin, del);
 exports.default = salaryUpdatesRouter;

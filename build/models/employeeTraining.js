@@ -44,5 +44,5 @@ const employeeTrainingSchema = new mongoose_1.Schema({
     outcome: String,
     notes: String
 });
-const EmployeeTrainingAgent = mongoose_1.default.model('SalaryUpdates', employeeTrainingSchema);
+const EmployeeTrainingAgent = mongoose_1.default.model('EmployeeTraining', employeeTrainingSchema);
 exports.EmployeeTrainingAgent = EmployeeTrainingAgent;

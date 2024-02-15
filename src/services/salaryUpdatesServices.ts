@@ -45,6 +45,24 @@ const getAll = async (): Promise<salaryUpdatesReturn> => {
     }
 }
 
+const getEmployeeSalary = async (empID: string): Promise<salaryUpdatesReturn> => {
+    try {
+        const employeeSalaries = await SalaryUpdatesAgent.find({empID: empID})
+            .populate('empID', 'firstName email title');
+        return {
+            status: serviceStatuses.SUCCESS,
+            message: null,
+            data: employeeSalaries
+        }
+    } catch (error) {
+        return {
+            status: serviceStatuses.ERROR,
+            message: `Error fetching data: ${error}`,
+            data: null
+        }
+    }
+}
+
 const update = async (id: string, salaryData: Record<string, any>): Promise<salaryUpdatesReturn> => {
     try {
         const updatedSalary = await SalaryUpdatesAgent.findByIdAndUpdate(id, salaryData, {new: true});
@@ -99,6 +117,7 @@ const del = async (ID: string): Promise<salaryUpdatesReturn> => {
 export const salaryUpdatesServices = {
     create,
     getAll,
+    getEmployeeSalary,
     update,
     del
 }

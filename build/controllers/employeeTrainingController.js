@@ -51,6 +51,18 @@ const getByID = async (req, res) => {
         data: dbResponse.data
     });
 };
+const getEmployeeTraining = async (req, res) => {
+    const empID = req.params.id;
+    const dbResponse = await employeeTrainingServices_1.employeeTrainingServices.getEmployeeTraining(empID);
+    if (dbResponse.status !== enums_1.serviceStatuses.SUCCESS) {
+        return res.status(400).json({
+            message: dbResponse.message
+        });
+    }
+    res.status(200).json({
+        data: dbResponse.data
+    });
+};
 const update = async (req, res) => {
     const ID = req.params.id;
     const updatedTraining = req.body;
@@ -91,6 +103,7 @@ employeeTrainingRouter.post('/employee-training', adminMiddleware_1.checkIfAdmin
     .createTrainingBodyValidationRules(), validation_1.validationFunctions.validationMiddleware, create);
 employeeTrainingRouter.get('/employee-training', adminMiddleware_1.checkIfAdmin, getAll);
 employeeTrainingRouter.get('/employee-training/:id', adminMiddleware_1.checkIfAdmin, getByID);
+employeeTrainingRouter.get('/employee-all-trainings/:id', adminMiddleware_1.checkIfAdmin, getEmployeeTraining);
 employeeTrainingRouter.put('/employee-training/:id', adminMiddleware_1.checkIfAdmin, update);
 employeeTrainingRouter.delete('/employee-training/:id', adminMiddleware_1.checkIfAdmin, del);
 exports.default = employeeTrainingRouter;

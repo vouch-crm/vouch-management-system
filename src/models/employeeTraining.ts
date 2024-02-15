@@ -36,7 +36,7 @@ const employeeTrainingSchema = new Schema({
     notes: String
 });
 
-const EmployeeTrainingAgent = mongoose.model<EmployeeTrainingDocument>('SalaryUpdates',
+const EmployeeTrainingAgent = mongoose.model<EmployeeTrainingDocument>('EmployeeTraining',
     employeeTrainingSchema);
 
 

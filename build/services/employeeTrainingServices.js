@@ -62,6 +62,24 @@ const getByID = async (ID) => {
         };
     }
 };
+const getEmployeeTraining = async (empID) => {
+    try {
+        const employeeTrainings = await employeeTraining_1.EmployeeTrainingAgent.find({ empID: empID })
+            .populate('empID', 'firstName email title');
+        return {
+            status: enums_1.serviceStatuses.SUCCESS,
+            message: null,
+            data: employeeTrainings
+        };
+    }
+    catch (error) {
+        return {
+            status: enums_1.serviceStatuses.ERROR,
+            message: `Error fetching data: ${error}`,
+            data: null
+        };
+    }
+};
 const update = async (id, salaryData) => {
     try {
         const updatedTraining = await employeeTraining_1.EmployeeTrainingAgent.findByIdAndUpdate(id, salaryData, { new: true });
@@ -115,6 +133,7 @@ exports.employeeTrainingServices = {
     create,
     getAll,
     getByID,
+    getEmployeeTraining,
     update,
     del
 };

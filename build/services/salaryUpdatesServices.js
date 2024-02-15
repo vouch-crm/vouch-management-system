@@ -37,6 +37,24 @@ const getAll = async () => {
         };
     }
 };
+const getEmployeeSalary = async (empID) => {
+    try {
+        const employeeSalaries = await salaryUpdatesModel_1.SalaryUpdatesAgent.find({ empID: empID })
+            .populate('empID', 'firstName email title');
+        return {
+            status: enums_1.serviceStatuses.SUCCESS,
+            message: null,
+            data: employeeSalaries
+        };
+    }
+    catch (error) {
+        return {
+            status: enums_1.serviceStatuses.ERROR,
+            message: `Error fetching data: ${error}`,
+            data: null
+        };
+    }
+};
 const update = async (id, salaryData) => {
     try {
         const updatedSalary = await salaryUpdatesModel_1.SalaryUpdatesAgent.findByIdAndUpdate(id, salaryData, { new: true });
@@ -88,6 +106,7 @@ const del = async (ID) => {
 exports.salaryUpdatesServices = {
     create,
     getAll,
+    getEmployeeSalary,
     update,
     del
 };

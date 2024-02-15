@@ -70,6 +70,20 @@ const getAll = async (req: Request, res: Response) => {
     });
 }
 
+const getEmployeeSalary = async (req: Request, res: Response) => {
+    const empID = req.params.id;
+    const dbResponse = await salaryUpdatesServices.getEmployeeSalary(empID);
+    if (dbResponse.status !== serviceStatuses.SUCCESS) {
+        return res.status(400).json({
+            message: dbResponse.message
+        });
+    }
+
+    res.status(200).json({
+        data: dbResponse.data
+    });
+}
+
 const update = async (req: Request, res: Response) => {
     const ID = req.params.id;
     const updatedData: Record<string, any> = req.body;
@@ -111,6 +125,7 @@ const del = async (req: Request, res: Response) => {
 salaryUpdatesRouter.post('/employee-salary', checkIfAdmin, validationFunctions
     .createSalaryUpdateBodyValidationRules(), validationFunctions.validationMiddleware, create);
 salaryUpdatesRouter.get('/employee-salary', checkIfAdmin, getAll);
+salaryUpdatesRouter.get('/employee-all-salaries/:id', checkIfAdmin, getEmployeeSalary);
 salaryUpdatesRouter.put('/employee-salary/:id', checkIfAdmin, update);
 salaryUpdatesRouter.delete('/employee-salary/:id', checkIfAdmin, del);
 
