@@ -5,7 +5,8 @@ interface TaskSchema {
     client: Schema.Types.ObjectId;
     project: Schema.Types.ObjectId;
     access: string[];
-    estimatedTotalCost: number;
+    estimatedTotalHours: number;
+    estimatedTotalCost: number
     progress: number;
     billable: boolean;
     estimatedTime: number; // in hours
@@ -15,6 +16,7 @@ const taskSchema: Schema = new Schema({
     client: Schema.Types.ObjectId,
     project: Schema.Types.ObjectId,
     access: [String],
+    estimatedTotalHours: Number,
     estimatedTotalCost: Number,
     progress: Number,
     billable: Boolean,
