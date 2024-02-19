@@ -14,6 +14,7 @@ const employeeController_1 = __importDefault(require("./controllers/employeeCont
 const adminController_1 = __importDefault(require("./controllers/adminController"));
 const salaryUpdatesController_1 = __importDefault(require("./controllers/salaryUpdatesController"));
 const employeeTrainingController_1 = __importDefault(require("./controllers/employeeTrainingController"));
+const employeeRequestController_1 = __importDefault(require("./controllers/employeeRequestController"));
 const utils_1 = require("./services/utils");
 const cors_1 = __importDefault(require("cors"));
 const morgan_1 = __importDefault(require("morgan"));
@@ -33,6 +34,7 @@ app.use(employeeController_1.default);
 app.use(adminController_1.default);
 app.use(salaryUpdatesController_1.default);
 app.use(employeeTrainingController_1.default);
+app.use(employeeRequestController_1.default);
 app.get('/', (_req, res) => {
     res.status(200).json({
         message: 'Server Started!'
