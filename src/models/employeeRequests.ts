@@ -3,7 +3,11 @@ import mongoose, { Schema } from 'mongoose'
 type EmployeeRequestDocument = {
     type: string,
     empID: string,
-    requestedDay: Date
+    requestedDay: Date,
+    endDate?: Date,
+    notes?: string,
+    startDateFullDay?: boolean,
+    endDateFullDay?: boolean,
 }
 
 const employeeRequestSchema: Schema = new Schema({
@@ -13,7 +17,11 @@ const employeeRequestSchema: Schema = new Schema({
         ref: 'Employee',
         required: true
     },
-    requestedDay: Date
+    requestedDay: Date,
+    endDate: Date,
+    notes: String,
+    startDateFullDay: Boolean,
+    endDateFullDay: Boolean,
 });
 
 const EmployeeRequestAgent = mongoose

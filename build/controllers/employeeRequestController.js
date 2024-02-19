@@ -13,9 +13,6 @@ const create = async (req, res) => {
     const requestData = req.body;
     let requestType;
     switch (requestData.type) {
-        case enums_1.employeeRequests.EARLYLEAVE:
-            requestType = enums_1.employeeRequests.EARLYLEAVE;
-            break;
         case enums_1.employeeRequests.HOLIDAY:
             requestType = enums_1.employeeRequests.HOLIDAY;
             break;
@@ -34,6 +31,10 @@ const create = async (req, res) => {
         type: requestData.type,
         requestedDay: requestData.requestedDay,
         empID: requestData.empID,
+        endDate: requestData.endDate,
+        notes: requestData.notes,
+        startDateFullDay: requestData.startDateFullDay,
+        endDateFullDay: requestData.endDateFullDay
     };
     const dbResponse = await employeeRequestServices_1.employeeRequestServices.create(employeeRequestData);
     if (dbResponse.status !== enums_1.serviceStatuses.SUCCESS) {

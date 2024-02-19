@@ -32,7 +32,11 @@ const employeeRequestSchema = new mongoose_1.Schema({
         ref: 'Employee',
         required: true
     },
-    requestedDay: Date
+    requestedDay: Date,
+    endDate: Date,
+    notes: String,
+    startDateFullDay: Boolean,
+    endDateFullDay: Boolean,
 });
 const EmployeeRequestAgent = mongoose_1.default
     .model('EmployeeRequest', employeeRequestSchema);

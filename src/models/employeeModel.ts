@@ -39,7 +39,8 @@ type EmployeeDocument = {
         buildingSociety: string,
         buildingSocietyRef: string
     },
-    performanceDocument?: string
+    performanceDocument?: string,
+    holidayAllowance?: number
 }
 
 type EmployeeInput = {
@@ -124,7 +125,8 @@ const employeeSchema: Schema = new Schema({
         buildingSociety: String,
         buildingSocietyRef: String
     },
-    performanceDocument: String
+    performanceDocument: String,
+    holidayAllowance: Number
 });
 
 const EmployeeAgent = mongoose.model<EmployeeDocument>('Employee', employeeSchema);

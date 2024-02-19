@@ -17,7 +17,6 @@ var employeeRequests;
     employeeRequests["HOLIDAY"] = "holiday";
     employeeRequests["SICK"] = "sick";
     employeeRequests["WORKFROMHOME"] = "work-from-home";
-    employeeRequests["EARLYLEAVE"] = "early-leave";
 })(employeeRequests || (exports.employeeRequests = employeeRequests = {}));
 var employmentType;
 (function (employmentType) {

@@ -29,6 +29,7 @@ const taskSchema = new mongoose_1.Schema({
     client: mongoose_1.Schema.Types.ObjectId,
     project: mongoose_1.Schema.Types.ObjectId,
     access: [String],
+    estimatedTotalHours: Number,
     estimatedTotalCost: Number,
     progress: Number,
     billable: Boolean,

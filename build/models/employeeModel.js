@@ -73,7 +73,8 @@ const employeeSchema = new mongoose_1.Schema({
         buildingSociety: String,
         buildingSocietyRef: String
     },
-    performanceDocument: String
+    performanceDocument: String,
+    holidayAllowance: Number
 });
 const EmployeeAgent = mongoose_1.default.model('Employee', employeeSchema);
 exports.EmployeeAgent = EmployeeAgent;
