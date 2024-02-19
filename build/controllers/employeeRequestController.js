@@ -31,6 +31,10 @@ const create = async (req, res) => {
         type: requestData.type,
         requestedDay: requestData.requestedDay,
         empID: requestData.empID,
+        endDate: requestData.endDate,
+        notes: requestData.notes,
+        startDateFullDay: requestData.startDateFullDay,
+        endDateFullDay: requestData.endDateFullDay
     };
     const dbResponse = await employeeRequestServices_1.employeeRequestServices.create(employeeRequestData);
     if (dbResponse.status !== enums_1.serviceStatuses.SUCCESS) {
