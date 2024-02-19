@@ -33,9 +33,9 @@ app.use(jobRouter);
 app.use(jobFormRouter);
 app.use(employeeRouter);
 app.use(adminRouter);
+app.use(empRequestRouter);
 app.use(salaryUpdatesRouter);
 app.use(employeeTrainingRouter);
-app.use(empRequestRouter);
 
 app.get('/', (_req: Request, res: Response): void => {
     res.status(200).json({

@@ -32,9 +32,9 @@ app.use(jobController_1.default);
 app.use(jobFormsController_1.default);
 app.use(employeeController_1.default);
 app.use(adminController_1.default);
+app.use(employeeRequestController_1.default);
 app.use(salaryUpdatesController_1.default);
 app.use(employeeTrainingController_1.default);
-app.use(employeeRequestController_1.default);
 app.get('/', (_req, res) => {
     res.status(200).json({
         message: 'Server Started!'
