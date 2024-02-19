@@ -7,7 +7,7 @@ type EmployeeRequestDocument = {
     endDate?: Date,
     notes?: string,
     startDateFullDay?: boolean,
-    endDateFullDay?: boolean 
+    endDateFullDay?: boolean,
 }
 
 const employeeRequestSchema: Schema = new Schema({
@@ -21,7 +21,7 @@ const employeeRequestSchema: Schema = new Schema({
     endDate: Date,
     notes: String,
     startDateFullDay: Boolean,
-    endDateFullDay: Boolean 
+    endDateFullDay: Boolean,
 });
 
 const EmployeeRequestAgent = mongoose

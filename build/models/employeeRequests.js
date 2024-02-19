@@ -36,7 +36,7 @@ const employeeRequestSchema = new mongoose_1.Schema({
     endDate: Date,
     notes: String,
     startDateFullDay: Boolean,
-    endDateFullDay: Boolean
+    endDateFullDay: Boolean,
 });
 const EmployeeRequestAgent = mongoose_1.default
     .model('EmployeeRequest', employeeRequestSchema);
