@@ -13,9 +13,6 @@ const create = async (req, res) => {
     const requestData = req.body;
     let requestType;
     switch (requestData.type) {
-        case enums_1.employeeRequests.EARLYLEAVE:
-            requestType = enums_1.employeeRequests.EARLYLEAVE;
-            break;
         case enums_1.employeeRequests.HOLIDAY:
             requestType = enums_1.employeeRequests.HOLIDAY;
             break;
