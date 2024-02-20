@@ -9,6 +9,7 @@ import employeeRouter from './controllers/employeeController';
 import adminRouter from './controllers/adminController';
 import salaryUpdatesRouter from './controllers/salaryUpdatesController';
 import employeeTrainingRouter from './controllers/employeeTrainingController';
+import empRequestRouter from './controllers/employeeRequestController';
 import { utils } from './services/utils';
 import cors from 'cors';
 import morgan from 'morgan';
@@ -32,6 +33,7 @@ app.use(jobRouter);
 app.use(jobFormRouter);
 app.use(employeeRouter);
 app.use(adminRouter);
+app.use(empRequestRouter);
 app.use(salaryUpdatesRouter);
 app.use(employeeTrainingRouter);
 
