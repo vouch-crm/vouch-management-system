@@ -14,8 +14,7 @@ const createEmployeeBodyValidationRules = () => {
 
 const createEmployeeRequestBodyValidationRules = () => {
     return [
-        body('requestedDay').exists().withMessage('requestedDay not provided').isDate()
-            .withMessage('Invalid value for requestedDay field'),
+        body('requestedDay').exists().withMessage('requestedDay not provided'),
         body('type').exists().withMessage('type not provided'),
         body('empID').exists().withMessage('empID not provided'),
     ]

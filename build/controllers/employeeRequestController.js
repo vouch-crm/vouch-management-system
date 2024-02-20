@@ -33,8 +33,8 @@ const create = async (req, res) => {
         empID: requestData.empID,
         endDate: requestData.endDate,
         notes: requestData.notes,
-        startDateFullDay: requestData.startDateFullDay,
-        endDateFullDay: requestData.endDateFullDay
+        startDateFullDay: requestData.startDateFullDay || true,
+        endDateFullDay: requestData.endDateFullDay || true
     };
     const dbResponse = await employeeRequestServices_1.employeeRequestServices.create(employeeRequestData);
     if (dbResponse.status !== enums_1.serviceStatuses.SUCCESS) {
