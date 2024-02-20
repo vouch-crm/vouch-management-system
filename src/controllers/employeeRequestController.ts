@@ -32,8 +32,8 @@ const create = async (req: Request, res: Response) => {
         empID: requestData.empID,
         endDate: requestData.endDate,
         notes: requestData.notes,
-        startDateFullDay: requestData.startDateFullDay,
-        endDateFullDay: requestData.endDateFullDay       
+        startDateFullDay: requestData.startDateFullDay || true,
+        endDateFullDay: requestData.endDateFullDay || true       
     }
     const dbResponse: employeeRequestReturn = await 
         employeeRequestServices.create(employeeRequestData);

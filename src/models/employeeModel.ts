@@ -40,7 +40,8 @@ type EmployeeDocument = {
         buildingSocietyRef: string
     },
     performanceDocument?: string,
-    holidayAllowance?: number
+    holidayAllowance?: number,
+    holidayAdjustments?: {note: string, number: number}[]
 }
 
 type EmployeeInput = {
@@ -126,7 +127,9 @@ const employeeSchema: Schema = new Schema({
         buildingSocietyRef: String
     },
     performanceDocument: String,
-    holidayAllowance: Number
+    holidayAllowance: {type: Number, default: 25},
+    holidayAdjustments: [{note: String, number: Number}]
+
 });
 
 const EmployeeAgent = mongoose.model<EmployeeDocument>('Employee', employeeSchema);
