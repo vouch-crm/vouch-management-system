@@ -42,7 +42,8 @@ const employeeTrainingSchema = new mongoose_1.Schema({
     currency: String,
     cost: Number,
     outcome: String,
-    notes: String
+    notes: String,
+    expiresOn: Date,
 });
 const EmployeeTrainingAgent = mongoose_1.default.model('EmployeeTraining', employeeTrainingSchema);
 exports.EmployeeTrainingAgent = EmployeeTrainingAgent;

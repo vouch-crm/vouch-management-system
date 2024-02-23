@@ -26,8 +26,7 @@ const createSalaryUpdateBodyValidationRules = () => {
             .withMessage('Invalid value for amount field'),
         (0, express_validator_1.body)('basis').exists().withMessage('basis not provided'),
         (0, express_validator_1.body)('payFrequency').exists().withMessage('payFrequency not provided'),
-        (0, express_validator_1.body)('startDate').exists().withMessage('startDate not provided').isDate()
-            .withMessage('Invalid value for startDate'),
+        (0, express_validator_1.body)('startDate').exists().withMessage('startDate not provided')
     ];
 };
 const createTrainingBodyValidationRules = () => {

@@ -13,7 +13,8 @@ type EmployeeTrainingDocument = {
     currency?: string,
     cost?: number,
     outcome?: string,
-    notes?: string
+    notes?: string,
+    expiresOn?: Date,
 }
 
 const employeeTrainingSchema = new Schema({
@@ -33,7 +34,8 @@ const employeeTrainingSchema = new Schema({
     currency: String,
     cost: Number,
     outcome: String,
-    notes: String
+    notes: String,
+    expiresOn: Date,
 });
 
 const EmployeeTrainingAgent = mongoose.model<EmployeeTrainingDocument>('EmployeeTraining',

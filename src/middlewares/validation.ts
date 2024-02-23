@@ -27,8 +27,7 @@ const createSalaryUpdateBodyValidationRules = () => {
             .withMessage('Invalid value for amount field'),
         body('basis').exists().withMessage('basis not provided'),
         body('payFrequency').exists().withMessage('payFrequency not provided'),
-        body('startDate').exists().withMessage('startDate not provided').isDate()
-            .withMessage('Invalid value for startDate'),
+        body('startDate').exists().withMessage('startDate not provided')
     ]
 }
 
