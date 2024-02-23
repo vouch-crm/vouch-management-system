@@ -132,9 +132,9 @@ const employeeSchema: Schema = new Schema({
     performanceDocument: String,
     holidayAllowance: {type: Number, default: 25},
     holidayAdjustments: [{note: String, number: Number}],
-    holdaysTaken: Number,
-    sickDaysTaken: Number,
-    workFromHome: Number,
+    holdaysTaken: {type: Number, default: 0},
+    sickDaysTaken: {type: Number, default: 0},
+    workFromHome: {type: Number, default: 0},
 
 });
 
