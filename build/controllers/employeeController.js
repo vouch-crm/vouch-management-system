@@ -11,12 +11,9 @@ const adminMiddleware_1 = require("../middlewares/adminMiddleware");
 const tokenServices_1 = require("../services/tokenServices");
 const s3Config_1 = require("../services/s3Config");
 const multer_1 = __importDefault(require("multer"));
-const multerImageFilter_1 = require("../services/multerImageFilter");
 const enums_1 = require("../services/enums");
 const s3Services_1 = require("../services/s3Services");
-const upload = (0, multer_1.default)({
-    fileFilter: multerImageFilter_1.imageFilter
-});
+const upload = (0, multer_1.default)({});
 const storage = multer_1.default.memoryStorage();
 const uploadMulter = (0, multer_1.default)({ storage });
 const employeeRouter = express_1.default.Router();
@@ -189,7 +186,7 @@ const uploadFile = async (req, res) => {
     const s3Response = await s3Services_1.S3Services.uploadFile(fileContent, fileName, contentType);
     if (s3Response.status !== enums_1.serviceStatuses.SUCCESS) {
         return res.status(400).json({
-            message: s3Response.message
+            message: s3Response
         });
     }
     const performanceDocURL = s3Response.data;

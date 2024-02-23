@@ -11,9 +11,7 @@ import { imageFilter } from '../services/multerImageFilter';
 import { serviceStatuses } from '../services/enums';
 import { S3Services } from '../services/s3Services';
 
-const upload = multer({
-    fileFilter: imageFilter
-});
+const upload = multer({});
 
 const storage = multer.memoryStorage();
 const uploadMulter = multer({ storage });
@@ -213,7 +211,7 @@ const uploadFile = async (req: Request, res: Response) => {
     const s3Response = await S3Services.uploadFile(fileContent, fileName, contentType);
     if(s3Response.status !== serviceStatuses.SUCCESS) {
         return res.status(400).json({
-            message: s3Response.message
+            message: s3Response
         });
     }
 
@@ -232,6 +230,8 @@ const uploadFile = async (req: Request, res: Response) => {
         message: dbResponse2.message
     });
 }
+
+
 
 employeeRouter.post('/employee', checkIfAdmin, validationFunctions.createEmployeeBodyValidationRules(),
     validationFunctions.validationMiddleware, create);
