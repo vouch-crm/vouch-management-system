@@ -42,9 +42,9 @@ type EmployeeDocument = {
     performanceDocument?: string,
     holidayAllowance?: number,
     holidayAdjustments?: {note: string, number: number}[],
-    holdaysTaken: number,
-    sickDaysTaken: number,
-    workFromHome: number,
+    holdaysTaken?: number,
+    sickDaysTaken?: number,
+    workFromHome?: number,
 }
 
 type EmployeeInput = {
@@ -73,7 +73,7 @@ type EmployeeInput = {
     address?: EmployeeDocument['address'],
     image?: EmployeeDocument['image'],
     status?: EmployeeDocument['status']
-    hourlyRate?: EmployeeDocument['hourlyRate']
+    hourlyRate?: EmployeeDocument['hourlyRate'],
 }
 
 type EmployeeLogin = {
