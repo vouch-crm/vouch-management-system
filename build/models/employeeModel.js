@@ -79,6 +79,7 @@ const employeeSchema = new mongoose_1.Schema({
     holdaysTaken: { type: Number, default: 0 },
     sickDaysTaken: { type: Number, default: 0 },
     workFromHome: { type: Number, default: 0 },
+    performanceLastUpdated: String
 });
 const EmployeeAgent = mongoose_1.default.model('Employee', employeeSchema);
 exports.EmployeeAgent = EmployeeAgent;
