@@ -191,7 +191,8 @@ const uploadFile = async (req, res) => {
     }
     const performanceDocURL = s3Response.data;
     const employeeData = {
-        performanceDocument: performanceDocURL
+        performanceDocument: performanceDocURL,
+        performanceLastUpdated: new Date()
     };
     const dbResponse2 = await employeeServices_1.employeeServices.update(ID, employeeData);
     if (dbResponse2.status !== enums_1.serviceStatuses.SUCCESS) {

@@ -45,7 +45,7 @@ type EmployeeDocument = {
     holdaysTaken?: number,
     sickDaysTaken?: number,
     workFromHome?: number,
-    performanceLastUpdated?: string
+    performanceLastUpdated?: Date
 }
 
 type EmployeeInput = {
@@ -136,7 +136,7 @@ const employeeSchema: Schema = new Schema({
     holdaysTaken: {type: Number, default: 0},
     sickDaysTaken: {type: Number, default: 0},
     workFromHome: {type: Number, default: 0},
-    performanceLastUpdated: String
+    performanceLastUpdated: Date
 
 
 });
