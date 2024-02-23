@@ -41,7 +41,10 @@ type EmployeeDocument = {
     },
     performanceDocument?: string,
     holidayAllowance?: number,
-    holidayAdjustments?: {note: string, number: number}[]
+    holidayAdjustments?: {note: string, number: number}[],
+    holdaysTaken: number,
+    sickDaysTaken: number,
+    workFromHome: number,
 }
 
 type EmployeeInput = {
@@ -128,7 +131,10 @@ const employeeSchema: Schema = new Schema({
     },
     performanceDocument: String,
     holidayAllowance: {type: Number, default: 25},
-    holidayAdjustments: [{note: String, number: Number}]
+    holidayAdjustments: [{note: String, number: Number}],
+    holdaysTaken: Number,
+    sickDaysTaken: Number,
+    workFromHome: Number,
 
 });
 
