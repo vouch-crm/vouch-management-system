@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const employeeServices_1 = require("../services/employeeServices");
 const hashingServices_1 = require("../services/hashingServices");
+const employeeModel_1 = require("../models/employeeModel");
 const validation_1 = require("../middlewares/validation");
 const adminMiddleware_1 = require("../middlewares/adminMiddleware");
 const tokenServices_1 = require("../services/tokenServices");
@@ -174,6 +175,7 @@ const uploadFile = async (req, res) => {
         });
     }
     const ID = req.params.id;
+    const { fileTitle } = req.query;
     const empExist = await employeeServices_1.employeeServices.checkEmployeeExist(ID);
     if (!empExist) {
         return res.status(404).json({
@@ -182,27 +184,53 @@ const uploadFile = async (req, res) => {
     }
     const fileContent = req.file.buffer;
     const contentType = req.file.mimetype;
-    const fileName = `${ID}-Performance-Doc`;
-    const s3Response = await s3Services_1.S3Services.uploadFile(fileContent, fileName, contentType);
-    if (s3Response.status !== enums_1.serviceStatuses.SUCCESS) {
-        return res.status(400).json({
-            message: s3Response
-        });
-    }
-    const performanceDocURL = s3Response.data;
-    const employeeData = {
-        performanceDocument: performanceDocURL,
-        performanceLastUpdated: new Date()
-    };
-    const dbResponse2 = await employeeServices_1.employeeServices.update(ID, employeeData);
-    if (dbResponse2.status !== enums_1.serviceStatuses.SUCCESS) {
-        return res.status(400).json({
+    if (fileTitle === 'performance') {
+        const fileName = `${ID}-Performance-Doc`;
+        const s3Response = await s3Services_1.S3Services.uploadFile(fileContent, fileName, contentType);
+        if (s3Response.status !== enums_1.serviceStatuses.SUCCESS) {
+            return res.status(400).json({
+                message: s3Response
+            });
+        }
+        const performanceDocURL = s3Response.data;
+        const employeeData = {
+            performanceDocument: performanceDocURL,
+            performanceLastUpdated: new Date()
+        };
+        const dbResponse2 = await employeeServices_1.employeeServices.update(ID, employeeData);
+        if (dbResponse2.status !== enums_1.serviceStatuses.SUCCESS) {
+            return res.status(400).json({
+                message: dbResponse2.message
+            });
+        }
+        res.status(200).json({
             message: dbResponse2.message
         });
     }
-    res.status(200).json({
-        message: dbResponse2.message
-    });
+    else if (fileTitle === 'document') {
+        const fileName = `${ID}-${fileTitle}`;
+        const s3Response = await s3Services_1.S3Services.uploadFile(fileContent, fileName, contentType);
+        if (s3Response.status !== enums_1.serviceStatuses.SUCCESS) {
+            return res.status(400).json({
+                message: s3Response
+            });
+        }
+        const document = {
+            title: fileTitle,
+            url: s3Response.data
+        };
+        const dbResponse2 = await employeeModel_1.EmployeeAgent.findByIdAndUpdate({ _id: ID }, {
+            $push: { documents: [document] }
+        });
+        if (dbResponse2 && dbResponse2.status !== enums_1.serviceStatuses.SUCCESS) {
+            return res.status(400).json({
+                message: dbResponse2
+            });
+        }
+        res.status(200).json({
+            message: dbResponse2
+        });
+    }
 };
 employeeRouter.post('/employee', adminMiddleware_1.checkIfAdmin, validation_1.validationFunctions.createEmployeeBodyValidationRules(), validation_1.validationFunctions.validationMiddleware, create);
 employeeRouter.post('/employee-login', login);
