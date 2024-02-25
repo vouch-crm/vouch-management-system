@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import { employeeServices, EmployeeReturn } from '../services/employeeServices';
 import { hashingServices } from '../services/hashingServices';
-import {EmployeeDocument, EmployeeInput, EmployeeLogin } from '../models/employeeModel';
+import { EmployeeDocument, EmployeeInput, EmployeeLogin, EmployeeAgent } from '../models/employeeModel';
 import { validationFunctions } from '../middlewares/validation';
 import { checkIfAdmin } from '../middlewares/adminMiddleware';
 import { tokenServices } from '../services/tokenServices';
@@ -55,7 +55,7 @@ const login = async (req: Request, res: Response) => {
             error: dbResponse.message
         });
     }
-    
+
     const employeePassword: string = dbResponse.data?.password as string;
     const passwordChecker: boolean = await hashingServices.verifyHash(
         requestData.password, employeePassword);
@@ -73,7 +73,7 @@ const login = async (req: Request, res: Response) => {
             token: tokenResponse.token,
             data: dbResponse.data
         });
-    console.log(dbResponse.data)
+        console.log(dbResponse.data)
 
     }
     else {
@@ -191,13 +191,14 @@ const uploadImage = async (req: Request, res: Response) => {
 }
 
 const uploadFile = async (req: Request, res: Response) => {
-    if(!req.file) {
+    if (!req.file) {
         return res.status(400).json({
             message: 'No file uploaded!'
         });
     }
 
     const ID = req.params.id;
+    const { fileTitle } = req.query
     const empExist = await employeeServices.checkEmployeeExist(ID);
     if (!empExist) {
         return res.status(404).json({
@@ -207,29 +208,58 @@ const uploadFile = async (req: Request, res: Response) => {
 
     const fileContent = req.file.buffer;
     const contentType = req.file.mimetype;
-    const fileName = `${ID}-Performance-Doc`;
-    const s3Response = await S3Services.uploadFile(fileContent, fileName, contentType);
-    if(s3Response.status !== serviceStatuses.SUCCESS) {
-        return res.status(400).json({
-            message: s3Response
-        });
-    }
+    if (fileTitle === 'performance') {
+        const fileName = `${ID}-Performance-Doc`;
+        const s3Response = await S3Services.uploadFile(fileContent, fileName, contentType);
+        if (s3Response.status !== serviceStatuses.SUCCESS) {
+            return res.status(400).json({
+                message: s3Response
+            });
+        }
 
-    const performanceDocURL = s3Response.data as string;
-    const employeeData = {
-        performanceDocument: performanceDocURL,
-        performanceLastUpdated: new Date()
-    }
-    const dbResponse2 = await employeeServices.update(ID, employeeData);
-    if (dbResponse2.status !== serviceStatuses.SUCCESS) {
-        return res.status(400).json({
+        const performanceDocURL = s3Response.data as string;
+        const employeeData = {
+            performanceDocument: performanceDocURL,
+            performanceLastUpdated: new Date()
+        }
+        const dbResponse2 = await employeeServices.update(ID, employeeData);
+        if (dbResponse2.status !== serviceStatuses.SUCCESS) {
+            return res.status(400).json({
+                message: dbResponse2.message
+            });
+        }
+        res.status(200).json({
             message: dbResponse2.message
         });
+    } else if (fileTitle === 'document') {
+        const fileName = `${ID}-${fileTitle}`;
+        const s3Response = await S3Services.uploadFile(fileContent, fileName, contentType);
+        if (s3Response.status !== serviceStatuses.SUCCESS) {
+            return res.status(400).json({
+                message: s3Response
+            });
+        }
+
+        const document = {
+            title: fileTitle,
+            url: s3Response.data
+        }
+        
+        const dbResponse2 = await EmployeeAgent.findByIdAndUpdate({_id: ID}, {
+            $push: { documents: [document] }
+        })
+        if (dbResponse2 && dbResponse2.status !== serviceStatuses.SUCCESS) {
+            return res.status(400).json({
+                message: dbResponse2
+            });
+        }
+        res.status(200).json({
+            message: dbResponse2
+        });
     }
 
-    res.status(200).json({
-        message: dbResponse2.message
-    });
+
+
 }
 
 

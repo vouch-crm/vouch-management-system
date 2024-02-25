@@ -45,7 +45,8 @@ type EmployeeDocument = {
     holdaysTaken?: number,
     sickDaysTaken?: number,
     workFromHome?: number,
-    performanceLastUpdated?: Date
+    performanceLastUpdated?: Date,
+    documents?: {title: string, url: string}[]
 }
 
 type EmployeeInput = {
@@ -136,9 +137,8 @@ const employeeSchema: Schema = new Schema({
     holdaysTaken: {type: Number, default: 0},
     sickDaysTaken: {type: Number, default: 0},
     workFromHome: {type: Number, default: 0},
-    performanceLastUpdated: Date
-
-
+    performanceLastUpdated: Date,
+    documents: Array
 });
 
 const EmployeeAgent = mongoose.model<EmployeeDocument>('Employee', employeeSchema);
