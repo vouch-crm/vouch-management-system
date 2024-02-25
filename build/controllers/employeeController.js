@@ -207,7 +207,7 @@ const uploadFile = async (req, res) => {
             message: dbResponse2.message
         });
     }
-    else if (fileTitle === 'document') {
+    else {
         const fileName = `${ID}-${fileTitle}`;
         const s3Response = await s3Services_1.S3Services.uploadFile(fileContent, fileName, contentType);
         if (s3Response.status !== enums_1.serviceStatuses.SUCCESS) {
