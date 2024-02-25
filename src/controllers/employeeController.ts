@@ -246,11 +246,11 @@ const uploadFile = async (req: Request, res: Response) => {
         }
         
         const dbResponse2 = await EmployeeAgent.findByIdAndUpdate({_id: ID}, {
-            $push: { documents: [document] }
+            $push: { documents: document }
         })
-        if (dbResponse2 && dbResponse2.status !== serviceStatuses.SUCCESS) {
+        if (!dbResponse2) {
             return res.status(400).json({
-                message: dbResponse2
+                message: 'Error uploading the document'
             });
         }
         res.status(200).json({

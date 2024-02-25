@@ -220,11 +220,11 @@ const uploadFile = async (req, res) => {
             url: s3Response.data
         };
         const dbResponse2 = await employeeModel_1.EmployeeAgent.findByIdAndUpdate({ _id: ID }, {
-            $push: { documents: [document] }
+            $push: { documents: document }
         });
-        if (dbResponse2 && dbResponse2.status !== enums_1.serviceStatuses.SUCCESS) {
+        if (!dbResponse2) {
             return res.status(400).json({
-                message: dbResponse2
+                message: 'Error uploading the document'
             });
         }
         res.status(200).json({
