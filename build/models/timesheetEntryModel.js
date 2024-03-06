@@ -23,15 +23,26 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TimesheetEntryModel = void 0;
+exports.TimeSheetEntryAgent = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 const timesheetEntrySchema = new mongoose_1.Schema({
-    taskID: mongoose_1.Schema.Types.ObjectId,
-    employeeID: mongoose_1.Schema.Types.ObjectId,
+    taskID: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: 'Task',
+        required: true
+    },
+    employeeID: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: 'Employee',
+        required: true
+    },
     timeTracked: Number,
+    trackedDay: Date,
     startTime: Date,
     endTime: Date,
     cost: Number,
     description: String,
+    timesheetRow: Number,
 });
-exports.TimesheetEntryModel = mongoose_1.default.model('TimesheetEntrySchema', timesheetEntrySchema);
+const TimeSheetEntryAgent = mongoose_1.default.model('TimesheetEntrySchema', timesheetEntrySchema);
+exports.TimeSheetEntryAgent = TimeSheetEntryAgent;

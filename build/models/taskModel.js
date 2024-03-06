@@ -27,12 +27,14 @@ exports.TaskAgent = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 const taskSchema = new mongoose_1.Schema({
     client: mongoose_1.Schema.Types.ObjectId,
-    project: mongoose_1.Schema.Types.ObjectId,
+    jobID: mongoose_1.Schema.Types.ObjectId,
     access: [String],
+    name: String,
     estimatedTotalHours: Number,
     estimatedTotalCost: Number,
     progress: Number,
     billable: Boolean,
-    estimatedTime: Number, // in hours
+    estimatedTime: Number,
+    category: String,
 });
 exports.TaskAgent = mongoose_1.default.model('Task', taskSchema);
