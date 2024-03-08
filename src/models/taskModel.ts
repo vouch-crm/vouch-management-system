@@ -5,7 +5,7 @@ interface TaskSchema {
     client: Schema.Types.ObjectId;
     name: string;
     jobID?: Schema.Types.ObjectId;
-    access: string[];
+    access?: string[];
     estimatedTotalHours: number;
     estimatedTotalCost: number;
     progress: number;
