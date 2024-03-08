@@ -68,6 +68,27 @@ const getByID = async (ID: string): Promise<TimeSheetEntryReturn> => {
     }
 }
 
+const getEntriesWithinPeriod = async (
+    empID: string, startDate: Date, endDate: Date): Promise<TimeSheetEntryReturn> => {
+        try {
+            const entries = await TimeSheetEntryAgent.find({
+                trackedDay: {$gte: startDate, $lte: endDate},
+                employeeID: empID
+            });
+            return {
+                status: serviceStatuses.SUCCESS,
+                message: null,
+                data: entries
+            }
+        } catch (error) {
+            return {
+                status: serviceStatuses.ERROR,
+                message: `Error getting entries: ${error}`,
+                data: null
+            }
+        }
+    }
+
 const update = async (ID: string, updatedData: Record<string, any>): Promise<TimeSheetEntryReturn> => {
     try {
         const updatedEntry = await TimeSheetEntryAgent.findByIdAndUpdate(ID, updatedData, {new: true});
@@ -93,13 +114,15 @@ const update = async (ID: string, updatedData: Record<string, any>): Promise<Tim
     }
 }
 
-const del = async (ID: string): Promise<TimeSheetEntryReturn> => {
+const del = async (IDs: string[]): Promise<TimeSheetEntryReturn> => {
     try {
-        const deletedEntry = await TimeSheetEntryAgent.findByIdAndDelete(ID);
+        const deletedEntry = await TimeSheetEntryAgent.deleteMany({
+            _id: {$in: IDs}
+        });
         if (!deletedEntry) {
             return {
                 status: serviceStatuses.FAILED,
-                message: `No entry with ID: ${ID}`,
+                message: `No entries with IDs: ${IDs}`,
                 data: null
             }
         }
@@ -112,7 +135,7 @@ const del = async (ID: string): Promise<TimeSheetEntryReturn> => {
     } catch (error) {
         return {
             status: serviceStatuses.ERROR,
-            message: `Error deleting entry with ID: ${ID}`,
+            message: `Error deleting entries with IDs: ${IDs}`,
             data: null
         }
     }
@@ -122,6 +145,7 @@ export const timeSheetEntryServices = {
     create,
     getAll,
     getByID,
+    getEntriesWithinPeriod,
     update,
     del
 }

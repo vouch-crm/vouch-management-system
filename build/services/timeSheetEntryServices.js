@@ -61,6 +61,26 @@ const getByID = async (ID) => {
         };
     }
 };
+const getEntriesWithinPeriod = async (empID, startDate, endDate) => {
+    try {
+        const entries = await timesheetEntryModel_1.TimeSheetEntryAgent.find({
+            trackedDay: { $gte: startDate, $lte: endDate },
+            employeeID: empID
+        });
+        return {
+            status: enums_1.serviceStatuses.SUCCESS,
+            message: null,
+            data: entries
+        };
+    }
+    catch (error) {
+        return {
+            status: enums_1.serviceStatuses.ERROR,
+            message: `Error getting entries: ${error}`,
+            data: null
+        };
+    }
+};
 const update = async (ID, updatedData) => {
     try {
         const updatedEntry = await timesheetEntryModel_1.TimeSheetEntryAgent.findByIdAndUpdate(ID, updatedData, { new: true });
@@ -85,13 +105,15 @@ const update = async (ID, updatedData) => {
         };
     }
 };
-const del = async (ID) => {
+const del = async (IDs) => {
     try {
-        const deletedEntry = await timesheetEntryModel_1.TimeSheetEntryAgent.findByIdAndDelete(ID);
+        const deletedEntry = await timesheetEntryModel_1.TimeSheetEntryAgent.deleteMany({
+            _id: { $in: IDs }
+        });
         if (!deletedEntry) {
             return {
                 status: enums_1.serviceStatuses.FAILED,
-                message: `No entry with ID: ${ID}`,
+                message: `No entries with IDs: ${IDs}`,
                 data: null
             };
         }
@@ -104,7 +126,7 @@ const del = async (ID) => {
     catch (error) {
         return {
             status: enums_1.serviceStatuses.ERROR,
-            message: `Error deleting entry with ID: ${ID}`,
+            message: `Error deleting entries with IDs: ${IDs}`,
             data: null
         };
     }
@@ -113,6 +135,7 @@ exports.timeSheetEntryServices = {
     create,
     getAll,
     getByID,
+    getEntriesWithinPeriod,
     update,
     del
 };
