@@ -33,6 +33,6 @@ const timesheetEntrySchema = new Schema({
 })
 
 const TimeSheetEntryAgent = mongoose.model<TimeSheetEntryDTO>(
-    'TimesheetEntrySchema', timesheetEntrySchema);
+    'TimesheetEntry', timesheetEntrySchema);
 
 export {TimeSheetEntryDTO, TimeSheetEntryAgent}

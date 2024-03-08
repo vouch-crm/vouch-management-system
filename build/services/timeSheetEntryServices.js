@@ -110,7 +110,7 @@ const del = async (IDs) => {
         const deletedEntry = await timesheetEntryModel_1.TimeSheetEntryAgent.deleteMany({
             _id: { $in: IDs }
         });
-        if (!deletedEntry) {
+        if (deletedEntry.deletedCount === 0) {
             return {
                 status: enums_1.serviceStatuses.FAILED,
                 message: `No entries with IDs: ${IDs}`,
@@ -126,7 +126,7 @@ const del = async (IDs) => {
     catch (error) {
         return {
             status: enums_1.serviceStatuses.ERROR,
-            message: `Error deleting entries with IDs: ${IDs}`,
+            message: `Error deleting entries with IDs: ${error}`,
             data: null
         };
     }

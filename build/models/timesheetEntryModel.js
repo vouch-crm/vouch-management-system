@@ -44,5 +44,5 @@ const timesheetEntrySchema = new mongoose_1.Schema({
     description: String,
     timesheetRow: Number,
 });
-const TimeSheetEntryAgent = mongoose_1.default.model('TimesheetEntrySchema', timesheetEntrySchema);
+const TimeSheetEntryAgent = mongoose_1.default.model('TimesheetEntry', timesheetEntrySchema);
 exports.TimeSheetEntryAgent = TimeSheetEntryAgent;

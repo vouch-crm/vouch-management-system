@@ -96,7 +96,6 @@ const del = async (req, res) => {
     }
     res.status(200).json({
         message: deletedEntry.message,
-        data: deletedEntry.data
     });
 };
 timeSheetController.post('/time-sheet-entry', create);

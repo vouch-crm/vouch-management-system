@@ -119,7 +119,7 @@ const del = async (IDs: string[]): Promise<TimeSheetEntryReturn> => {
         const deletedEntry = await TimeSheetEntryAgent.deleteMany({
             _id: {$in: IDs}
         });
-        if (!deletedEntry) {
+        if (deletedEntry.deletedCount === 0) {
             return {
                 status: serviceStatuses.FAILED,
                 message: `No entries with IDs: ${IDs}`,
@@ -135,7 +135,7 @@ const del = async (IDs: string[]): Promise<TimeSheetEntryReturn> => {
     } catch (error) {
         return {
             status: serviceStatuses.ERROR,
-            message: `Error deleting entries with IDs: ${IDs}`,
+            message: `Error deleting entries with IDs: ${error}`,
             data: null
         }
     }
