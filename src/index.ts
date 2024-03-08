@@ -10,6 +10,7 @@ import adminRouter from './controllers/adminController';
 import salaryUpdatesRouter from './controllers/salaryUpdatesController';
 import employeeTrainingRouter from './controllers/employeeTrainingController';
 import empRequestRouter from './controllers/employeeRequestController';
+import timeSheetController from './controllers/timeSheetEntryController';
 import { utils } from './services/utils';
 import cors from 'cors';
 import morgan from 'morgan';
@@ -36,6 +37,7 @@ app.use(adminRouter);
 app.use(empRequestRouter);
 app.use(salaryUpdatesRouter);
 app.use(employeeTrainingRouter);
+app.use(timeSheetController);
 
 app.get('/', (_req: Request, res: Response): void => {
     res.status(200).json({

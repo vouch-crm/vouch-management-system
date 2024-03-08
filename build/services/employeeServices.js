@@ -62,6 +62,13 @@ const getEmployeeByID = async (ID) => {
         };
     }
 };
+const getEmpHourlyRate = async (ID) => {
+    const employee = await employeeModel_1.EmployeeAgent.findById(ID, 'hourlyRate');
+    if (!employee) {
+        return undefined;
+    }
+    return employee.hourlyRate;
+};
 const checkEmployeeExist = async (ID) => {
     try {
         const employee = await employeeModel_1.EmployeeAgent.findById(ID);
@@ -182,5 +189,6 @@ exports.employeeServices = {
     update,
     getEmployeeByID,
     checkEmployeeExist,
-    getEmployeeByEmail
+    getEmployeeByEmail,
+    getEmpHourlyRate
 };

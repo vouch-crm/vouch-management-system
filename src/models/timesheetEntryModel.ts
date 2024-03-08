@@ -1,20 +1,28 @@
 import mongoose, { Schema } from "mongoose";
 
-interface TimesheetEntrySchema {
-    taskID: Schema.Types.ObjectId;
-    employeeID: Schema.Types.ObjectId;
-    timeTracked: Number; // in seconds
-    trackedDay: Date;
-    startTime?: Date;
-    endTime?: Date;
-    cost?: number;
-    description?: string;
-    timesheetRow: number;
+type TimeSheetEntryDTO = {
+    taskID: string,
+    employeeID: string,
+    timeTracked: Number, // in seconds
+    trackedDay: Date,
+    startTime?: Date,
+    endTime?: Date,
+    cost?: number,
+    description?: string,
+    timesheetRow: number,
 }
 
 const timesheetEntrySchema = new Schema({
-    taskID: Schema.Types.ObjectId,
-    employeeID: Schema.Types.ObjectId,
+    taskID: {
+        type: Schema.Types.ObjectId,
+        ref: 'Task',
+        required: true
+    },
+    employeeID: {
+        type: Schema.Types.ObjectId,
+        ref: 'Employee',
+        required: true
+    },
     timeTracked: Number, // in seconds
     trackedDay: Date,
     startTime: Date,
@@ -24,4 +32,7 @@ const timesheetEntrySchema = new Schema({
     timesheetRow: Number,
 })
 
-export const TimesheetEntryModel = mongoose.model<TimesheetEntrySchema>('TimesheetEntrySchema', timesheetEntrySchema)
+const TimeSheetEntryAgent = mongoose.model<TimeSheetEntryDTO>(
+    'TimesheetEntry', timesheetEntrySchema);
+
+export {TimeSheetEntryDTO, TimeSheetEntryAgent}

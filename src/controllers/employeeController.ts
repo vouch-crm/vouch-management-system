@@ -73,7 +73,6 @@ const login = async (req: Request, res: Response) => {
             token: tokenResponse.token,
             data: dbResponse.data
         });
-        console.log(dbResponse.data)
 
     }
     else {
@@ -185,7 +184,6 @@ const uploadImage = async (req: Request, res: Response) => {
         });
 
     } catch (error) {
-        console.log(error)
         res.status(500)
     }
 }

@@ -30,14 +30,14 @@ const create = async (employeeData: EmployeeDocument): Promise<EmployeeReturn> =
             message: 'Employee Created Successfuly!',
             data: newEmployee
         }
-        
+
     } catch (error) {
         if (error instanceof MongoError && error.code === 11000) {
             return {
                 status: 'Error',
                 message: `This email: ${employeeData.email} already exists!`,
                 data: null
-            }    
+            }
         }
         return {
             status: 'Error',
@@ -73,6 +73,15 @@ const getEmployeeByID = async (ID: string): Promise<EmployeeReturn> => {
     }
 }
 
+const getEmpHourlyRate = async (ID: string): Promise<number | undefined> => {
+    const employee = await EmployeeAgent.findById(ID, 'hourlyRate');
+    if (!employee) {
+        return undefined;
+    }
+    
+    return employee.hourlyRate;
+}
+
 const checkEmployeeExist = async (ID: string): Promise<boolean> => {
     try {
         const employee: EmployeeDocument | null = await EmployeeAgent.findById(ID);
@@ -90,7 +99,7 @@ const checkEmployeeExist = async (ID: string): Promise<boolean> => {
 
 const getEmployeeByEmail = async (email: string): Promise<EmployeeReturn> => {
     try {
-        const employee: EmployeeDocument | null = await EmployeeAgent.findOne({email});
+        const employee: EmployeeDocument | null = await EmployeeAgent.findOne({ email });
 
         if (!employee) {
             return {
@@ -149,17 +158,17 @@ const del = async (id: string): Promise<EmployeeReturn> => {
                 status: 'Error',
                 message: 'Unauthorized admin deletion!',
                 data: null
-            };    
+            };
         }
 
-        const deletedEmployee: EmployeeDocument | null = await 
+        const deletedEmployee: EmployeeDocument | null = await
             EmployeeAgent.findByIdAndDelete(id);
 
         return {
             status: 'Success',
             data: deletedEmployee,
             message: 'Employee deleted successfuly!'
-        }; 
+        };
     } catch (error) {
         return {
             status: 'Error',
@@ -171,7 +180,7 @@ const del = async (id: string): Promise<EmployeeReturn> => {
 
 const update = async (id: string, employeeData: Record<string, any>): Promise<EmployeeReturn> => {
     try {
-        const updatedEmployee = await EmployeeAgent.findByIdAndUpdate(id, employeeData, {new: true});
+        const updatedEmployee = await EmployeeAgent.findByIdAndUpdate(id, employeeData, { new: true });
 
         if (!updatedEmployee) {
             return {
@@ -204,5 +213,6 @@ export const employeeServices = {
     update,
     getEmployeeByID,
     checkEmployeeExist,
-    getEmployeeByEmail
+    getEmployeeByEmail,
+    getEmpHourlyRate
 }
