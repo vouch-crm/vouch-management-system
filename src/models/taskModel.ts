@@ -4,7 +4,7 @@ import mongoose, { Schema } from "mongoose";
 interface TaskSchema {
     client: Schema.Types.ObjectId;
     name: string;
-    jobID: Schema.Types.ObjectId;
+    jobID?: Schema.Types.ObjectId;
     access: string[];
     estimatedTotalHours: number;
     estimatedTotalCost: number;
