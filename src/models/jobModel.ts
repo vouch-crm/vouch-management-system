@@ -3,8 +3,8 @@ import mongoose, { Schema } from "mongoose";
 export interface IJob {
     id?: string,
     clientSector: string,
-    vouchAccountLead: [string],
-    additionalTeamOnAccount: any[],
+    vouchAccountLead: string,
+    additionalTeamOnAccount?: string[],
     coreServices?: string[],
     client?: string
     clientAccess?: {

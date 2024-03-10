@@ -1,11 +1,17 @@
 import express, { Request, Response } from 'express'
 import { TaskAgent } from '../models/taskModel'
+import { jobAgent } from '../models/jobModel'
 
 const taskRouter: express.Router = express.Router()
 
 const createTask = async (req: Request, res: Response) => {
     try {
         const reqBody = req.body;
+        if(!reqBody.jobID) {
+            const newJob = await jobAgent.create({
+                
+            })
+        }
         const newTask = await TaskAgent.create(reqBody);
         res.status(201).json(newTask);
         
@@ -59,3 +65,5 @@ taskRouter.get('/task/:id', findTask);
 taskRouter.get('/tasks', findAllTasks);
 taskRouter.put('/task/:id', updateTask);
 taskRouter.delete('/task/:id', deleteTask)
+
+export default taskRouter

@@ -5,10 +5,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const taskModel_1 = require("../models/taskModel");
+const jobModel_1 = require("../models/jobModel");
 const taskRouter = express_1.default.Router();
 const createTask = async (req, res) => {
     try {
         const reqBody = req.body;
+        if (!reqBody.jobID) {
+            const newJob = await jobModel_1.jobAgent.create({});
+        }
         const newTask = await taskModel_1.TaskAgent.create(reqBody);
         res.status(201).json(newTask);
     }
@@ -61,3 +65,4 @@ taskRouter.get('/task/:id', findTask);
 taskRouter.get('/tasks', findAllTasks);
 taskRouter.put('/task/:id', updateTask);
 taskRouter.delete('/task/:id', deleteTask);
+exports.default = taskRouter;

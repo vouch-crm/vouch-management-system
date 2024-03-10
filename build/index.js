@@ -17,6 +17,7 @@ const employeeTrainingController_1 = __importDefault(require("./controllers/empl
 const employeeRequestController_1 = __importDefault(require("./controllers/employeeRequestController"));
 const timeSheetEntryController_1 = __importDefault(require("./controllers/timeSheetEntryController"));
 const timeSheetTemplateController_1 = __importDefault(require("./controllers/timeSheetTemplateController"));
+const TaskController_1 = __importDefault(require("./controllers/TaskController"));
 const utils_1 = require("./services/utils");
 const cors_1 = __importDefault(require("cors"));
 const morgan_1 = __importDefault(require("morgan"));
@@ -39,6 +40,7 @@ app.use(salaryUpdatesController_1.default);
 app.use(employeeTrainingController_1.default);
 app.use(timeSheetEntryController_1.default);
 app.use(timeSheetTemplateController_1.default);
+app.use(TaskController_1.default);
 app.get('/', (_req, res) => {
     res.status(200).json({
         message: 'Server Started!'
