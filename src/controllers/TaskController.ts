@@ -59,6 +59,6 @@ taskRouter.post('/task', createTask);
 taskRouter.get('/task/:id', findTask);
 taskRouter.get('/tasks', findAllTasks);
 taskRouter.put('/task/:id', updateTask);
-taskRouter.delete('/task/:id', deleteTask)
+taskRouter.delete('/task/:id', deleteTask);
 
 export default taskRouter

@@ -2,7 +2,8 @@ import mongoose, { Schema } from "mongoose";
 
 
 interface TaskSchema {
-    client: Schema.Types.ObjectId;
+    clientID: Schema.Types.ObjectId;
+    clientName: string;
     name: string;
     jobID?: Schema.Types.ObjectId;
     access?: string[];
@@ -10,12 +11,13 @@ interface TaskSchema {
     estimatedTotalCost: number;
     progress: number;
     billable: boolean;
-    estimatedTime: number; // in hours
+    estimatedTime?: number; // in hours
     category: string;
 }
 
 const taskSchema: Schema = new Schema({
-    client: Schema.Types.ObjectId,
+    clientID: Schema.Types.ObjectId,
+    clientName: String,
     jobID: Schema.Types.ObjectId,
     access: [String],
     name: String,
