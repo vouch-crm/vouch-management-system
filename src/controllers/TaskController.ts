@@ -7,11 +7,6 @@ const taskRouter: express.Router = express.Router()
 const createTask = async (req: Request, res: Response) => {
     try {
         const reqBody = req.body;
-        if(!reqBody.jobID) {
-            const newJob = await jobAgent.create({
-                
-            })
-        }
         const newTask = await TaskAgent.create(reqBody);
         res.status(201).json(newTask);
         
