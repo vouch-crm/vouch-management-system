@@ -26,8 +26,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TaskAgent = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 const taskSchema = new mongoose_1.Schema({
-    clientID: mongoose_1.Schema.Types.ObjectId,
-    clientName: String,
+    client: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: 'client'
+    },
     jobID: mongoose_1.Schema.Types.ObjectId,
     access: [String],
     name: String,

@@ -39,7 +39,7 @@ const findTask = async (req, res) => {
 };
 const findAllTasks = async (req, res) => {
     try {
-        const tasks = await taskModel_1.TaskAgent.find();
+        const tasks = await taskModel_1.TaskAgent.find().populate('client');
         res.status(200).json(tasks);
     }
     catch (error) {
