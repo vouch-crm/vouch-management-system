@@ -8,9 +8,9 @@ interface TaskSchema {
     access?: string[];
     estimatedTotalHours: number;
     estimatedTotalCost: number;
-    progress: number;
+    progress?: number;
     billable: boolean;
-    estimatedTime: number; // in hours
+    estimatedTime?: number; // in hours
     category: string;
 }
 

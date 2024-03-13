@@ -4,7 +4,8 @@ import mongoose, {Schema} from 'mongoose';
 type TimeSheetTemplateDTO = {
     employeeID: string,
     taskIDs: string[],
-    name: string
+    name?: string,
+    date?:string
 }
 
 const timeSheetTemplateSchema = new Schema({
