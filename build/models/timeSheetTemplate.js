@@ -32,7 +32,8 @@ const timeSheetTemplateSchema = new mongoose_1.Schema({
         ref: 'Employee'
     },
     taskIDs: [String],
-    name: String
+    name: String,
+    date: Date
 });
 const TimeSheetTemplateAgent = mongoose_1.default.model('TimeSheetTemplate', timeSheetTemplateSchema);
 exports.TimeSheetTemplateAgent = TimeSheetTemplateAgent;

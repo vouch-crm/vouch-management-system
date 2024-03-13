@@ -15,7 +15,8 @@ const timeSheetTemplateSchema = new Schema({
         ref: 'Employee'
     },
     taskIDs: [String],
-    name: String
+    name: String,
+    date: Date
 });
 
 const TimeSheetTemplateAgent = mongoose.model<TimeSheetTemplateDTO>(
