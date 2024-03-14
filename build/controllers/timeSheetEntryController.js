@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const timeSheetEntryServices_1 = require("../services/timeSheetEntryServices");
 const employeeServices_1 = require("../services/employeeServices");
+const timesheetEntryModel_1 = require("../models/timesheetEntryModel");
 const enums_1 = require("../services/enums");
 const express_1 = __importDefault(require("express"));
 const timeSheetController = express_1.default.Router();
@@ -98,9 +99,47 @@ const del = async (req, res) => {
         message: deletedEntry.message,
     });
 };
+const employeeActivities = async (req, res) => {
+    try {
+        const entries = await timesheetEntryModel_1.TimeSheetEntryAgent.find().populate('taskID').populate('employeeID');
+        let employeeIDs = [];
+        let taskIDs = [];
+        entries.forEach(entry => {
+            if (!employeeIDs.includes(entry.employeeID.toString())) {
+                employeeIDs.push(entry.employeeID.toString());
+            }
+            if (!taskIDs.includes(entry.taskID.toString())) {
+                taskIDs.push(entry.taskID.toString());
+            }
+        });
+        const data = employeeIDs.map(employee => {
+            const employeeEntries = entries.filter(entry => entry.employeeID.toString() === employee);
+            const totalTimeInSeconds = employeeEntries.map(entry => entry.timeTracked).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+            const taskInfo = taskIDs.map(task => {
+                const taskEntries = employeeEntries.filter(entry => entry.taskID.toString() === task);
+                const totalTime = taskEntries.map(entry => entry.timeTracked).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+                return {
+                    taskName: taskEntries[0].taskID.name,
+                    timeTracked: totalTime
+                };
+            });
+            return {
+                employeeName: `${employeeEntries[0].employeeID.firstName} ${employeeEntries[0].employeeID.lastName}`,
+                taskInfo,
+                totalTimeInSeconds
+            };
+        });
+        res.status(200).json(data);
+        // [{employeeID: id, totalTime: time, tasks: [{taskID: id, totalTime: time}]]      
+    }
+    catch (error) {
+        res.status(400);
+    }
+};
 timeSheetController.post('/time-sheet-entry', create);
 timeSheetController.get('/time-sheet-entry', getAll);
 timeSheetController.get('/time-sheet-entry/:employeeID/:startDate/:endDate', getEntriesWithinPeriod);
 timeSheetController.patch('/time-sheet-entry/:id', update);
 timeSheetController.post('/time-sheet-entries', del);
+timeSheetController.get('/team-activities', employeeActivities);
 exports.default = timeSheetController;
