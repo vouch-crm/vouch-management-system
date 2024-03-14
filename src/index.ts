@@ -13,6 +13,7 @@ import empRequestRouter from './controllers/employeeRequestController';
 import timeSheetController from './controllers/timeSheetEntryController';
 import timeSheetTemplateRouter from './controllers/timeSheetTemplateController';
 import taskRouter from './controllers/TaskController'
+import dashboradRouter from './controllers/dashboardController';
 import { utils } from './services/utils';
 import cors from 'cors';
 import morgan from 'morgan';
@@ -42,6 +43,7 @@ app.use(employeeTrainingRouter);
 app.use(timeSheetController);
 app.use(timeSheetTemplateRouter);
 app.use(taskRouter);
+app.use(dashboradRouter);
 
 app.get('/', (_req: Request, res: Response): void => {
     res.status(200).json({
