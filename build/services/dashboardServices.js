@@ -155,7 +155,64 @@ const dashboardStats2 = async (startDate, endDate) => {
         };
     }
 };
+const dashboardStats3 = async (startDate, endDate) => {
+    try {
+        const sectionThreeStats = await timesheetEntryModel_1.TimeSheetEntryAgent.aggregate([
+            {
+                $match: {
+                    trackedDay: {
+                        $gte: startDate,
+                        $lte: endDate
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: '$taskID',
+                    totalHours: {
+                        $sum: '$timeTracked'
+                    }
+                }
+            },
+            {
+                $lookup: {
+                    from: 'tasks',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'task'
+                }
+            },
+            {
+                $addFields: {
+                    taskName: {
+                        $arrayElemAt: ['$task.name', 0]
+                    }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    taskName: 1,
+                    totalHours: 1
+                }
+            }
+        ]);
+        return {
+            status: enums_1.serviceStatuses.SUCCESS,
+            message: null,
+            data: sectionThreeStats
+        };
+    }
+    catch (error) {
+        return {
+            status: enums_1.serviceStatuses.ERROR,
+            message: `Error fetching dashboard section3 stats: ${error}`,
+            data: null
+        };
+    }
+};
 exports.dashboardServices = {
     dashboardStats1,
-    dashboardStats2
+    dashboardStats2,
+    dashboardStats3
 };

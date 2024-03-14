@@ -30,8 +30,8 @@ const dashboardStats1 = async (startDate: Date, endDate: Date): Promise<dashboar
                 $group: {
                     _id: null,
                     maxTrackedTime: {
-                        $max: '$totalTrackedTime' 
-                    }, 
+                        $max: '$totalTrackedTime'
+                    },
                     taskID: {
                         $first: '$_id'
                     }
@@ -79,7 +79,7 @@ const dashboardStats1 = async (startDate: Date, endDate: Date): Promise<dashboar
                 }
             }
         ]);
-            
+
         sectionOneStats[0].maxTrackedTime = sectionOneStats[0].maxTrackedTime / 3600
         return {
             status: serviceStatuses.SUCCESS,
@@ -161,7 +161,65 @@ const dashboardStats2 = async (startDate: Date, endDate: Date) => {
     }
 }
 
+const dashboardStats3 = async (startDate: Date, endDate: Date) => {
+    try {
+        const sectionThreeStats = await TimeSheetEntryAgent.aggregate([
+            {
+                $match: {
+                    trackedDay: {
+                        $gte: startDate,
+                        $lte: endDate
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: '$taskID',
+                    totalHours: {
+                        $sum: '$timeTracked'
+                    }
+                }
+            },
+            {
+                $lookup: {
+                    from: 'tasks',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'task'
+                }
+            },
+            {
+                $addFields: {
+                    taskName: {
+                        $arrayElemAt: ['$task.name', 0]
+                    }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    taskName: 1,
+                    totalHours: 1
+                }
+            }
+        ]);
+
+        return {
+            status: serviceStatuses.SUCCESS,
+            message: null,
+            data: sectionThreeStats
+        }
+    } catch (error) {
+        return {
+            status: serviceStatuses.ERROR,
+            message: `Error fetching dashboard section3 stats: ${error}`,
+            data: null
+        }
+    }
+}
+
 export const dashboardServices = {
     dashboardStats1,
-    dashboardStats2
+    dashboardStats2,
+    dashboardStats3
 }
