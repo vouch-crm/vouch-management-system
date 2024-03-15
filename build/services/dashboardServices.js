@@ -107,10 +107,15 @@ const dashboardStats2 = async (startDate, endDate) => {
                         trackedDay: '$trackedDay',
                         taskID: '$taskID'
                     },
+                    totalTrackedSecondsPerDay: {
+                        $sum: '$timeTracked'
+                    }
+                }
+            },
+            {
+                $addFields: {
                     totalTrackedHoursPerDay: {
-                        $sum: {
-                            $divide: ['$timeTracked', 3600]
-                        }
+                        $divide: ['$totalTrackedSecondsPerDay', 3600]
                     }
                 }
             },
@@ -171,10 +176,15 @@ const dashboardStats3 = async (startDate, endDate) => {
             {
                 $group: {
                     _id: '$taskID',
+                    totalSeconds: {
+                        $sum: '$timeTracked'
+                    }
+                }
+            },
+            {
+                $addFields: {
                     totalHours: {
-                        $sum: {
-                            $divide: ['$timeTracked', 3600]
-                        }
+                        $divide: ['$totalSeconds', 3600]
                     }
                 }
             },
