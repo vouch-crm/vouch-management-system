@@ -225,8 +225,102 @@ const dashboardStats3 = async (startDate, endDate) => {
         };
     }
 };
+const dashboardStats4 = async (startDate, endDate) => {
+    try {
+        const sectionFourStats = await timesheetEntryModel_1.TimeSheetEntryAgent.aggregate([
+            {
+                $match: {
+                    trackedDay: {
+                        $gte: startDate,
+                        $lte: endDate
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: { employeeID: '$employeeID', taskID: '$taskID' },
+                    totalHoursPerTask: { $sum: '$timeTracked' }
+                }
+            },
+            {
+                $lookup: {
+                    from: 'tasks',
+                    localField: '_id.taskID',
+                    foreignField: '_id',
+                    as: 'taskData'
+                }
+            },
+            {
+                $addFields: {
+                    taskName: { $arrayElemAt: ['$taskData.name', 0] }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    employeeID: '$_id.employeeID',
+                    taskID: '$_id.taskID',
+                    taskName: 1,
+                    totalHoursPerTask: 1
+                }
+            },
+            {
+                $group: {
+                    _id: '$employeeID',
+                    totalHoursByEmployee: { $sum: '$totalHoursPerTask' },
+                    tasks: {
+                        $push: {
+                            taskName: '$taskName',
+                            totalHours: '$totalHoursPerTask'
+                        }
+                    }
+                }
+            },
+            {
+                $lookup: {
+                    from: 'employees',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'employeeData'
+                }
+            },
+            {
+                $addFields: {
+                    employeeFirstName: {
+                        $arrayElemAt: ['$employeeData.firstName', 0]
+                    },
+                    employeeLastName: {
+                        $arrayElemAt: ['$employeeData.lastName', 0]
+                    }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    employeeFirstName: 1,
+                    employeeLastName: 1,
+                    totalHoursByEmployee: 1,
+                    tasks: 1
+                }
+            }
+        ]);
+        return {
+            status: enums_1.serviceStatuses.SUCCESS,
+            message: null,
+            data: sectionFourStats
+        };
+    }
+    catch (error) {
+        return {
+            status: enums_1.serviceStatuses.ERROR,
+            message: `Error fetching section 4 stats: ${error}`,
+            data: null
+        };
+    }
+};
 exports.dashboardServices = {
     dashboardStats1,
     dashboardStats2,
-    dashboardStats3
+    dashboardStats3,
+    dashboardStats4
 };

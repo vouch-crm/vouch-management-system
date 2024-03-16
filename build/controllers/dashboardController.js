@@ -23,30 +23,44 @@ const dashboardStats1 = async (req, res) => {
 const dashboardStats2 = async (req, res) => {
     const startDate = new Date(req.params.startDate);
     const endDate = new Date(req.params.endDate);
-    const sectionOneStats = await dashboardServices_1.dashboardServices.dashboardStats2(startDate, endDate);
-    if (sectionOneStats.status !== enums_1.serviceStatuses.SUCCESS) {
+    const sectionTwoStats = await dashboardServices_1.dashboardServices.dashboardStats2(startDate, endDate);
+    if (sectionTwoStats.status !== enums_1.serviceStatuses.SUCCESS) {
         return res.status(400).json({
-            message: sectionOneStats.message
+            message: sectionTwoStats.message
         });
     }
     res.status(200).json({
-        data: sectionOneStats.data
+        data: sectionTwoStats.data
     });
 };
 const dashboardStats3 = async (req, res) => {
     const startDate = new Date(req.params.startDate);
     const endDate = new Date(req.params.endDate);
-    const sectionOneStats = await dashboardServices_1.dashboardServices.dashboardStats3(startDate, endDate);
-    if (sectionOneStats.status !== enums_1.serviceStatuses.SUCCESS) {
+    const sectionThreeStats = await dashboardServices_1.dashboardServices.dashboardStats3(startDate, endDate);
+    if (sectionThreeStats.status !== enums_1.serviceStatuses.SUCCESS) {
         return res.status(400).json({
-            message: sectionOneStats.message
+            message: sectionThreeStats.message
         });
     }
     res.status(200).json({
-        data: sectionOneStats.data
+        data: sectionThreeStats.data
+    });
+};
+const dashboardStats4 = async (req, res) => {
+    const startDate = new Date(req.params.startDate);
+    const endDate = new Date(req.params.endDate);
+    const sectionFourStats = await dashboardServices_1.dashboardServices.dashboardStats4(startDate, endDate);
+    if (sectionFourStats.status !== enums_1.serviceStatuses.SUCCESS) {
+        return res.status(400).json({
+            message: sectionFourStats.message
+        });
+    }
+    res.status(200).json({
+        data: sectionFourStats.data
     });
 };
 dashboradRouter.get('/dashboard-stats-1/:startDate/:endDate', dashboardStats1);
 dashboradRouter.get('/dashboard-stats-2/:startDate/:endDate', dashboardStats2);
 dashboradRouter.get('/dashboard-stats-3/:startDate/:endDate', dashboardStats3);
+dashboradRouter.get('/dashboard-stats-4/:startDate/:endDate', dashboardStats4);
 exports.default = dashboradRouter;
