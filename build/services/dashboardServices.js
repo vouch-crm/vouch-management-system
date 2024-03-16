@@ -239,7 +239,14 @@ const dashboardStats4 = async (startDate, endDate) => {
             {
                 $group: {
                     _id: { employeeID: '$employeeID', taskID: '$taskID' },
-                    totalHoursPerTask: { $sum: '$timeTracked' }
+                    totalSecondsPerTask: { $sum: '$timeTracked' }
+                }
+            },
+            {
+                $addFields: {
+                    totalHoursPerTask: {
+                        $divide: ['$totalSecondsPerTask', 3600]
+                    }
                 }
             },
             {
@@ -271,7 +278,7 @@ const dashboardStats4 = async (startDate, endDate) => {
                     tasks: {
                         $push: {
                             taskName: '$taskName',
-                            totalHours: '$totalHoursPerTask'
+                            totalHoursPerTask: '$totalHoursPerTask'
                         }
                     }
                 }
