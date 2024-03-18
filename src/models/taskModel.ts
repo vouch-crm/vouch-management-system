@@ -12,6 +12,7 @@ interface TaskSchema {
     billable: boolean;
     estimatedTime?: number; // in hours
     category: string;
+    color: string;
 }
 
 const taskSchema: Schema = new Schema({
@@ -28,6 +29,7 @@ const taskSchema: Schema = new Schema({
     billable: Boolean,
     estimatedTime: Number, // in hours
     category: String,
+    color: String
 
 })
 

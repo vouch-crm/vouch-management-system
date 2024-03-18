@@ -39,5 +39,6 @@ const taskSchema = new mongoose_1.Schema({
     billable: Boolean,
     estimatedTime: Number,
     category: String,
+    color: String
 });
 exports.TaskAgent = mongoose_1.default.model('Task', taskSchema);
