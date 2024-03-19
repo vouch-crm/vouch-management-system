@@ -28,6 +28,9 @@ const dashboardStats1 = async (startDate, endDate) => {
                     maxTrackedTime: {
                         $max: '$totalTrackedTime'
                     },
+                    totalTrackedTimeAllTasks: {
+                        $sum: '$totalTrackedTime'
+                    },
                     taskID: {
                         $first: '$_id'
                     }
@@ -71,11 +74,13 @@ const dashboardStats1 = async (startDate, endDate) => {
                     _id: null,
                     maxTrackedTime: 1,
                     taskName: 1,
-                    clientName: 1
+                    clientName: 1,
+                    totalTrackedTimeAllTasks: 1,
                 }
             }
         ]);
         sectionOneStats[0].maxTrackedTime = sectionOneStats[0].maxTrackedTime / 3600;
+        sectionOneStats[0].totalTrackedTimeAllTasks = sectionOneStats[0].totalTrackedTimeAllTasks / 3600;
         return {
             status: enums_1.serviceStatuses.SUCCESS,
             message: null,
