@@ -120,13 +120,14 @@ const employeeActivities = async (req, res) => {
                 const totalTime = taskEntries.map(entry => entry.timeTracked).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
                 return {
                     taskName: taskEntries[0].taskID.name,
-                    timeTracked: totalTime
+                    timeTracked: totalTime,
+                    color: taskEntries[0].taskID.color
                 };
             });
             return {
                 employeeName: `${employeeEntries[0].employeeID.firstName} ${employeeEntries[0].employeeID.lastName}`,
                 taskInfo,
-                totalTimeInSeconds
+                totalTimeInSeconds,
             };
         });
         res.status(200).json(data);

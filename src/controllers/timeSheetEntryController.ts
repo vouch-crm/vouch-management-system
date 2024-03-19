@@ -55,7 +55,6 @@ const getEntriesWithinPeriod = async (req: Request, res: Response) => {
             message: entries.message
         });
     }
-
     res.status(200).json({
         data: entries.data
     });
@@ -133,13 +132,14 @@ const employeeActivities = async (req: Request, res: Response) => {
                 const totalTime = taskEntries.map(entry => entry.timeTracked).reduce((accumulator: any, currentValue) => accumulator + currentValue, 0)
                 return {
                     taskName: (taskEntries[0].taskID as any).name,
-                    timeTracked: totalTime
+                    timeTracked: totalTime,
+                    color: (taskEntries[0].taskID as any).color
                 }
             })
             return {
                 employeeName: `${(employeeEntries[0].employeeID as any).firstName} ${(employeeEntries[0].employeeID as any).lastName}` ,
                 taskInfo,
-                totalTimeInSeconds
+                totalTimeInSeconds,
             }
 
         })
