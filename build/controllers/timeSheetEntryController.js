@@ -115,17 +115,18 @@ const employeeActivities = async (req, res) => {
         const data = employeeIDs.map(employee => {
             const employeeEntries = entries.filter(entry => entry.employeeID.toString() === employee);
             const totalTimeInSeconds = employeeEntries.map(entry => entry.timeTracked).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-            const taskInfo = taskIDs.map(task => {
-                const taskEntries = employeeEntries.filter(entry => entry.taskID.toString() === task);
-                if (taskEntries.length > 0 && employeeEntries.length > 0) {
-                    const totalTime = taskEntries.map(entry => entry.timeTracked).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-                    return {
-                        taskName: taskEntries[0].taskID.name,
-                        timeTracked: totalTime,
-                        color: taskEntries[0].taskID.color
-                    };
-                }
-            });
+            // Get unique task IDs for the current employee
+            const uniqueTaskIDs = new Set(employeeEntries.map(entry => entry.taskID.toString()));
+            // Construct taskInfo array for the current employee
+            const taskInfo = Array.from(uniqueTaskIDs).map(taskID => {
+                const taskEntries = employeeEntries.filter(entry => entry.taskID.toString() === taskID);
+                const totalTime = taskEntries.map(entry => entry.timeTracked).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+                return {
+                    taskName: taskEntries[0].taskID.name,
+                    timeTracked: totalTime,
+                    color: taskEntries[0].taskID.color
+                };
+            }).filter(task => task); // Filter out null values
             return {
                 employeeName: `${employeeEntries[0].employeeID.firstName} ${employeeEntries[0].employeeID.lastName}`,
                 taskInfo,
