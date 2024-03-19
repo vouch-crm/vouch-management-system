@@ -117,12 +117,14 @@ const employeeActivities = async (req, res) => {
             const totalTimeInSeconds = employeeEntries.map(entry => entry.timeTracked).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
             const taskInfo = taskIDs.map(task => {
                 const taskEntries = employeeEntries.filter(entry => entry.taskID.toString() === task);
-                const totalTime = taskEntries.map(entry => entry.timeTracked).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-                return {
-                    taskName: taskEntries[0].taskID.name,
-                    timeTracked: totalTime,
-                    color: taskEntries[0].taskID.color
-                };
+                if (taskEntries.length > 0 && employeeEntries.length > 0) {
+                    const totalTime = taskEntries.map(entry => entry.timeTracked).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+                    return {
+                        taskName: taskEntries[0].taskID.name,
+                        timeTracked: totalTime,
+                        color: taskEntries[0].taskID.color
+                    };
+                }
             });
             return {
                 employeeName: `${employeeEntries[0].employeeID.firstName} ${employeeEntries[0].employeeID.lastName}`,

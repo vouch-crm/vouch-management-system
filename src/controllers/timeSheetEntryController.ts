@@ -129,15 +129,18 @@ const employeeActivities = async (req: Request, res: Response) => {
             const totalTimeInSeconds = employeeEntries.map(entry => entry.timeTracked).reduce((accumulator: any, currentValue) => accumulator + currentValue, 0)
             const taskInfo = taskIDs.map(task => {
                 const taskEntries = employeeEntries.filter(entry => entry.taskID.toString() === task)
-                const totalTime = taskEntries.map(entry => entry.timeTracked).reduce((accumulator: any, currentValue) => accumulator + currentValue, 0)
-                return {
-                    taskName: (taskEntries[0].taskID as any).name,
-                    timeTracked: totalTime,
-                    color: (taskEntries[0].taskID as any).color
+                if (taskEntries.length > 0 && employeeEntries.length > 0) {
+                    const totalTime = taskEntries.map(entry => entry.timeTracked).reduce((accumulator: any, currentValue) => accumulator + currentValue, 0)
+                    return {
+                        taskName: (taskEntries[0].taskID as any).name,
+                        timeTracked: totalTime,
+                        color: (taskEntries[0].taskID as any).color
+                    }
                 }
+
             })
             return {
-                employeeName: `${(employeeEntries[0].employeeID as any).firstName} ${(employeeEntries[0].employeeID as any).lastName}` ,
+                employeeName: `${(employeeEntries[0].employeeID as any).firstName} ${(employeeEntries[0].employeeID as any).lastName}`,
                 taskInfo,
                 totalTimeInSeconds,
             }
