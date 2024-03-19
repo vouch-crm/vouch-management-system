@@ -137,7 +137,7 @@ const employeeActivities = async (req: Request, res: Response) => {
                 const totalTime = taskEntries.map(entry => entry.timeTracked).reduce((accumulator: any, currentValue) => accumulator + currentValue, 0);
                 return {
                     taskName: (taskEntries[0].taskID as any).name,
-                    timeTracked: totalTime,
+                    timeTracked: +totalTime.toFixed(2),
                     color: (taskEntries[0].taskID as any).color
                 };
             }).filter(task => task); // Filter out null values
@@ -145,7 +145,7 @@ const employeeActivities = async (req: Request, res: Response) => {
             return {
                 employeeName: `${(employeeEntries[0].employeeID as any).firstName} ${(employeeEntries[0].employeeID as any).lastName}`,
                 taskInfo,
-                totalTimeInSeconds,
+                totalTimeInSeconds: +totalTimeInSeconds.toFixed(2),
             };
         });
         
