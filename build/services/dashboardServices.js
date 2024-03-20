@@ -136,6 +136,9 @@ const dashboardStats2 = async (startDate, endDate) => {
                 $addFields: {
                     taskName: {
                         $arrayElemAt: ['$task.name', 0]
+                    },
+                    color: {
+                        $arrayElemAt: ['$task.color', 0]
                     }
                 }
             },
@@ -144,6 +147,7 @@ const dashboardStats2 = async (startDate, endDate) => {
                     _id: 0,
                     trackedDay: '$_id.trackedDay',
                     taskName: 1,
+                    color: 1,
                     totalTrackedHoursPerDay: 1
                 }
             },
