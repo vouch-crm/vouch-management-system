@@ -214,7 +214,10 @@ const dashboardStats3 = async (startDate: Date, endDate: Date): Promise<dashboar
             {
                 $addFields: {
                     taskName: {
-                        $arrayElemAt: ['$task.name', 0]
+                        $arrayElemAt: ['$task.name', 0],
+                    },
+                    color: {
+                        $arrayElemAt: ['$task.color', 0] 
                     }
                 }
             },
@@ -222,7 +225,8 @@ const dashboardStats3 = async (startDate: Date, endDate: Date): Promise<dashboar
                 $project: {
                     _id: 0,
                     taskName: 1,
-                    totalHours: 1
+                    totalHours: 1,
+                    color: 1
                 }
             }
         ]);
