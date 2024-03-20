@@ -112,7 +112,13 @@ const del = async (req: Request, res: Response) => {
 
 const employeeActivities = async (req: Request, res: Response) => {
     try {
-        const entries = await TimeSheetEntryAgent.find().populate('taskID').populate('employeeID')
+        const { startDate, endDate } = req.params
+        const entries = await TimeSheetEntryAgent.find({
+            trackedDay: {
+                $gte: startDate,
+                $lte: endDate
+            }
+        }).populate('taskID').populate('employeeID')
         let employeeIDs: string[] = [];
         let taskIDs: string[] = [];
         entries.forEach(entry => {
@@ -127,10 +133,10 @@ const employeeActivities = async (req: Request, res: Response) => {
         const data = employeeIDs.map(employee => {
             const employeeEntries = entries.filter(entry => entry.employeeID.toString() === employee);
             const totalTimeInSeconds = employeeEntries.map(entry => entry.timeTracked).reduce((accumulator: any, currentValue) => accumulator + currentValue, 0);
-            
+
             // Get unique task IDs for the current employee
             const uniqueTaskIDs = new Set(employeeEntries.map(entry => entry.taskID.toString()));
-        
+
             // Construct taskInfo array for the current employee
             const taskInfo = Array.from(uniqueTaskIDs).map(taskID => {
                 const taskEntries = employeeEntries.filter(entry => entry.taskID.toString() === taskID);
@@ -141,14 +147,14 @@ const employeeActivities = async (req: Request, res: Response) => {
                     color: (taskEntries[0].taskID as any).color
                 };
             }).filter(task => task); // Filter out null values
-            
+
             return {
                 employeeName: `${(employeeEntries[0].employeeID as any).firstName} ${(employeeEntries[0].employeeID as any).lastName}`,
                 taskInfo,
                 totalTimeInSeconds: +totalTimeInSeconds.toFixed(2),
             };
         });
-        
+
 
         res.status(200).json(data)
 
@@ -164,6 +170,6 @@ timeSheetController.get('/time-sheet-entry', getAll);
 timeSheetController.get('/time-sheet-entry/:employeeID/:startDate/:endDate', getEntriesWithinPeriod);
 timeSheetController.patch('/time-sheet-entry/:id', update);
 timeSheetController.post('/time-sheet-entries', del);
-timeSheetController.get('/team-activities', employeeActivities);
+timeSheetController.get('/team-activities/:startDate/:endDate', employeeActivities);
 
 export default timeSheetController;

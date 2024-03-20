@@ -101,7 +101,13 @@ const del = async (req, res) => {
 };
 const employeeActivities = async (req, res) => {
     try {
-        const entries = await timesheetEntryModel_1.TimeSheetEntryAgent.find().populate('taskID').populate('employeeID');
+        const { startDate, endDate } = req.params;
+        const entries = await timesheetEntryModel_1.TimeSheetEntryAgent.find({
+            trackedDay: {
+                $gte: startDate,
+                $lte: endDate
+            }
+        }).populate('taskID').populate('employeeID');
         let employeeIDs = [];
         let taskIDs = [];
         entries.forEach(entry => {
@@ -145,5 +151,5 @@ timeSheetController.get('/time-sheet-entry', getAll);
 timeSheetController.get('/time-sheet-entry/:employeeID/:startDate/:endDate', getEntriesWithinPeriod);
 timeSheetController.patch('/time-sheet-entry/:id', update);
 timeSheetController.post('/time-sheet-entries', del);
-timeSheetController.get('/team-activities', employeeActivities);
+timeSheetController.get('/team-activities/:startDate/:endDate', employeeActivities);
 exports.default = timeSheetController;
