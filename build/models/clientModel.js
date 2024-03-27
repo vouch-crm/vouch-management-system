@@ -68,6 +68,7 @@ const clientSchema = new mongoose_1.Schema({
         type: Boolean,
         default: false
     },
-    emailSent: Boolean
+    emailSent: Boolean,
+    currency: String
 });
 exports.clientAgent = mongoose_1.default.model('client', clientSchema);
