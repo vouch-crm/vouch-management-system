@@ -3,6 +3,7 @@ import mongoose, { Schema } from "mongoose";
 type TimeSheetEntryDTO = {
     taskID: string,
     employeeID: string,
+    clientID: string,
     timeTracked: Number, // in seconds
     trackedDay: Date,
     startTime?: Date,
@@ -21,6 +22,11 @@ const timesheetEntrySchema = new Schema({
     employeeID: {
         type: Schema.Types.ObjectId,
         ref: 'Employee',
+        required: true
+    },
+    clientID: {
+        type: Schema.Types.ObjectId,
+        ref: 'Client',
         required: true
     },
     timeTracked: Number, // in seconds

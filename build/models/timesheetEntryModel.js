@@ -36,6 +36,11 @@ const timesheetEntrySchema = new mongoose_1.Schema({
         ref: 'Employee',
         required: true
     },
+    clientID: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: 'Client',
+        required: true
+    },
     timeTracked: Number,
     trackedDay: Date,
     startTime: Date,
