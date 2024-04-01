@@ -1,5 +1,12 @@
 import Mongoose from "mongoose";
 import { TimeSheetEntryAgent } from "../models/timesheetEntryModel";
+import { serviceStatuses } from "./enums";
+
+export type reportReturn = {
+    status: string,
+    message: string | null,
+    data: any | null
+}
 
 export const getWorkHoursPerDay = async (startDate: Date, endDate: Date) => {
     try {
@@ -102,3 +109,128 @@ export const getMonthlyCostPerClient = async (month: number, clientID: string) =
     }
 }
 
+const getClientTotalHoursAndHoursPerDay = async (clientID: string,
+    startDate: Date, endDate: Date): Promise<reportReturn> => {
+    try {
+        const report = await TimeSheetEntryAgent.aggregate([
+            {
+                $match: {
+                    trackedDay: {
+                        $gte: startDate,
+                        $lte: endDate
+                    },
+                    clientID: new Mongoose.Types.ObjectId(clientID)
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        trackedDay: '$trackedDay',
+                    },
+                    totalTimeTrackedInSecondsPerDay: {
+                        $sum: '$timeTracked'
+                    }
+                }
+            },
+            {
+                $addFields: {
+                    totalTimeTrackedInHoursPerDay: {
+                        $divide: ['$totalTimeTrackedInSecondsPerDay', 3600]
+                    }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    clientID: clientID,
+                    trackedDay: '$_id.trackedDay',
+                    totalTimeTrackedInHoursPerDay: 1
+                }
+            },
+            {
+                $sort: {
+                    trackedDay: 1
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalTimeTrackedInHours: {
+                        $sum: '$totalTimeTrackedInHoursPerDay'
+                    },
+                    report: {
+                        $push: '$$ROOT'
+                    }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    totalTimeTrackedInHours: 1,
+                    report: 1
+                }
+            }
+        ]);
+
+        return {
+            status: serviceStatuses.SUCCESS,
+            message: null,
+            data: report
+        };
+    } catch (error) {
+        return {
+            status: serviceStatuses.ERROR,
+            message: `${error}`,
+            data: null
+        }
+    }
+}
+
+const getEmployeeTotalRevenue = async (startDate: Date, endDate: Date): Promise<reportReturn> => {
+    try {
+        const report = await TimeSheetEntryAgent.aggregate([
+            {
+                $match: {
+                    trackedDay: {
+                        $gte: startDate,
+                        $lte: endDate
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        employeeID: '$employeeID'
+                    },
+                    totalRevenue: {
+                        $sum: '$cost'
+                    }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    employeeID: '$_id.employeeID',
+                    totalRevenue: 1
+                }
+            }
+        ]);
+
+        return {
+            status: serviceStatuses.SUCCESS,
+            message: null,
+            data: report
+        };
+    } catch (error) {
+        return {
+            status: serviceStatuses.ERROR,
+            message: `${error}`,
+            data: null
+        }
+    }
+}
+
+export const reportServices = {
+    getClientTotalHoursAndHoursPerDay,
+    getEmployeeTotalRevenue
+}

@@ -3,9 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getMonthlyCostPerClient = exports.getWorkHoursPerDay = void 0;
+exports.reportServices = exports.getMonthlyCostPerClient = exports.getWorkHoursPerDay = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const timesheetEntryModel_1 = require("../models/timesheetEntryModel");
+const enums_1 = require("./enums");
 const getWorkHoursPerDay = async (startDate, endDate) => {
     try {
         const data = await timesheetEntryModel_1.TimeSheetEntryAgent.aggregate([
@@ -109,3 +110,125 @@ const getMonthlyCostPerClient = async (month, clientID) => {
     }
 };
 exports.getMonthlyCostPerClient = getMonthlyCostPerClient;
+const getClientTotalHoursAndHoursPerDay = async (clientID, startDate, endDate) => {
+    try {
+        const report = await timesheetEntryModel_1.TimeSheetEntryAgent.aggregate([
+            {
+                $match: {
+                    trackedDay: {
+                        $gte: startDate,
+                        $lte: endDate
+                    },
+                    clientID: new mongoose_1.default.Types.ObjectId(clientID)
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        trackedDay: '$trackedDay',
+                    },
+                    totalTimeTrackedInSecondsPerDay: {
+                        $sum: '$timeTracked'
+                    }
+                }
+            },
+            {
+                $addFields: {
+                    totalTimeTrackedInHoursPerDay: {
+                        $divide: ['$totalTimeTrackedInSecondsPerDay', 3600]
+                    }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    clientID: clientID,
+                    trackedDay: '$_id.trackedDay',
+                    totalTimeTrackedInHoursPerDay: 1
+                }
+            },
+            {
+                $sort: {
+                    trackedDay: 1
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalTimeTrackedInHours: {
+                        $sum: '$totalTimeTrackedInHoursPerDay'
+                    },
+                    report: {
+                        $push: '$$ROOT'
+                    }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    totalTimeTrackedInHours: 1,
+                    report: 1
+                }
+            }
+        ]);
+        return {
+            status: enums_1.serviceStatuses.SUCCESS,
+            message: null,
+            data: report
+        };
+    }
+    catch (error) {
+        return {
+            status: enums_1.serviceStatuses.ERROR,
+            message: `${error}`,
+            data: null
+        };
+    }
+};
+const getEmployeeTotalRevenue = async (startDate, endDate) => {
+    try {
+        const report = await timesheetEntryModel_1.TimeSheetEntryAgent.aggregate([
+            {
+                $match: {
+                    trackedDay: {
+                        $gte: startDate,
+                        $lte: endDate
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        employeeID: '$employeeID'
+                    },
+                    totalRevenue: {
+                        $sum: '$cost'
+                    }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    employeeID: '$_id.employeeID',
+                    totalRevenue: 1
+                }
+            }
+        ]);
+        return {
+            status: enums_1.serviceStatuses.SUCCESS,
+            message: null,
+            data: report
+        };
+    }
+    catch (error) {
+        return {
+            status: enums_1.serviceStatuses.ERROR,
+            message: `${error}`,
+            data: null
+        };
+    }
+};
+exports.reportServices = {
+    getClientTotalHoursAndHoursPerDay,
+    getEmployeeTotalRevenue
+};

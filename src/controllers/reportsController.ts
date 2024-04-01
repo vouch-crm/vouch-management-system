@@ -1,5 +1,6 @@
-import { Router, Request, Response } from 'express'
-import { getWorkHoursPerDay, getMonthlyCostPerClient } from '../services/reportsServices'
+import { Router, Request, Response } from 'express';
+import { getWorkHoursPerDay, getMonthlyCostPerClient } from '../services/reportsServices';
+import { reportServices } from '../services/reportsServices';
 
 const reportsRouter = Router()
 
@@ -29,8 +30,36 @@ const getClientMonthlyCost = async (req: Request, res: Response) => {
 
 }
 
-reportsRouter.get('/reports-bar/:startDate/:endDate', getBarData)
-reportsRouter.get('/client-monthly-cost/:clientID', getClientMonthlyCost)
+const getClientTotalHoursAndHoursPerDay = async (
+    req: Request, res: Response) => {
+    const clientID = req.params.clientID;
+    const startDate = new Date(req.params.startDate as string);
+    const endDate = new Date(req.params.endDate as string);
+    const report = await reportServices
+        .getClientTotalHoursAndHoursPerDay(clientID, startDate, endDate);
+
+    res.status(200).json({
+        data: report
+    });
+}
+
+const getEmployeeTotalRevenue = async (
+    req: Request, res: Response) => {
+    const startDate = new Date(req.params.startDate as string);
+    const endDate = new Date(req.params.endDate as string);
+    const report = await reportServices.getEmployeeTotalRevenue(startDate, endDate);
+
+    res.status(200).json({
+        data: report
+    });
+}
+
+reportsRouter.get('/reports-bar/:startDate/:endDate', getBarData);
+reportsRouter.get('/client-monthly-cost/:clientID', getClientMonthlyCost);
+reportsRouter.get('/report-client/:clientID/:startDate/:endDate',
+    getClientTotalHoursAndHoursPerDay);
+reportsRouter.get('/report-employee-revenues/:startDate/:endDate', getEmployeeTotalRevenue);
+
 
 export default reportsRouter
 
