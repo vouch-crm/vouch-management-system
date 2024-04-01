@@ -17,7 +17,7 @@ const create = async (req, res) => {
             message: `No employee found with this ID: ${requestData.employeeID}`
         });
     }
-    requestData.cost = (requestData.timeTracked / 3600) * empHourlyRate;
+    // requestData.cost = ((requestData.timeTracked as number) / 3600) * empHourlyRate;
     const newEntry = await timeSheetEntryServices_1.timeSheetEntryServices.create(requestData);
     if (newEntry.status !== enums_1.serviceStatuses.SUCCESS) {
         return res.status(400).json({

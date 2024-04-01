@@ -29,13 +29,26 @@ const timesheetEntrySchema = new Schema({
         ref: 'Client',
         required: true
     },
-    timeTracked: Number, // in seconds
+    timeTracked: {
+        type: Number,
+        required: true
+    }, // in seconds
     trackedDay: Date,
     startTime: Date,
     endTime: Date,
     cost: Number,
     description: String,
     timesheetRow: Number,
+})
+
+timesheetEntrySchema.pre('save', async function(next) {
+    try {
+        await this.populate('employeeID')
+        this.cost = (this.employeeID as any).hourlyRate * (this.timeTracked / 3600) 
+        next()
+    } catch (error: any) {
+        next(error)
+    }
 })
 
 const TimeSheetEntryAgent = mongoose.model<TimeSheetEntryDTO>(

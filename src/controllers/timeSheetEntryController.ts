@@ -17,7 +17,7 @@ const create = async (req: Request, res: Response) => {
         });
     }
 
-    requestData.cost = ((requestData.timeTracked as number) / 3600) * empHourlyRate;
+    // requestData.cost = ((requestData.timeTracked as number) / 3600) * empHourlyRate;
     const newEntry = await timeSheetEntryServices.create(requestData);
     if (newEntry.status !== serviceStatuses.SUCCESS) {
         return res.status(400).json({

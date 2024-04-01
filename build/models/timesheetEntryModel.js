@@ -41,13 +41,26 @@ const timesheetEntrySchema = new mongoose_1.Schema({
         ref: 'Client',
         required: true
     },
-    timeTracked: Number,
+    timeTracked: {
+        type: Number,
+        required: true
+    },
     trackedDay: Date,
     startTime: Date,
     endTime: Date,
     cost: Number,
     description: String,
     timesheetRow: Number,
+});
+timesheetEntrySchema.pre('save', async function (next) {
+    try {
+        await this.populate('employeeID');
+        this.cost = this.employeeID.hourlyRate * (this.timeTracked / 3600);
+        next();
+    }
+    catch (error) {
+        next(error);
+    }
 });
 const TimeSheetEntryAgent = mongoose_1.default.model('TimesheetEntry', timesheetEntrySchema);
 exports.TimeSheetEntryAgent = TimeSheetEntryAgent;
