@@ -126,9 +126,13 @@ const getClientTotalHoursAndHoursPerDay = async (clientID: string,
                 $group: {
                     _id: {
                         trackedDay: '$trackedDay',
+                        // clientID: '$clientID'
                     },
                     totalTimeTrackedInSecondsPerDay: {
                         $sum: '$timeTracked'
+                    },
+                    clientID: {
+                        $first: '$clientID'
                     }
                 }
             },
@@ -142,8 +146,8 @@ const getClientTotalHoursAndHoursPerDay = async (clientID: string,
             {
                 $project: {
                     _id: 0,
-                    clientID: clientID,
                     trackedDay: '$_id.trackedDay',
+                    clientID: '$clientID',
                     totalTimeTrackedInHoursPerDay: 1
                 }
             },
@@ -164,9 +168,125 @@ const getClientTotalHoursAndHoursPerDay = async (clientID: string,
                 }
             },
             {
+                $lookup: {
+                    from: 'clients',
+                    localField: 'report.clientID',
+                    foreignField: '_id',
+                    as: 'client'
+                }
+            },
+            {
+                $addFields: {
+                    clientName: {
+                        $arrayElemAt: ['$client.clientBasicInfo.name', 0]
+                    }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    clientName: 1,
+                    totalTimeTrackedInHours: 1,
+                    report: 1
+                }
+            }
+        ]);
+
+        return {
+            status: serviceStatuses.SUCCESS,
+            message: null,
+            data: report
+        };
+    } catch (error) {
+        return {
+            status: serviceStatuses.ERROR,
+            message: `${error}`,
+            data: null
+        }
+    }
+}
+
+const getEmployeeTotalHoursAndHoursPerDay = async (employeeID: string,
+    startDate: Date, endDate: Date): Promise<reportReturn> => {
+    try {
+        const report = await TimeSheetEntryAgent.aggregate([
+            {
+                $match: {
+                    trackedDay: {
+                        $gte: startDate,
+                        $lte: endDate
+                    },
+                    employeeID: new Mongoose.Types.ObjectId(employeeID)
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        trackedDay: '$trackedDay',
+                    },
+                    totalTimeTrackedInSecondsPerDay: {
+                        $sum: '$timeTracked'
+                    },
+                    employeeID: {
+                        $first: '$employeeID'
+                    }
+                }
+            },
+            {
+                $addFields: {
+                    totalTimeTrackedInHoursPerDay: {
+                        $divide: ['$totalTimeTrackedInSecondsPerDay', 3600]
+                    }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    trackedDay: '$_id.trackedDay',
+                    employeeID: '$employeeID',
+                    totalTimeTrackedInHoursPerDay: 1
+                }
+            },
+            {
+                $sort: {
+                    trackedDay: 1
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalTimeTrackedInHours: {
+                        $sum: '$totalTimeTrackedInHoursPerDay'
+                    },
+                    report: {
+                        $push: '$$ROOT'
+                    }
+                }
+            },
+            {
+                $lookup: {
+                    from: 'employees',
+                    localField: 'report.employeeID',
+                    foreignField: '_id',
+                    as: 'employee'
+                }
+            },
+            {
+                $addFields: {
+                    employeeFirstName: {
+                        $arrayElemAt: ['$employee.firstName', 0]
+                    },
+                    employeeLastName: {
+                        $arrayElemAt: ['$employee.lastName', 0]
+                    },
+                }
+            },
+            {
                 $project: {
                     _id: 0,
                     totalTimeTrackedInHours: 1,
+                    employeeFirstName: 1,
+                    employeeLastName: 1,
                     report: 1
                 }
             }
@@ -232,5 +352,6 @@ const getEmployeeTotalRevenue = async (startDate: Date, endDate: Date): Promise<
 
 export const reportServices = {
     getClientTotalHoursAndHoursPerDay,
+    getEmployeeTotalHoursAndHoursPerDay,
     getEmployeeTotalRevenue
 }
