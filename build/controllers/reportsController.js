@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const reportsServices_1 = require("../services/reportsServices");
 const reportsServices_2 = require("../services/reportsServices");
+const enums_1 = require("../services/enums");
 const reportsRouter = (0, express_1.Router)();
 const getBarData = async (req, res) => {
     try {
@@ -32,20 +33,46 @@ const getClientTotalHoursAndHoursPerDay = async (req, res) => {
     const endDate = new Date(req.params.endDate);
     const report = await reportsServices_2.reportServices
         .getClientTotalHoursAndHoursPerDay(clientID, startDate, endDate);
+    if (report.status !== enums_1.serviceStatuses.SUCCESS) {
+        return res.status(400).json({
+            message: report.message
+        });
+    }
     res.status(200).json({
-        data: report
+        data: report.data
+    });
+};
+const getEmployeeTotalHoursAndHoursPerDay = async (req, res) => {
+    const employeeID = req.params.employeeID;
+    const startDate = new Date(req.params.startDate);
+    const endDate = new Date(req.params.endDate);
+    const report = await reportsServices_2.reportServices
+        .getEmployeeTotalHoursAndHoursPerDay(employeeID, startDate, endDate);
+    if (report.status !== enums_1.serviceStatuses.SUCCESS) {
+        return res.status(400).json({
+            message: report.message
+        });
+    }
+    res.status(200).json({
+        data: report.data
     });
 };
 const getEmployeeTotalRevenue = async (req, res) => {
     const startDate = new Date(req.params.startDate);
     const endDate = new Date(req.params.endDate);
     const report = await reportsServices_2.reportServices.getEmployeeTotalRevenue(startDate, endDate);
+    if (report.status !== enums_1.serviceStatuses.SUCCESS) {
+        return res.status(400).json({
+            message: report.message
+        });
+    }
     res.status(200).json({
-        data: report
+        data: report.data
     });
 };
 reportsRouter.get('/reports-bar/:startDate/:endDate', getBarData);
 reportsRouter.get('/client-monthly-cost/:clientID', getClientMonthlyCost);
 reportsRouter.get('/report-client/:clientID/:startDate/:endDate', getClientTotalHoursAndHoursPerDay);
+reportsRouter.get('/report-employee/:employeeID/:startDate/:endDate', getEmployeeTotalHoursAndHoursPerDay);
 reportsRouter.get('/report-employee-revenues/:startDate/:endDate', getEmployeeTotalRevenue);
 exports.default = reportsRouter;
