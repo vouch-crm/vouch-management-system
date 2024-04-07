@@ -57,6 +57,19 @@ const getEmployeeTotalHoursAndHoursPerDay = async (req, res) => {
         data: report.data
     });
 };
+const getClientsTotalHoursByEmployees = async (req, res) => {
+    const startDate = new Date(req.params.startDate);
+    const endDate = new Date(req.params.endDate);
+    const report = await reportsServices_2.reportServices.getClientsTotalHoursByEmployees(startDate, endDate);
+    if (report.status !== enums_1.serviceStatuses.SUCCESS) {
+        return res.status(400).json({
+            message: report.message
+        });
+    }
+    res.status(200).json({
+        data: report.data
+    });
+};
 const getEmployeeTotalRevenue = async (req, res) => {
     const startDate = new Date(req.params.startDate);
     const endDate = new Date(req.params.endDate);
@@ -74,5 +87,6 @@ reportsRouter.get('/reports-bar/:startDate/:endDate', getBarData);
 reportsRouter.get('/client-monthly-cost/:clientID', getClientMonthlyCost);
 reportsRouter.get('/report-client/:clientID/:startDate/:endDate', getClientTotalHoursAndHoursPerDay);
 reportsRouter.get('/report-employee/:employeeID/:startDate/:endDate', getEmployeeTotalHoursAndHoursPerDay);
+reportsRouter.get('/report-client/:startDate/:endDate', getClientsTotalHoursByEmployees);
 reportsRouter.get('/report-employee-revenues/:startDate/:endDate', getEmployeeTotalRevenue);
 exports.default = reportsRouter;

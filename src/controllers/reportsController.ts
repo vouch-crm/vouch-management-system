@@ -69,6 +69,23 @@ const getEmployeeTotalHoursAndHoursPerDay = async (
     });
 }
 
+const getClientsTotalHoursByEmployees = async (
+    req: Request, res: Response) => {
+    const startDate = new Date(req.params.startDate as string);
+    const endDate = new Date(req.params.endDate as string);
+    const report = await reportServices.getClientsTotalHoursByEmployees(startDate, endDate);
+
+    if (report.status !== serviceStatuses.SUCCESS) {
+        return res.status(400).json({
+            message: report.message
+        });
+    }
+
+    res.status(200).json({
+        data: report.data
+    });
+}
+
 const getEmployeeTotalRevenue = async (
     req: Request, res: Response) => {
     const startDate = new Date(req.params.startDate as string);
@@ -92,6 +109,7 @@ reportsRouter.get('/report-client/:clientID/:startDate/:endDate',
     getClientTotalHoursAndHoursPerDay);
 reportsRouter.get('/report-employee/:employeeID/:startDate/:endDate', 
     getEmployeeTotalHoursAndHoursPerDay);
+reportsRouter.get('/report-client/:startDate/:endDate', getClientsTotalHoursByEmployees);
 reportsRouter.get('/report-employee-revenues/:startDate/:endDate', getEmployeeTotalRevenue);
 
 

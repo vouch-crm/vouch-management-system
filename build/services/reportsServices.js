@@ -126,7 +126,6 @@ const getClientTotalHoursAndHoursPerDay = async (clientID, startDate, endDate) =
                 $group: {
                     _id: {
                         trackedDay: '$trackedDay',
-                        // clientID: '$clientID'
                     },
                     totalTimeTrackedInSecondsPerDay: {
                         $sum: '$timeTracked'
@@ -303,6 +302,69 @@ const getEmployeeTotalHoursAndHoursPerDay = async (employeeID, startDate, endDat
         };
     }
 };
+const getClientsTotalHoursByEmployees = async (startDate, endDate) => {
+    try {
+        const report = await timesheetEntryModel_1.TimeSheetEntryAgent.aggregate([
+            {
+                $match: {
+                    trackedDay: {
+                        $gte: startDate,
+                        $lte: endDate
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: '$clientID',
+                    totalTrackedSecondsPerClient: {
+                        $sum: '$timeTracked'
+                    },
+                }
+            },
+            {
+                $addFields: {
+                    totalTrackedHoursPerClient: {
+                        $divide: ['$totalTrackedSecondsPerClient', 3600]
+                    }
+                }
+            },
+            {
+                $lookup: {
+                    from: 'clients',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'client'
+                }
+            },
+            {
+                $addFields: {
+                    clientName: {
+                        $arrayElemAt: ['$client.clientBasicInfo.name', 0]
+                    }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    clientName: 1,
+                    totalTrackedHoursPerClient: 1
+                }
+            }
+        ]);
+        return {
+            status: enums_1.serviceStatuses.SUCCESS,
+            message: null,
+            data: report
+        };
+    }
+    catch (error) {
+        return {
+            status: enums_1.serviceStatuses.ERROR,
+            message: `${error}`,
+            data: null
+        };
+    }
+};
 const getEmployeeTotalRevenue = async (startDate, endDate) => {
     try {
         const report = await timesheetEntryModel_1.TimeSheetEntryAgent.aggregate([
@@ -349,5 +411,6 @@ const getEmployeeTotalRevenue = async (startDate, endDate) => {
 exports.reportServices = {
     getClientTotalHoursAndHoursPerDay,
     getEmployeeTotalHoursAndHoursPerDay,
+    getClientsTotalHoursByEmployees,
     getEmployeeTotalRevenue
 };
