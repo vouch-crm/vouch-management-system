@@ -80,6 +80,11 @@ export const getMonthlyCostPerClient = async (month: number, clientID: string) =
                 }
             },
             {
+                $addFields: {
+
+                }
+            },
+            {
                 $unwind: '$client'
             },
             {
@@ -102,3 +107,22 @@ export const getMonthlyCostPerClient = async (month: number, clientID: string) =
     }
 }
 
+export const getEntriesWithinPeriod = async (startDate: Date, endDate: Date, pageNumber: number) => {
+    try {
+        const PAGE_SIZE = 50
+        const skipCount = (pageNumber - 1) * PAGE_SIZE;
+        const entries = await TimeSheetEntryAgent.find({
+            trackedDay: {
+                $gte: startDate,
+                $lte: endDate
+            }
+        }).populate('taskID', 'name').populate('employeeID', 'firstName lastName').sort({trackedDay: -1}).skip(skipCount).limit(PAGE_SIZE).exec()
+
+        const totalTime = entries.map(entry => entry.timeTracked).reduce((acc: any, cur: any) => acc + cur, 0) / 3600
+
+
+        return { totalTime, entries }
+    } catch (error: any) {
+        throw new Error(error)
+    }
+}
