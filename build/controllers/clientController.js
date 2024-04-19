@@ -16,8 +16,9 @@ const clientOnBoard = async (req, res) => {
     const clientData = {
         clientBasicInfo: {
             name: requestData.nameOnBoard,
-            email: requestData.email
-        }
+            email: requestData.email,
+        },
+        monthlyBudget: requestData.monthlyBudget
     };
     const dbResponse = await clientServices_1.clientServices.create(clientData);
     if (dbResponse.status === 'success') {

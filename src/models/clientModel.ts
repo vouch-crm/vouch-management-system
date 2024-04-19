@@ -30,7 +30,8 @@ export interface IClient{
     workflowUpdates?: boolean,
     marketingUpdates?: boolean,
     emailSent?: boolean,
-    currency?: string
+    currency?: string,
+    monthlyBudget?: number
 }
 
 const clientSchema: Schema = new Schema({
@@ -77,7 +78,8 @@ const clientSchema: Schema = new Schema({
             default: false
     },
     emailSent: Boolean,
-    currency: String
+    currency: String,
+    monthlyBudget: Number
 });
 
 export const clientAgent = mongoose.model<IClient>('client', clientSchema);

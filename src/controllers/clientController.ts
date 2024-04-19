@@ -16,8 +16,9 @@ const clientOnBoard = async (req: Request, res: Response) => {
     const clientData: IClient = {
         clientBasicInfo: {
             name: requestData.nameOnBoard,
-            email: requestData.email
-        }
+            email: requestData.email,
+        },
+        monthlyBudget: requestData.monthlyBudget
     }
 
     const dbResponse: IReturnClient = await clientServices.create(clientData);

@@ -232,7 +232,7 @@ const uploadFile = async (req, res) => {
 };
 employeeRouter.post('/employee', adminMiddleware_1.checkIfAdmin, validation_1.validationFunctions.createEmployeeBodyValidationRules(), validation_1.validationFunctions.validationMiddleware, create);
 employeeRouter.post('/employee-login', login);
-employeeRouter.get('/employee', adminMiddleware_1.checkIfAdmin, getAll);
+employeeRouter.get('/employee', getAll);
 employeeRouter.get('/employee/:id', adminMiddleware_1.checkIfAdmin, getEmployeeByID);
 employeeRouter.delete('/employee/:id', adminMiddleware_1.checkIfAdmin, del);
 employeeRouter.put('/employee/:id', update);

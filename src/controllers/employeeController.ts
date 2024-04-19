@@ -265,7 +265,7 @@ const uploadFile = async (req: Request, res: Response) => {
 employeeRouter.post('/employee', checkIfAdmin, validationFunctions.createEmployeeBodyValidationRules(),
     validationFunctions.validationMiddleware, create);
 employeeRouter.post('/employee-login', login);
-employeeRouter.get('/employee', checkIfAdmin, getAll);
+employeeRouter.get('/employee', getAll);
 employeeRouter.get('/employee/:id', checkIfAdmin, getEmployeeByID);
 employeeRouter.delete('/employee/:id', checkIfAdmin, del);
 employeeRouter.put('/employee/:id', update);

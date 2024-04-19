@@ -41,15 +41,15 @@ const timesheetEntrySchema = new Schema({
     timesheetRow: Number,
 })
 
-timesheetEntrySchema.pre('save', async function(next) {
-    try {
-        await this.populate('employeeID')
-        this.cost = (this.employeeID as any).hourlyRate * (this.timeTracked / 3600) 
-        next()
-    } catch (error: any) {
-        next(error)
-    }
-})
+// timesheetEntrySchema.pre('save', async function(next) {
+//     try {
+//         await this.populate('employeeID')
+//         this.cost = (this.employeeID as any).hourlyRate * (this.timeTracked / 3600) 
+//         next()
+//     } catch (error: any) {
+//         next(error)
+//     }
+// })
 
 const TimeSheetEntryAgent = mongoose.model<TimeSheetEntryDTO>(
     'TimesheetEntry', timesheetEntrySchema);
