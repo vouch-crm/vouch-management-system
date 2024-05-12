@@ -23,34 +23,29 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TimeSheetEntryAgent = void 0;
+exports.revenueAgent = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const timesheetEntrySchema = new mongoose_1.Schema({
-    taskID: {
-        type: mongoose_1.Schema.Types.ObjectId,
-        ref: 'Task',
-        required: true
+const monthSchema = new mongoose_1.Schema({
+    retainer: Number,
+    fees: {
+        type: Map,
+        of: Number,
     },
-    employeeID: {
-        type: mongoose_1.Schema.Types.ObjectId,
-        ref: 'Employee',
-        required: true
-    },
+    totalBudget: Number
+});
+const revenueSchema = new mongoose_1.Schema({
     clientID: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: 'Client',
         required: true
     },
-    timeTracked: {
-        type: Number,
-        required: true
+    type: String,
+    year: String,
+    months: {
+        type: Map,
+        of: monthSchema
     },
-    trackedDay: Date,
-    startTime: Date,
-    endTime: Date,
-    cost: Number,
-    description: String,
-    timesheetRow: Number,
+    totalBudget: Number
 });
-const TimeSheetEntryAgent = mongoose_1.default.model('TimesheetEntry', timesheetEntrySchema);
-exports.TimeSheetEntryAgent = TimeSheetEntryAgent;
+const revenueAgent = mongoose_1.default.model('Revenue', revenueSchema);
+exports.revenueAgent = revenueAgent;
