@@ -20,6 +20,7 @@ const timeSheetTemplateController_1 = __importDefault(require("./controllers/tim
 const TaskController_1 = __importDefault(require("./controllers/TaskController"));
 const dashboardController_1 = __importDefault(require("./controllers/dashboardController"));
 const reportsController_1 = __importDefault(require("./controllers/reportsController"));
+const revenueController_1 = __importDefault(require("./controllers/revenueController"));
 const utils_1 = require("./services/utils");
 const cors_1 = __importDefault(require("cors"));
 const morgan_1 = __importDefault(require("morgan"));
@@ -45,6 +46,7 @@ app.use(timeSheetTemplateController_1.default);
 app.use(TaskController_1.default);
 app.use(dashboardController_1.default);
 app.use(reportsController_1.default);
+app.use(revenueController_1.default);
 app.get('/', (_req, res) => {
     res.status(200).json({
         message: 'Server Started!'
