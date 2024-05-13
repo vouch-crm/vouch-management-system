@@ -1,5 +1,6 @@
 import { body, validationResult } from 'express-validator'
 import { Request, Response, NextFunction } from 'express'
+import { revenueType } from '../services/enums'
 
 const createEmployeeBodyValidationRules = () => {
     return [
@@ -39,6 +40,20 @@ const createTrainingBodyValidationRules = () => {
     ]
 }
 
+const createRevenueBodyValidationRules = () => {
+    return [
+        body('type').custom(value => {
+            if(value !== revenueType.CONFIRMED && value !== revenueType.AWAITING_APPROVAL &&    
+                value !== revenueType.OPPORTUNITY) {
+                    throw new Error('Invalid value for type field');
+                }
+                return true;
+        }),
+        body('year').exists().withMessage('year field not provided'),
+        body('months').exists().withMessage('months field not provided')
+    ]
+}
+
 const validationMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (errors.isEmpty()) {
@@ -55,5 +70,6 @@ export const validationFunctions = {
     validationMiddleware,
     createEmployeeRequestBodyValidationRules,
     createSalaryUpdateBodyValidationRules,
-    createTrainingBodyValidationRules
+    createTrainingBodyValidationRules,
+    createRevenueBodyValidationRules
 }

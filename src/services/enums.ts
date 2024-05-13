@@ -36,3 +36,9 @@ export enum basis {
     PER_MONTH = 'per month',
     PER_ANNUM = 'per annum'
 }
+
+export enum revenueType {
+    CONFIRMED = 'Confirmed',
+    AWAITING_APPROVAL = 'Awaiting Approval',
+    OPPORTUNITY = 'Oppurtunity'
+}

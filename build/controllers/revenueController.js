@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const revenueServices_1 = require("../services/revenueServices");
 const enums_1 = require("../services/enums");
 const express_1 = __importDefault(require("express"));
+const validation_1 = require("../middlewares/validation");
 const revenueRouter = express_1.default.Router();
 const create = async (req, res) => {
     const requestData = req.body;
@@ -37,6 +38,6 @@ const del = async (req, res) => {
         message: deletedRevenue.message
     });
 };
-revenueRouter.post('/revenue', create);
+revenueRouter.post('/revenue', validation_1.validationFunctions.createRevenueBodyValidationRules(), validation_1.validationFunctions.validationMiddleware, create);
 revenueRouter.delete('/revenue/:id', del);
 exports.default = revenueRouter;

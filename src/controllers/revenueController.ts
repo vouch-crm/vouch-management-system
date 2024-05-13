@@ -2,6 +2,7 @@ import { revenueServices, revenueReturn } from "../services/revenueServices";
 import { serviceStatuses } from "../services/enums";
 import express, {Request, Response} from 'express';
 import { revenueDTO } from "../models/revenueModel";
+import { validationFunctions } from "../middlewares/validation";
 
 const revenueRouter = express.Router();
 
@@ -40,7 +41,8 @@ const del = async(req: Request, res: Response) => {
     });
 }
 
-revenueRouter.post('/revenue', create);
+revenueRouter.post('/revenue', validationFunctions.createRevenueBodyValidationRules(),
+   validationFunctions.validationMiddleware, create);
 revenueRouter.delete('/revenue/:id', del);
 
 export default revenueRouter;

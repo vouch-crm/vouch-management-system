@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validationFunctions = void 0;
 const express_validator_1 = require("express-validator");
+const enums_1 = require("../services/enums");
 const createEmployeeBodyValidationRules = () => {
     return [
         (0, express_validator_1.body)('joinDate').exists().withMessage('JoinDate not provided'),
@@ -36,6 +37,19 @@ const createTrainingBodyValidationRules = () => {
         (0, express_validator_1.body)('trainingType').exists().withMessage('trainingType not provided')
     ];
 };
+const createRevenueBodyValidationRules = () => {
+    return [
+        (0, express_validator_1.body)('type').custom(value => {
+            if (value !== enums_1.revenueType.CONFIRMED && value !== enums_1.revenueType.AWAITING_APPROVAL &&
+                value !== enums_1.revenueType.OPPORTUNITY) {
+                throw new Error('Invalid value for type field');
+            }
+            return true;
+        }),
+        (0, express_validator_1.body)('year').exists().withMessage('year field not provided'),
+        (0, express_validator_1.body)('months').exists().withMessage('months field not provided')
+    ];
+};
 const validationMiddleware = async (req, res, next) => {
     const errors = (0, express_validator_1.validationResult)(req);
     if (errors.isEmpty()) {
@@ -50,5 +64,6 @@ exports.validationFunctions = {
     validationMiddleware,
     createEmployeeRequestBodyValidationRules,
     createSalaryUpdateBodyValidationRules,
-    createTrainingBodyValidationRules
+    createTrainingBodyValidationRules,
+    createRevenueBodyValidationRules
 };
