@@ -37,8 +37,7 @@ const revenueSchema = new Schema({
     months: {
         type: Map,
         of: monthSchema
-    },
-    totalBudget: Number
+    }
 });
 
 const revenueAgent = mongoose.model<revenueDTO>('Revenue', revenueSchema);

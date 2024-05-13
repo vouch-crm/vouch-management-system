@@ -44,8 +44,7 @@ const revenueSchema = new mongoose_1.Schema({
     months: {
         type: Map,
         of: monthSchema
-    },
-    totalBudget: Number
+    }
 });
 const revenueAgent = mongoose_1.default.model('Revenue', revenueSchema);
 exports.revenueAgent = revenueAgent;

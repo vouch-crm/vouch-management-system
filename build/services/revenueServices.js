@@ -20,6 +20,23 @@ const create = async (revenueData) => {
         };
     }
 };
+const getAll = async () => {
+    try {
+        const revenues = await revenueModel_1.revenueAgent.find();
+        return {
+            status: enums_1.serviceStatuses.SUCCESS,
+            message: null,
+            data: revenues
+        };
+    }
+    catch (error) {
+        return {
+            status: enums_1.serviceStatuses.ERROR,
+            message: `Error getting revenues: ${error}`,
+            data: null
+        };
+    }
+};
 const del = async (ID) => {
     try {
         const deletedRevenue = await revenueModel_1.revenueAgent.findByIdAndDelete(ID);
@@ -46,5 +63,6 @@ const del = async (ID) => {
 };
 exports.revenueServices = {
     create,
+    getAll,
     del
 };

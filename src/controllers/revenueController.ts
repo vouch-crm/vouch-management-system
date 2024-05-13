@@ -22,6 +22,20 @@ const create = async(req: Request, res: Response) => {
     });
 }
 
+const getAll = async(req: Request, res: Response) => {
+    const revenues = await revenueServices.getAll();
+
+    if(revenues.status !== serviceStatuses.SUCCESS) {
+        return res.status(400).json({
+            message: revenues.message
+        });
+    }
+
+    res.status(200).json({
+        data: revenues.data
+    });
+}
+
 const del = async(req: Request, res: Response) => {
     const ID = req.params.id;
     const deletedRevenue = await revenueServices.del(ID);
@@ -43,6 +57,7 @@ const del = async(req: Request, res: Response) => {
 
 revenueRouter.post('/revenue', validationFunctions.createRevenueBodyValidationRules(),
    validationFunctions.validationMiddleware, create);
+revenueRouter.get('/revenue', getAll);
 revenueRouter.delete('/revenue/:id', del);
 
 export default revenueRouter;

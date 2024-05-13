@@ -25,6 +25,24 @@ const create = async(revenueData: revenueDTO): Promise<revenueReturn> => {
     }
 }
 
+const getAll = async(): Promise<revenueReturn> => {
+    try {
+        const revenues = await revenueAgent.find();
+
+        return {
+            status: serviceStatuses.SUCCESS,
+            message: null,
+            data: revenues
+        }
+    } catch (error) {
+        return {
+            status: serviceStatuses.ERROR,
+            message: `Error getting revenues: ${error}`,
+            data: null
+        }
+    }
+}
+
 const del = async(ID: string): Promise<revenueReturn> => {
     try {
         const deletedRevenue = await revenueAgent.findByIdAndDelete(ID);
@@ -53,5 +71,6 @@ const del = async(ID: string): Promise<revenueReturn> => {
 
 export const revenueServices = {
     create,
+    getAll,
     del
 }
