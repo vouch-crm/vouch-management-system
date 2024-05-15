@@ -44,7 +44,7 @@ const createRevenueBodyValidationRules = () => {
     return [
         body('type').custom(value => {
             if(value !== revenueType.CONFIRMED && value !== revenueType.AWAITING_APPROVAL &&    
-                value !== revenueType.OPPORTUNITY) {
+                value !== revenueType.OPPORTUNITY && value !== revenueType.NEW_LEADS) {
                     throw new Error('Invalid value for type field');
                 }
                 return true;

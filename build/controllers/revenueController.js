@@ -32,6 +32,19 @@ const getAll = async (req, res) => {
         data: revenues.data
     });
 };
+const updateRevenueCellValue = async (req, res) => {
+    const ID = req.params.id;
+    const { monthName, updatedCell } = req.body;
+    const dbResponse = await revenueServices_1.revenueServices.updateRevenueCellValue(ID, monthName, updatedCell);
+    if (dbResponse.status !== enums_1.serviceStatuses.SUCCESS) {
+        return res.status(400).json({
+            message: dbResponse.message
+        });
+    }
+    res.status(200).json({
+        message: dbResponse.message
+    });
+};
 const del = async (req, res) => {
     const ID = req.params.id;
     const deletedRevenue = await revenueServices_1.revenueServices.del(ID);
@@ -51,5 +64,6 @@ const del = async (req, res) => {
 };
 revenueRouter.post('/revenue', validation_1.validationFunctions.createRevenueBodyValidationRules(), validation_1.validationFunctions.validationMiddleware, create);
 revenueRouter.get('/revenue', getAll);
+revenueRouter.put('/revenue-cell-update/:id', updateRevenueCellValue);
 revenueRouter.delete('/revenue/:id', del);
 exports.default = revenueRouter;

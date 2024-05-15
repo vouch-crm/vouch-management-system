@@ -41,7 +41,7 @@ const createRevenueBodyValidationRules = () => {
     return [
         (0, express_validator_1.body)('type').custom(value => {
             if (value !== enums_1.revenueType.CONFIRMED && value !== enums_1.revenueType.AWAITING_APPROVAL &&
-                value !== enums_1.revenueType.OPPORTUNITY) {
+                value !== enums_1.revenueType.OPPORTUNITY && value !== enums_1.revenueType.NEW_LEADS) {
                 throw new Error('Invalid value for type field');
             }
             return true;

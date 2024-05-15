@@ -43,6 +43,38 @@ const getAll = async(): Promise<revenueReturn> => {
     }
 }
 
+const updateRevenueCellValue = async(ID: string, monthName: string,
+    updatedCell: Record<string, any>): Promise<revenueReturn> => {
+    try {
+        const keyName = `months.${monthName}`;
+        console.log(monthName);
+        const updatedRevenue = await revenueAgent.findOneAndUpdate(
+            {
+                _id: ID
+            },
+            {
+                $set: {
+                    [keyName]: updatedCell
+                }
+            },
+            {
+                new: true
+            }
+        )
+        return {
+            status: serviceStatuses.SUCCESS,
+            message: 'Cell values updated successfuly!',
+            data: null
+        };
+    } catch (error) {
+        return {
+            status: serviceStatuses.ERROR,
+            message: `Error updating the revenue cell values: ${error}`,
+            data: null
+        }
+    }
+}
+
 const del = async(ID: string): Promise<revenueReturn> => {
     try {
         const deletedRevenue = await revenueAgent.findByIdAndDelete(ID);
@@ -72,5 +104,6 @@ const del = async(ID: string): Promise<revenueReturn> => {
 export const revenueServices = {
     create,
     getAll,
+    updateRevenueCellValue,
     del
 }

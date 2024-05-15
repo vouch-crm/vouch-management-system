@@ -37,6 +37,33 @@ const getAll = async () => {
         };
     }
 };
+const updateRevenueCellValue = async (ID, monthName, updatedCell) => {
+    try {
+        const keyName = `months.${monthName}`;
+        console.log(monthName);
+        const updatedRevenue = await revenueModel_1.revenueAgent.findOneAndUpdate({
+            _id: ID
+        }, {
+            $set: {
+                [keyName]: updatedCell
+            }
+        }, {
+            new: true
+        });
+        return {
+            status: enums_1.serviceStatuses.SUCCESS,
+            message: 'Cell values updated successfuly!',
+            data: null
+        };
+    }
+    catch (error) {
+        return {
+            status: enums_1.serviceStatuses.ERROR,
+            message: `Error updating the revenue cell values: ${error}`,
+            data: null
+        };
+    }
+};
 const del = async (ID) => {
     try {
         const deletedRevenue = await revenueModel_1.revenueAgent.findByIdAndDelete(ID);
@@ -64,5 +91,6 @@ const del = async (ID) => {
 exports.revenueServices = {
     create,
     getAll,
+    updateRevenueCellValue,
     del
 };
