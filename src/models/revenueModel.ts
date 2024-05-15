@@ -24,7 +24,9 @@ const monthSchema = new Schema({
         of: Number,
     },
     totalBudget: Number
-})
+},
+    { _id: false }
+)
 
 const revenueSchema = new Schema({
     clientID: {
@@ -42,4 +44,4 @@ const revenueSchema = new Schema({
 
 const revenueAgent = mongoose.model<revenueDTO>('Revenue', revenueSchema);
 
-export {revenueDTO, revenueAgent}
+export { revenueDTO, revenueAgent }

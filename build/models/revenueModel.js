@@ -32,7 +32,7 @@ const monthSchema = new mongoose_1.Schema({
         of: Number,
     },
     totalBudget: Number
-});
+}, { _id: false });
 const revenueSchema = new mongoose_1.Schema({
     clientID: {
         type: mongoose_1.Schema.Types.ObjectId,

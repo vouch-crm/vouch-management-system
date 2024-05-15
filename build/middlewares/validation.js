@@ -50,6 +50,42 @@ const createRevenueBodyValidationRules = () => {
         (0, express_validator_1.body)('months').exists().withMessage('months field not provided')
     ];
 };
+const updateRevenueCellBodyValidations = () => {
+    return [
+        (0, express_validator_1.body)('monthName').custom(value => {
+            switch (value) {
+                case 'Jan':
+                    break;
+                case 'Feb':
+                    break;
+                case 'Mar':
+                    break;
+                case 'Apr':
+                    break;
+                case 'May':
+                    break;
+                case 'Jun':
+                    break;
+                case 'Jul':
+                    break;
+                case 'Aug':
+                    break;
+                case 'Sep':
+                    break;
+                case 'Oct':
+                    break;
+                case 'Nov':
+                    break;
+                case 'Dec':
+                    break;
+                default:
+                    throw new Error('Invalid month name!');
+            }
+            return true;
+        }),
+        (0, express_validator_1.body)('updatedCell').exists().withMessage('updatedCell field not provided'),
+    ];
+};
 const validationMiddleware = async (req, res, next) => {
     const errors = (0, express_validator_1.validationResult)(req);
     if (errors.isEmpty()) {
@@ -65,5 +101,6 @@ exports.validationFunctions = {
     createEmployeeRequestBodyValidationRules,
     createSalaryUpdateBodyValidationRules,
     createTrainingBodyValidationRules,
-    createRevenueBodyValidationRules
+    createRevenueBodyValidationRules,
+    updateRevenueCellBodyValidations
 };

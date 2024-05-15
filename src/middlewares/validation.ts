@@ -43,14 +43,51 @@ const createTrainingBodyValidationRules = () => {
 const createRevenueBodyValidationRules = () => {
     return [
         body('type').custom(value => {
-            if(value !== revenueType.CONFIRMED && value !== revenueType.AWAITING_APPROVAL &&    
+            if (value !== revenueType.CONFIRMED && value !== revenueType.AWAITING_APPROVAL &&
                 value !== revenueType.OPPORTUNITY && value !== revenueType.NEW_LEADS) {
-                    throw new Error('Invalid value for type field');
-                }
-                return true;
+                throw new Error('Invalid value for type field');
+            }
+            return true;
         }),
         body('year').exists().withMessage('year field not provided'),
         body('months').exists().withMessage('months field not provided')
+    ]
+}
+
+const updateRevenueCellBodyValidations = () => {
+    return [
+        body('monthName').custom(value => {
+            switch (value) {
+                case 'Jan':
+                    break;
+                case 'Feb':
+                    break;
+                case 'Mar':
+                    break;
+                case 'Apr':
+                    break;
+                case 'May':
+                    break;
+                case 'Jun':
+                    break;
+                case 'Jul':
+                    break;
+                case 'Aug':
+                    break;
+                case 'Sep':
+                    break;
+                case 'Oct':
+                    break;
+                case 'Nov':
+                    break;
+                case 'Dec':
+                    break;
+                default:
+                    throw new Error('Invalid month name!');
+            }
+            return true;
+        }),
+        body('updatedCell').exists().withMessage('updatedCell field not provided'),
     ]
 }
 
@@ -71,5 +108,6 @@ export const validationFunctions = {
     createEmployeeRequestBodyValidationRules,
     createSalaryUpdateBodyValidationRules,
     createTrainingBodyValidationRules,
-    createRevenueBodyValidationRules
+    createRevenueBodyValidationRules,
+    updateRevenueCellBodyValidations
 }
