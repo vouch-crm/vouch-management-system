@@ -47,7 +47,6 @@ const updateRevenueCellValue = async(ID: string, monthName: string,
     updatedCell: Record<string, any>): Promise<revenueReturn> => {
     try {
         const keyName = `months.${monthName}`;
-        console.log(monthName);
         const updatedRevenue = await revenueAgent.findOneAndUpdate(
             {
                 _id: ID
@@ -61,6 +60,15 @@ const updateRevenueCellValue = async(ID: string, monthName: string,
                 new: true
             }
         )
+        
+        if(!updatedRevenue) {
+            return {
+                status: serviceStatuses.FAILED,
+                message: `No entry found with ID:${ID}`,
+                data: null
+            }
+        }
+
         return {
             status: serviceStatuses.SUCCESS,
             message: 'Cell values updated successfuly!',

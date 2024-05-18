@@ -40,7 +40,6 @@ const getAll = async () => {
 const updateRevenueCellValue = async (ID, monthName, updatedCell) => {
     try {
         const keyName = `months.${monthName}`;
-        console.log(monthName);
         const updatedRevenue = await revenueModel_1.revenueAgent.findOneAndUpdate({
             _id: ID
         }, {
@@ -50,6 +49,13 @@ const updateRevenueCellValue = async (ID, monthName, updatedCell) => {
         }, {
             new: true
         });
+        if (!updatedRevenue) {
+            return {
+                status: enums_1.serviceStatuses.FAILED,
+                message: `No entry found with ID:${ID}`,
+                data: null
+            };
+        }
         return {
             status: enums_1.serviceStatuses.SUCCESS,
             message: 'Cell values updated successfuly!',

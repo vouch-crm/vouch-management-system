@@ -36,8 +36,13 @@ const updateRevenueCellValue = async (req, res) => {
     const ID = req.params.id;
     const { monthName, updatedCell } = req.body;
     const dbResponse = await revenueServices_1.revenueServices.updateRevenueCellValue(ID, monthName, updatedCell);
-    if (dbResponse.status !== enums_1.serviceStatuses.SUCCESS) {
+    if (dbResponse.status === enums_1.serviceStatuses.ERROR) {
         return res.status(400).json({
+            message: dbResponse.message
+        });
+    }
+    else if (dbResponse.status === enums_1.serviceStatuses.FAILED) {
+        return res.status(404).json({
             message: dbResponse.message
         });
     }
