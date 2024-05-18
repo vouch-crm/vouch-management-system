@@ -70,6 +70,41 @@ const updateRevenueCellValue = async (ID, monthName, updatedCell) => {
         };
     }
 };
+const updateConvertedCellValues = async (cellValues) => {
+    try {
+        const keyname = `months.${cellValues.monthName}`;
+        const dbResponse = await revenueModel_1.revenueAgent.findOneAndUpdate({
+            clientID: cellValues.clientID,
+            type: cellValues.type,
+            year: cellValues.year
+        }, {
+            $set: {
+                [keyname]: cellValues.updatedCell
+            }
+        }, {
+            new: true
+        });
+        if (!dbResponse) {
+            return {
+                status: enums_1.serviceStatuses.FAILED,
+                message: `No entry found with client ID: ${cellValues.clientID}`,
+                data: null
+            };
+        }
+        return {
+            status: enums_1.serviceStatuses.SUCCESS,
+            message: 'Cell values updated successfuly!',
+            data: null
+        };
+    }
+    catch (error) {
+        return {
+            status: enums_1.serviceStatuses.ERROR,
+            message: `Error updating the revenue cell values: ${error}`,
+            data: null
+        };
+    }
+};
 const del = async (ID) => {
     try {
         const deletedRevenue = await revenueModel_1.revenueAgent.findByIdAndDelete(ID);
@@ -98,5 +133,6 @@ exports.revenueServices = {
     create,
     getAll,
     updateRevenueCellValue,
+    updateConvertedCellValues,
     del
 };
