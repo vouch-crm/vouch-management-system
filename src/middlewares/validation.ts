@@ -126,9 +126,14 @@ const updateConvertedRevenueCellBodyValidations = () => {
         }),
         body('type').custom(value => {
             switch (value) {
-                case revenueType.CONFIRMED, revenueType.AWAITING_APPROVAL, revenueType.NEW_LEADS, revenueType.OPPORTUNITY:
+                case revenueType.CONFIRMED:
                     break;
-            
+                case revenueType.AWAITING_APPROVAL:
+                    break;
+                case revenueType.NEW_LEADS:
+                    break;
+                case revenueType.OPPORTUNITY:
+                    break;
                 default:
                     throw new Error('Invalid type field value!');
             }

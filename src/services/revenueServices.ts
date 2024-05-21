@@ -86,6 +86,7 @@ const updateRevenueCellValue = async (ID: string, monthName: string,
 const updateConvertedCellValues = async (cellValues: Record<string, any>): Promise<revenueReturn> => {
     try {
         const keyname = `months.${cellValues.monthName}`;
+        console.log(keyname);
         const dbResponse = await revenueAgent.findOneAndUpdate(
             {
                 clientID: cellValues.clientID,
@@ -94,7 +95,7 @@ const updateConvertedCellValues = async (cellValues: Record<string, any>): Promi
             },
             {
                 $set: {
-                    [keyname]: cellValues.updatedCell
+                    [keyname]: cellValues.updatedValues
                 }
             },
             {

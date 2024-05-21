@@ -121,7 +121,13 @@ const updateConvertedRevenueCellBodyValidations = () => {
         }),
         (0, express_validator_1.body)('type').custom(value => {
             switch (value) {
-                case enums_1.revenueType.CONFIRMED, enums_1.revenueType.AWAITING_APPROVAL, enums_1.revenueType.NEW_LEADS, enums_1.revenueType.OPPORTUNITY:
+                case enums_1.revenueType.CONFIRMED:
+                    break;
+                case enums_1.revenueType.AWAITING_APPROVAL:
+                    break;
+                case enums_1.revenueType.NEW_LEADS:
+                    break;
+                case enums_1.revenueType.OPPORTUNITY:
                     break;
                 default:
                     throw new Error('Invalid type field value!');

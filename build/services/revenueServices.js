@@ -73,13 +73,14 @@ const updateRevenueCellValue = async (ID, monthName, updatedCell) => {
 const updateConvertedCellValues = async (cellValues) => {
     try {
         const keyname = `months.${cellValues.monthName}`;
+        console.log(keyname);
         const dbResponse = await revenueModel_1.revenueAgent.findOneAndUpdate({
             clientID: cellValues.clientID,
             type: cellValues.type,
             year: cellValues.year
         }, {
             $set: {
-                [keyname]: cellValues.updatedCell
+                [keyname]: cellValues.updatedValues
             }
         }, {
             new: true
