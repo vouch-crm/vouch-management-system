@@ -125,6 +125,46 @@ const updateConvertedCellValues = async (cellValues: Record<string, any>): Promi
     }
 }
 
+const removeCellData = async(ID: string, monthName: string): Promise<revenueReturn> => {
+    try {
+        const keyName = `months.${monthName}`;
+
+        const dbResponse = await revenueAgent.findOneAndUpdate(
+            {
+                _id: ID
+            },
+            {
+                $unset: {
+                    [keyName]: ""
+                }
+            },
+            {
+                new: true
+            }
+        );
+
+        if(!dbResponse) {
+            return {
+                status: serviceStatuses.FAILED,
+                message: `No entry found with ID: ${ID}`,
+                data: null
+            }
+        }
+
+        return {
+            status: serviceStatuses.SUCCESS,
+            message: 'Cell updated successfuly!',
+            data: null
+        }
+    } catch (error) {
+        return {
+            status: serviceStatuses.ERROR,
+            message: `Error updating cell values: ${error}`,
+            data: null
+        }
+    }
+}
+
 const del = async (ID: string): Promise<revenueReturn> => {
     try {
         const deletedRevenue = await revenueAgent.findByIdAndDelete(ID);
@@ -156,5 +196,6 @@ export const revenueServices = {
     getAll,
     updateRevenueCellValue,
     updateConvertedCellValues,
+    removeCellData,
     del
 }

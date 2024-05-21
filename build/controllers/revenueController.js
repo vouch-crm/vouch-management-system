@@ -50,6 +50,42 @@ const updateRevenueCellValue = async (req, res) => {
         message: dbResponse.message
     });
 };
+const updateConvertedCellValue = async (req, res) => {
+    const ID = req.params.id;
+    const { clientID, type, year, monthName, updatedValues } = req.params;
+    const cellValues = {
+        clientID: clientID,
+        type: type,
+        year: year,
+        monthName: monthName,
+        updatedValues: updatedValues
+    };
+    const dbResponse = await revenueServices_1.revenueServices.updateConvertedCellValues(cellValues);
+    if (dbResponse.status === enums_1.serviceStatuses.FAILED) {
+        return res.status(400).json({
+            message: dbResponse.message
+        });
+    }
+    else if (dbResponse.status === enums_1.serviceStatuses.ERROR) {
+        return res.status(400).json({
+            message: dbResponse.message
+        });
+    }
+    const dbResponse2 = await revenueServices_1.revenueServices.removeCellData(ID, monthName);
+    if (dbResponse.status === enums_1.serviceStatuses.FAILED) {
+        return res.status(404).json({
+            message: dbResponse2.message
+        });
+    }
+    else if (dbResponse2.status === enums_1.serviceStatuses.ERROR) {
+        return res.status(400).json({
+            message: dbResponse2.message
+        });
+    }
+    res.status(200).json({
+        message: dbResponse2.message
+    });
+};
 const del = async (req, res) => {
     const ID = req.params.id;
     const deletedRevenue = await revenueServices_1.revenueServices.del(ID);
@@ -70,5 +106,6 @@ const del = async (req, res) => {
 revenueRouter.post('/revenue', validation_1.validationFunctions.createRevenueBodyValidationRules(), validation_1.validationFunctions.validationMiddleware, create);
 revenueRouter.get('/revenue', getAll);
 revenueRouter.put('/revenue-cell-update/:id', validation_1.validationFunctions.updateRevenueCellBodyValidations(), validation_1.validationFunctions.validationMiddleware, updateRevenueCellValue);
+revenueRouter.put('/revenue-converter-cell-update/:id', updateConvertedCellValue);
 revenueRouter.delete('/revenue/:id', del);
 exports.default = revenueRouter;
