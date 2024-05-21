@@ -120,7 +120,9 @@ revenueRouter.post('/revenue', validationFunctions.createRevenueBodyValidationRu
 revenueRouter.get('/revenue', getAll);
 revenueRouter.put('/revenue-cell-update/:id', validationFunctions.updateRevenueCellBodyValidations(),
     validationFunctions.validationMiddleware, updateRevenueCellValue);
-revenueRouter.put('/revenue-converter-cell-update/:id', updateConvertedCellValue);
+revenueRouter.put('/revenue-converter-cell-update/:id',
+    validationFunctions.updateConvertedRevenueCellBodyValidations(), 
+    validationFunctions.validationMiddleware, updateConvertedCellValue);
 revenueRouter.delete('/revenue/:id', del);
 
 export default revenueRouter;

@@ -91,6 +91,55 @@ const updateRevenueCellBodyValidations = () => {
     ]
 }
 
+const updateConvertedRevenueCellBodyValidations = () => {
+    return [
+        body('monthName').custom(value => {
+            switch (value) {
+                case 'Jan':
+                    break;
+                case 'Feb':
+                    break;
+                case 'Mar':
+                    break;
+                case 'Apr':
+                    break;
+                case 'May':
+                    break;
+                case 'Jun':
+                    break;
+                case 'Jul':
+                    break;
+                case 'Aug':
+                    break;
+                case 'Sep':
+                    break;
+                case 'Oct':
+                    break;
+                case 'Nov':
+                    break;
+                case 'Dec':
+                    break;
+                default:
+                    throw new Error('Invalid month name!');
+            }
+            return true;
+        }),
+        body('type').custom(value => {
+            switch (value) {
+                case revenueType.CONFIRMED, revenueType.AWAITING_APPROVAL, revenueType.NEW_LEADS, revenueType.OPPORTUNITY:
+                    break;
+            
+                default:
+                    throw new Error('Invalid type field value!');
+            }
+            return true
+        }),
+        body('year').exists().withMessage('year field not provided'),
+        body('updatedValues').exists().withMessage('updatedValues field not provided'),
+        body('clientID').exists().withMessage('clientID field not provided'),
+    ]
+}
+
 const validationMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (errors.isEmpty()) {
@@ -109,5 +158,6 @@ export const validationFunctions = {
     createSalaryUpdateBodyValidationRules,
     createTrainingBodyValidationRules,
     createRevenueBodyValidationRules,
-    updateRevenueCellBodyValidations
+    updateRevenueCellBodyValidations,
+    updateConvertedRevenueCellBodyValidations
 }

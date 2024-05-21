@@ -86,6 +86,53 @@ const updateRevenueCellBodyValidations = () => {
         (0, express_validator_1.body)('updatedCell').exists().withMessage('updatedCell field not provided'),
     ];
 };
+const updateConvertedRevenueCellBodyValidations = () => {
+    return [
+        (0, express_validator_1.body)('monthName').custom(value => {
+            switch (value) {
+                case 'Jan':
+                    break;
+                case 'Feb':
+                    break;
+                case 'Mar':
+                    break;
+                case 'Apr':
+                    break;
+                case 'May':
+                    break;
+                case 'Jun':
+                    break;
+                case 'Jul':
+                    break;
+                case 'Aug':
+                    break;
+                case 'Sep':
+                    break;
+                case 'Oct':
+                    break;
+                case 'Nov':
+                    break;
+                case 'Dec':
+                    break;
+                default:
+                    throw new Error('Invalid month name!');
+            }
+            return true;
+        }),
+        (0, express_validator_1.body)('type').custom(value => {
+            switch (value) {
+                case enums_1.revenueType.CONFIRMED, enums_1.revenueType.AWAITING_APPROVAL, enums_1.revenueType.NEW_LEADS, enums_1.revenueType.OPPORTUNITY:
+                    break;
+                default:
+                    throw new Error('Invalid type field value!');
+            }
+            return true;
+        }),
+        (0, express_validator_1.body)('year').exists().withMessage('year field not provided'),
+        (0, express_validator_1.body)('updatedValues').exists().withMessage('updatedValues field not provided'),
+        (0, express_validator_1.body)('clientID').exists().withMessage('clientID field not provided'),
+    ];
+};
 const validationMiddleware = async (req, res, next) => {
     const errors = (0, express_validator_1.validationResult)(req);
     if (errors.isEmpty()) {
@@ -102,5 +149,6 @@ exports.validationFunctions = {
     createSalaryUpdateBodyValidationRules,
     createTrainingBodyValidationRules,
     createRevenueBodyValidationRules,
-    updateRevenueCellBodyValidations
+    updateRevenueCellBodyValidations,
+    updateConvertedRevenueCellBodyValidations
 };

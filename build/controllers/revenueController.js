@@ -106,6 +106,6 @@ const del = async (req, res) => {
 revenueRouter.post('/revenue', validation_1.validationFunctions.createRevenueBodyValidationRules(), validation_1.validationFunctions.validationMiddleware, create);
 revenueRouter.get('/revenue', getAll);
 revenueRouter.put('/revenue-cell-update/:id', validation_1.validationFunctions.updateRevenueCellBodyValidations(), validation_1.validationFunctions.validationMiddleware, updateRevenueCellValue);
-revenueRouter.put('/revenue-converter-cell-update/:id', updateConvertedCellValue);
+revenueRouter.put('/revenue-converter-cell-update/:id', validation_1.validationFunctions.updateConvertedRevenueCellBodyValidations(), validation_1.validationFunctions.validationMiddleware, updateConvertedCellValue);
 revenueRouter.delete('/revenue/:id', del);
 exports.default = revenueRouter;
