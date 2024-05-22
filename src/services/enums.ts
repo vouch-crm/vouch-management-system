@@ -40,6 +40,6 @@ export enum basis {
 export enum revenueType {
     CONFIRMED = 'Confirmed',
     AWAITING_APPROVAL = 'Awaiting Approval',
-    OPPORTUNITY = 'Oppurtunity',
+    OPPORTUNITY = 'Opportunity',
     NEW_LEADS = 'New Leads'
 }

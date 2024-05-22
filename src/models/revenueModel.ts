@@ -12,6 +12,7 @@ type revenueDTO = {
     clientID: string,
     type: string,
     year: string,
+    accountManager: string,
     months: {
         [month: string]: monthData
     }
@@ -36,6 +37,7 @@ const revenueSchema = new Schema({
     },
     type: String,
     year: String,
+    accountManager: String,
     months: {
         type: Map,
         of: monthSchema

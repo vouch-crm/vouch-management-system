@@ -44,6 +44,6 @@ var revenueType;
 (function (revenueType) {
     revenueType["CONFIRMED"] = "Confirmed";
     revenueType["AWAITING_APPROVAL"] = "Awaiting Approval";
-    revenueType["OPPORTUNITY"] = "Oppurtunity";
+    revenueType["OPPORTUNITY"] = "Opportunity";
     revenueType["NEW_LEADS"] = "New Leads";
 })(revenueType || (exports.revenueType = revenueType = {}));
