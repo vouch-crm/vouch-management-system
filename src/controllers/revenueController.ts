@@ -3,6 +3,7 @@ import { serviceStatuses } from "../services/enums";
 import express, { Request, Response } from 'express';
 import { revenueDTO } from "../models/revenueModel";
 import { validationFunctions } from "../middlewares/validation";
+import { revenueMiddleware } from "../middlewares/revenueMiddlware";
 
 const revenueRouter = express.Router();
 
@@ -116,7 +117,8 @@ const del = async (req: Request, res: Response) => {
 }
 
 revenueRouter.post('/revenue', validationFunctions.createRevenueBodyValidationRules(),
-    validationFunctions.validationMiddleware, create);
+    validationFunctions.validationMiddleware, 
+    revenueMiddleware.checkClientIDAndYearExist, create);
 revenueRouter.get('/revenue', getAll);
 revenueRouter.put('/revenue-cell-update/:id', validationFunctions.updateRevenueCellBodyValidations(),
     validationFunctions.validationMiddleware, updateRevenueCellValue);
