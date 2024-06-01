@@ -23,17 +23,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.revenueAgent = void 0;
+exports.costAgent = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 const monthSchema = new mongoose_1.Schema({
-    retainer: Number,
     fees: {
         type: Map,
         of: Number,
     },
-    totalBudget: Number
 }, { _id: false });
-const revenueSchema = new mongoose_1.Schema({
+const costSchema = new mongoose_1.Schema({
     clientID: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: 'client',
@@ -41,11 +39,10 @@ const revenueSchema = new mongoose_1.Schema({
     },
     type: String,
     year: String,
-    accountManager: String,
     months: {
         type: Map,
         of: monthSchema
     }
 });
-const revenueAgent = mongoose_1.default.model('Revenue', revenueSchema);
-exports.revenueAgent = revenueAgent;
+const costAgent = mongoose_1.default.model('Cost', costSchema);
+exports.costAgent = costAgent;
