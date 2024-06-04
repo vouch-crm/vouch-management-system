@@ -43,7 +43,7 @@ const revenueSchema = new mongoose_1.Schema({
     year: String,
     accountManager: String,
     months: {
-        type: Map,
+        type: mongoose_1.default.SchemaTypes.Mixed,
         of: monthSchema
     }
 });

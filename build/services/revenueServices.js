@@ -73,7 +73,7 @@ const updateRevenueCellValue = async (ID, monthName, updatedCell) => {
 const updateConvertedCellValues = async (cellValues) => {
     try {
         const keyname = `months.${cellValues.monthName}`;
-        console.log(keyname);
+        cellValues = await aggregateCellDataValues(cellValues);
         const dbResponse = await revenueModel_1.revenueAgent.findOneAndUpdate({
             clientID: cellValues.clientID,
             type: cellValues.type,
@@ -105,6 +105,32 @@ const updateConvertedCellValues = async (cellValues) => {
             data: null
         };
     }
+};
+const aggregateCellDataValues = async (newCellValues) => {
+    const { clientID, type, year, monthName } = newCellValues;
+    const currentValues = await revenueModel_1.revenueAgent.findOne({
+        clientID,
+        type,
+        year
+    });
+    if (!currentValues || !currentValues.months[monthName]) {
+        return newCellValues;
+    }
+    newCellValues.updatedValues.retainer +=
+        currentValues?.months[monthName].retainer;
+    newCellValues.updatedValues.totalBudget +=
+        currentValues?.months[monthName].totalBudget;
+    Object.keys(currentValues.months[monthName].fees).forEach(key => {
+        if (newCellValues.updatedValues.fees[key]) {
+            newCellValues.updatedValues.fees[key] +=
+                currentValues.months[monthName].fees[key];
+        }
+        else {
+            newCellValues.updatedValues.fees[key] =
+                currentValues.months[monthName].fees[key];
+        }
+    });
+    return newCellValues;
 };
 const removeCellData = async (ID, monthName) => {
     try {

@@ -86,7 +86,8 @@ const updateRevenueCellValue = async (ID: string, monthName: string,
 const updateConvertedCellValues = async (cellValues: Record<string, any>): Promise<revenueReturn> => {
     try {
         const keyname = `months.${cellValues.monthName}`;
-        console.log(keyname);
+        cellValues = await aggregateCellDataValues(cellValues);
+
         const dbResponse = await revenueAgent.findOneAndUpdate(
             {
                 clientID: cellValues.clientID,
@@ -124,6 +125,37 @@ const updateConvertedCellValues = async (cellValues: Record<string, any>): Promi
             data: null
         }
     }
+}
+
+const aggregateCellDataValues = async(newCellValues: Record<string, any>): Promise<object> => {
+    const {clientID, type, year, monthName} = newCellValues;
+    const currentValues = await revenueAgent.findOne({
+        clientID,
+        type,
+        year
+    });
+
+    if(!currentValues || !currentValues.months[monthName]) {
+        return newCellValues
+    }
+
+    newCellValues.updatedValues.retainer += 
+        currentValues?.months[monthName].retainer;
+    newCellValues.updatedValues.totalBudget += 
+        currentValues?.months[monthName].totalBudget;
+    
+    Object.keys(currentValues.months[monthName].fees).forEach(key => {
+    if(newCellValues.updatedValues.fees[key]){
+        newCellValues.updatedValues.fees[key] +=
+            currentValues.months[monthName].fees[key];
+    }
+    else {
+        newCellValues.updatedValues.fees[key] =
+            currentValues.months[monthName].fees[key];
+    }
+});
+
+    return newCellValues;
 }
 
 const removeCellData = async(ID: string, monthName: string): Promise<revenueReturn> => {
