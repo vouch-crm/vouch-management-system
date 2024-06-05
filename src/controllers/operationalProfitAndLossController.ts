@@ -4,7 +4,7 @@ import express, { Request, Response } from 'express';
 const router = express.Router()
 
 interface GroupedResult {
-  [x: string ]: any;
+  [x: string]: any;
 }
 
 const addOrUpdateFee = async (req: Request, res: Response) => {
@@ -15,10 +15,15 @@ const addOrUpdateFee = async (req: Request, res: Response) => {
     const feeValue = reqBody.feeValue
     const oldCost = await costAgent.findOne({ clientID: reqBody.clientID })
     if (oldCost) {
-      const path = `months.${month}.fees.${feeName}`
+      const feePath = `months.${month}.fees.${feeName}`
+      const totalCostPath = `months.${month}.totalCost`
+      // @ts-ignore
+      const feesArray = oldCost.months.get(month) ? Array.from(oldCost.months.get(month).fees.values()) : [] 
+      // @ts-ignore
       await costAgent.updateOne({ clientID: req.body.clientID }, {
         $set: {
-          [path]: feeValue
+          [feePath]: feeValue,
+          [totalCostPath]: feesArray.length > 0 ? feesArray.reduce((sum: any, num: any) => sum + num, feeValue) : feeValue
         }
       }, { new: true })
       res.status(200).json('Fee Added!')
@@ -31,14 +36,16 @@ const addOrUpdateFee = async (req: Request, res: Response) => {
           [month]: {
             fees: {
               [feeName]: feeValue
-            }
+            },
+            totalCost: feeValue
           }
         }
-      } 
+      }
       const newCost = await costAgent.create(objectToCreate)
       res.status(201).json(newCost)
     }
   } catch (error) {
+    console.log(error)
     res.status(400).json(error)
   }
 }
@@ -71,20 +78,9 @@ const groupByClientID = (costData: any, revenueData: any) => {
 const getCost = async (req: Request, res: Response) => {
   try {
     const costData = await costAgent.find().populate({ path: 'clientID', select: 'clientBasicInfo.name' })
-    const revenueData = await revenueAgent.find({type: 'Confirmed'}).populate({ path: 'clientID', select: 'clientBasicInfo.name' })
+    const revenueData = await revenueAgent.find({ type: 'Confirmed' }).populate({ path: 'clientID', select: 'clientBasicInfo.name' })
     const data = groupByClientID(costData, revenueData)
     res.status(200).json(data)
-  } catch (error) {
-    console.log(error)
-    res.status(400).json(error)
-  }
-}
-
-const update = async (req: Request, res: Response) => {
-  try {
-    const reqBody: costDTO = req.body
-    const newCost = await costAgent.findOneAndUpdate({ clientID: reqBody.clientID }, reqBody)
-    res.status(200).json(newCost)
   } catch (error) {
     console.log(error)
     res.status(400).json(error)
@@ -96,6 +92,5 @@ const update = async (req: Request, res: Response) => {
 
 router.post('/cost', addOrUpdateFee)
 router.get('/cost', getCost)
-router.put('/cost', update)
 
 export default router

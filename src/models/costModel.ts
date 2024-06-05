@@ -3,7 +3,8 @@ import mongoose, { Schema } from 'mongoose';
 type monthData = {
     fees: {
         [key: string]: number,
-    }
+    };
+    totalCost?: number
 }
 
 type costDTO = {
@@ -20,6 +21,7 @@ const monthSchema = new Schema({
         type: Map,
         of: Number,
     },
+    totalCost: Number
 },
     { _id: false }
 )
@@ -37,6 +39,7 @@ const costSchema = new Schema({
         of: monthSchema
     }
 });
+
 
 const costAgent = mongoose.model<costDTO>('Cost', costSchema);
 
