@@ -30,6 +30,7 @@ const monthSchema = new mongoose_1.Schema({
         type: Map,
         of: Number,
     },
+    totalCost: Number
 }, { _id: false });
 const costSchema = new mongoose_1.Schema({
     clientID: {

@@ -15,10 +15,15 @@ const addOrUpdateFee = async (req, res) => {
         const feeValue = reqBody.feeValue;
         const oldCost = await costModel_1.costAgent.findOne({ clientID: reqBody.clientID });
         if (oldCost) {
-            const path = `months.${month}.fees.${feeName}`;
+            const feePath = `months.${month}.fees.${feeName}`;
+            const totalCostPath = `months.${month}.totalCost`;
+            // @ts-ignore
+            const feesArray = oldCost.months.get(month) ? Array.from(oldCost.months.get(month).fees.values()) : [];
+            // @ts-ignore
             await costModel_1.costAgent.updateOne({ clientID: req.body.clientID }, {
                 $set: {
-                    [path]: feeValue
+                    [feePath]: feeValue,
+                    [totalCostPath]: feesArray.length > 0 ? feesArray.reduce((sum, num) => sum + num, feeValue) : feeValue
                 }
             }, { new: true });
             res.status(200).json('Fee Added!');
@@ -32,7 +37,8 @@ const addOrUpdateFee = async (req, res) => {
                     [month]: {
                         fees: {
                             [feeName]: feeValue
-                        }
+                        },
+                        totalCost: feeValue
                     }
                 }
             };
@@ -41,6 +47,7 @@ const addOrUpdateFee = async (req, res) => {
         }
     }
     catch (error) {
+        console.log(error);
         res.status(400).json(error);
     }
 };
@@ -76,18 +83,6 @@ const getCost = async (req, res) => {
         res.status(400).json(error);
     }
 };
-const update = async (req, res) => {
-    try {
-        const reqBody = req.body;
-        const newCost = await costModel_1.costAgent.findOneAndUpdate({ clientID: reqBody.clientID }, reqBody);
-        res.status(200).json(newCost);
-    }
-    catch (error) {
-        console.log(error);
-        res.status(400).json(error);
-    }
-};
 router.post('/cost', addOrUpdateFee);
 router.get('/cost', getCost);
-router.put('/cost', update);
 exports.default = router;
