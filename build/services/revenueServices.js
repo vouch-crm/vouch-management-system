@@ -94,7 +94,6 @@ const updateConvertedCellValues = async (cellValues) => {
                     [cellValues.monthName]: cellValues.updatedValues
                 }
             });
-            console.log(cellValues);
             return {
                 status: enums_1.serviceStatuses.SUCCESS,
                 message: 'Cell values updated successfuly!',
@@ -129,16 +128,21 @@ const aggregateCellDataValues = async (newCellValues) => {
         currentValues?.months[monthName].retainer;
     newCellValues.updatedValues.totalBudget +=
         currentValues?.months[monthName].totalBudget;
-    Object.keys(currentValues.months[monthName].fees).forEach(key => {
-        if (newCellValues.updatedValues.fees[key]) {
-            newCellValues.updatedValues.fees[key] +=
-                currentValues.months[monthName].fees[key];
-        }
-        else {
-            newCellValues.updatedValues.fees[key] =
-                currentValues.months[monthName].fees[key];
-        }
-    });
+    if (currentValues.months[monthName].fees) {
+        Object.keys(currentValues.months[monthName].fees).forEach(key => {
+            if (newCellValues.updatedValues.fees[key]) {
+                newCellValues.updatedValues.fees[key] +=
+                    currentValues.months[monthName].fees[key];
+            }
+            else {
+                newCellValues.updatedValues.fees[key] =
+                    currentValues.months[monthName].fees[key];
+            }
+        });
+    }
+    else {
+        currentValues.months[monthName].fees = newCellValues.updatedValues.fees;
+    }
     return newCellValues;
 };
 const removeCellData = async (ID, monthName) => {

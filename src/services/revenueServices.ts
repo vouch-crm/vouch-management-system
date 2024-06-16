@@ -115,7 +115,6 @@ const updateConvertedCellValues = async (cellValues: Record<string, any>): Promi
                     }
                 },
             )
-            console.log(cellValues)
             return {
                 status: serviceStatuses.SUCCESS,
                 message: 'Cell values updated successfuly!',
@@ -155,16 +154,23 @@ const aggregateCellDataValues = async (newCellValues: Record<string, any>): Prom
     newCellValues.updatedValues.totalBudget +=
         currentValues?.months[monthName].totalBudget;
 
-    Object.keys(currentValues.months[monthName].fees).forEach(key => {
-        if (newCellValues.updatedValues.fees[key]) {
-            newCellValues.updatedValues.fees[key] +=
-                currentValues.months[monthName].fees[key];
-        }
-        else {
-            newCellValues.updatedValues.fees[key] =
-                currentValues.months[monthName].fees[key];
-        }
-    });
+
+    if (currentValues.months[monthName].fees) {
+        Object.keys(currentValues.months[monthName].fees).forEach(key => {
+            if (newCellValues.updatedValues.fees[key]) {
+                newCellValues.updatedValues.fees[key] +=
+                    currentValues.months[monthName].fees[key];
+            }
+            else {
+                newCellValues.updatedValues.fees[key] =
+                    currentValues.months[monthName].fees[key];
+            }
+        });
+    } else {
+        currentValues.months[monthName].fees = newCellValues.updatedValues.fees
+    }
+
+
 
     return newCellValues;
 }
