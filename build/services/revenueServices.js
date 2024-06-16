@@ -86,9 +86,18 @@ const updateConvertedCellValues = async (cellValues) => {
             new: true
         });
         if (!dbResponse) {
+            await revenueModel_1.revenueAgent.create({
+                clientID: cellValues.clientID,
+                type: cellValues.type,
+                year: cellValues.year,
+                months: {
+                    [cellValues.monthName]: cellValues.updatedValues
+                }
+            });
+            console.log(cellValues);
             return {
-                status: enums_1.serviceStatuses.FAILED,
-                message: `No entry found with client ID: ${cellValues.clientID}`,
+                status: enums_1.serviceStatuses.SUCCESS,
+                message: 'Cell values updated successfuly!',
                 data: null
             };
         }

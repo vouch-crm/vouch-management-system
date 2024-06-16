@@ -53,6 +53,7 @@ const updateRevenueCellValue = async (req, res) => {
 };
 const updateConvertedCellValue = async (req, res) => {
     const ID = req.params.id;
+    console.log(req.body);
     const { clientID, type, year, monthName, updatedValues } = req.body;
     const cellValues = {
         clientID: clientID,

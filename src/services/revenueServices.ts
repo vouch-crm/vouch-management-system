@@ -105,9 +105,20 @@ const updateConvertedCellValues = async (cellValues: Record<string, any>): Promi
         )
 
         if (!dbResponse) {
+            await revenueAgent.create(
+                {
+                    clientID: cellValues.clientID,
+                    type: cellValues.type,
+                    year: cellValues.year,
+                    months: {
+                        [cellValues.monthName]: cellValues.updatedValues
+                    }
+                },
+            )
+            console.log(cellValues)
             return {
-                status: serviceStatuses.FAILED,
-                message: `No entry found with client ID: ${cellValues.clientID}`,
+                status: serviceStatuses.SUCCESS,
+                message: 'Cell values updated successfuly!',
                 data: null
             }
         }
@@ -127,38 +138,38 @@ const updateConvertedCellValues = async (cellValues: Record<string, any>): Promi
     }
 }
 
-const aggregateCellDataValues = async(newCellValues: Record<string, any>): Promise<object> => {
-    const {clientID, type, year, monthName} = newCellValues;
+const aggregateCellDataValues = async (newCellValues: Record<string, any>): Promise<object> => {
+    const { clientID, type, year, monthName } = newCellValues;
     const currentValues = await revenueAgent.findOne({
         clientID,
         type,
         year
     });
 
-    if(!currentValues || !currentValues.months[monthName]) {
+    if (!currentValues || !currentValues.months[monthName]) {
         return newCellValues
     }
 
-    newCellValues.updatedValues.retainer += 
+    newCellValues.updatedValues.retainer +=
         currentValues?.months[monthName].retainer;
-    newCellValues.updatedValues.totalBudget += 
+    newCellValues.updatedValues.totalBudget +=
         currentValues?.months[monthName].totalBudget;
-    
+
     Object.keys(currentValues.months[monthName].fees).forEach(key => {
-    if(newCellValues.updatedValues.fees[key]){
-        newCellValues.updatedValues.fees[key] +=
-            currentValues.months[monthName].fees[key];
-    }
-    else {
-        newCellValues.updatedValues.fees[key] =
-            currentValues.months[monthName].fees[key];
-    }
-});
+        if (newCellValues.updatedValues.fees[key]) {
+            newCellValues.updatedValues.fees[key] +=
+                currentValues.months[monthName].fees[key];
+        }
+        else {
+            newCellValues.updatedValues.fees[key] =
+                currentValues.months[monthName].fees[key];
+        }
+    });
 
     return newCellValues;
 }
 
-const removeCellData = async(ID: string, monthName: string): Promise<revenueReturn> => {
+const removeCellData = async (ID: string, monthName: string): Promise<revenueReturn> => {
     try {
         const keyName = `months.${monthName}`;
 
@@ -176,7 +187,7 @@ const removeCellData = async(ID: string, monthName: string): Promise<revenueRetu
             }
         );
 
-        if(!dbResponse) {
+        if (!dbResponse) {
             return {
                 status: serviceStatuses.FAILED,
                 message: `No entry found with ID: ${ID}`,
