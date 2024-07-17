@@ -23,26 +23,16 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TaskAgent = void 0;
+exports.projectAgent = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const taskSchema = new mongoose_1.Schema({
-    client: {
+const projectSchema = new mongoose_1.Schema({
+    clientID: {
         type: mongoose_1.Schema.Types.ObjectId,
-        ref: 'client'
+        ref: 'client',
+        required: true
     },
-    projectID: {
-        type: mongoose_1.Schema.Types.ObjectId,
-        ref: 'project'
-    },
-    jobID: mongoose_1.Schema.Types.ObjectId,
-    access: [String],
     name: String,
-    estimatedTotalHours: Number,
-    estimatedTotalCost: Number,
-    progress: Number,
-    billable: Boolean,
-    estimatedTime: Number,
-    category: String,
-    color: String
+    budget: Number
 });
-exports.TaskAgent = mongoose_1.default.model('Task', taskSchema);
+const projectAgent = mongoose_1.default.model('Project', projectSchema);
+exports.projectAgent = projectAgent;

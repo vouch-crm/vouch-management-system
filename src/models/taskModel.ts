@@ -3,6 +3,7 @@ import mongoose, { Schema } from "mongoose";
 
 interface TaskSchema {
     client: Schema.Types.ObjectId;
+    projectID: string,
     name: string;
     jobID?: Schema.Types.ObjectId;
     access?: string[];
@@ -19,6 +20,10 @@ const taskSchema: Schema = new Schema({
     client: {
         type: Schema.Types.ObjectId,
         ref: 'client'
+    },
+    projectID: {
+        type: Schema.Types.ObjectId,
+        ref: 'project'
     },
     jobID: Schema.Types.ObjectId,
     access: [String],

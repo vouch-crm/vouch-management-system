@@ -145,6 +145,14 @@ const updateConvertedRevenueCellBodyValidations = () => {
     ]
 }
 
+const createProjectBodyValidationRules = () => {
+    return [
+        body('clientID').exists().withMessage('clientID not provided'),
+        body('name').exists().withMessage('name not provided'),
+        body('budget').exists().withMessage('budget not provided')
+    ]
+}
+
 const validationMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (errors.isEmpty()) {
@@ -164,5 +172,6 @@ export const validationFunctions = {
     createTrainingBodyValidationRules,
     createRevenueBodyValidationRules,
     updateRevenueCellBodyValidations,
-    updateConvertedRevenueCellBodyValidations
+    updateConvertedRevenueCellBodyValidations,
+    createProjectBodyValidationRules
 }
