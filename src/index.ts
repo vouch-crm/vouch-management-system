@@ -17,6 +17,7 @@ import dashboradRouter from './controllers/dashboardController';
 import reportsRouter from './controllers/reportsController';
 import revenueRouter from './controllers/revenueController';
 import operationalProfitAndLossRouter from './controllers/operationalProfitAndLossController';
+import projectRouter from './controllers/projectController';
 import { utils } from './services/utils';
 import cors from 'cors';
 import morgan from 'morgan';
@@ -50,6 +51,7 @@ app.use(dashboradRouter);
 app.use(reportsRouter);
 app.use(revenueRouter);
 app.use(operationalProfitAndLossRouter);
+app.use(projectRouter);
 
 app.get('/', (_req: Request, res: Response): void => {
     res.status(200).json({

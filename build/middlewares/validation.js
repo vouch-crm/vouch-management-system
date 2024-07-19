@@ -139,6 +139,13 @@ const updateConvertedRevenueCellBodyValidations = () => {
         (0, express_validator_1.body)('clientID').exists().withMessage('clientID field not provided'),
     ];
 };
+const createProjectBodyValidationRules = () => {
+    return [
+        (0, express_validator_1.body)('clientID').exists().withMessage('clientID not provided'),
+        (0, express_validator_1.body)('name').exists().withMessage('name not provided'),
+        (0, express_validator_1.body)('budget').exists().withMessage('budget not provided')
+    ];
+};
 const validationMiddleware = async (req, res, next) => {
     const errors = (0, express_validator_1.validationResult)(req);
     if (errors.isEmpty()) {
@@ -156,5 +163,6 @@ exports.validationFunctions = {
     createTrainingBodyValidationRules,
     createRevenueBodyValidationRules,
     updateRevenueCellBodyValidations,
-    updateConvertedRevenueCellBodyValidations
+    updateConvertedRevenueCellBodyValidations,
+    createProjectBodyValidationRules
 };
