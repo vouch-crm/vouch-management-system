@@ -5,6 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const costModel_1 = require("../models/costModel");
 const revenueModel_1 = require("../models/revenueModel");
+const reportsServices_1 = require("../services/reportsServices");
+const clientServices_1 = require("../services/clientServices");
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
 const addOrUpdateFee = async (req, res) => {
@@ -71,8 +73,74 @@ const groupByClientID = (costData, revenueData) => {
     });
     return grouped;
 };
+const setTimeCostForClients = async () => {
+    try {
+        const months = {
+            'Jan': 1,
+            'Feb': 2,
+            'Mar': 3,
+            'Apr': 4,
+            'May': 5,
+            'Jun': 6,
+            'Jul': 7,
+            'Aug': 8,
+            'Sep': 9,
+            'Oct': 10,
+            'Nov': 11,
+            'Dec': 12
+        };
+        const dbResponse = await clientServices_1.clientServices.find();
+        // @ts-ignore
+        const clients = dbResponse?.data?.map((client) => client._id.toString());
+        console.log(clients);
+        clients.forEach(async (client) => {
+            const oldCost = await costModel_1.costAgent.findOne({ clientID: client });
+            Object.keys(months).forEach(async (month) => {
+                // @ts-ignore
+                const timeCostPerMonth = await (0, reportsServices_1.getMonthlyCostPerClient)(months[month], client);
+                console.log(`${month}: `, timeCostPerMonth);
+                if (timeCostPerMonth[0]) {
+                    if (oldCost) {
+                        const feePath = `months.${month}.fees.Time`;
+                        const totalCostPath = `months.${month}.totalCost`;
+                        // @ts-ignore
+                        const feesArray = oldCost.months.get(month) ? Array.from(oldCost.months.get(month).fees.values()) : [];
+                        // @ts-ignore
+                        const res = await costModel_1.costAgent.updateOne({ clientID: client }, {
+                            $set: {
+                                [feePath]: timeCostPerMonth[0].totalCost,
+                                [totalCostPath]: feesArray.length > 0 ? feesArray.reduce((sum, num) => sum + num, timeCostPerMonth[0].totalCost) : timeCostPerMonth[0].totalCost
+                            }
+                        }, { new: true });
+                    }
+                    else {
+                        const objectToCreate = {
+                            clientID: client,
+                            type: 'Cost',
+                            year: new Date().getMonth() > 10 ? `${(new Date().getFullYear() - 1).toString().substring(2)}/${(new Date().getFullYear()).toString().substring(2)}` : `${(new Date().getFullYear()).toString().substring(2)}/${(new Date().getFullYear() + 1).toString().substring(2)}`,
+                            months: {
+                                [month]: {
+                                    fees: {
+                                        'Time': timeCostPerMonth[0].totalCost
+                                    },
+                                    totalCost: timeCostPerMonth[0].totalCost
+                                }
+                            }
+                        };
+                        console.log(objectToCreate.year);
+                        const newCost = await costModel_1.costAgent.create(objectToCreate);
+                    }
+                }
+            });
+        });
+    }
+    catch (error) {
+        throw new Error(`Error: ${error}`);
+    }
+};
 const getCost = async (req, res) => {
     try {
+        await setTimeCostForClients();
         const costData = await costModel_1.costAgent.find().populate({ path: 'clientID', select: 'clientBasicInfo.name' });
         const revenueData = await revenueModel_1.revenueAgent.find({ type: 'Confirmed' }).populate({ path: 'clientID', select: 'clientBasicInfo.name' });
         const data = groupByClientID(costData, revenueData);
