@@ -4,6 +4,7 @@ import express, { Request, Response } from 'express';
 import { revenueDTO } from "../models/revenueModel";
 import { validationFunctions } from "../middlewares/validation";
 import { revenueMiddleware } from "../middlewares/revenueMiddlware";
+import { projectServices } from "../services/projectServices"
 
 const revenueRouter = express.Router();
 
@@ -39,9 +40,24 @@ const getAll = async (req: Request, res: Response) => {
 
 const updateRevenueCellValue = async (req: Request, res: Response) => {
     const ID = req.params.id;
+    const clientID = req.params.clientID
     const { monthName, updatedCell } = req.body;
     const dbResponse = await revenueServices.updateRevenueCellValue(ID, monthName, updatedCell);
-
+    console.log(updatedCell.fees)
+    console.log(req.body)
+    console.log(req.params)
+    const project = await projectServices.getProject(clientID, 'retainer')
+        //@ts-ignore
+    if(project.data.length === 0) {
+        await projectServices.create({name: 'retainer', budget: updatedCell.retainer, clientID})
+    }
+    for(const fee in updatedCell.fees) {
+        const project = await projectServices.getProject(clientID, fee)
+        //@ts-ignore
+        if(project.data.length === 0) {
+            await projectServices.create({name: fee, budget: updatedCell.fees[fee], clientID})
+        }
+    }
     if (dbResponse.status === serviceStatuses.ERROR) {
         return res.status(400).json({
             message: dbResponse.message
@@ -120,7 +136,7 @@ revenueRouter.post('/revenue', validationFunctions.createRevenueBodyValidationRu
     validationFunctions.validationMiddleware, 
     revenueMiddleware.checkClientIDAndYearExist, create);
 revenueRouter.get('/revenue', getAll);
-revenueRouter.put('/revenue-cell-update/:id', validationFunctions.updateRevenueCellBodyValidations(),
+revenueRouter.put('/revenue-cell-update/:id/:clientID', validationFunctions.updateRevenueCellBodyValidations(),
     validationFunctions.validationMiddleware, updateRevenueCellValue);
 revenueRouter.put('/revenue-converter-cell-update/:id',
     validationFunctions.updateConvertedRevenueCellBodyValidations(), 

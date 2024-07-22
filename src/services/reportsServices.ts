@@ -50,13 +50,25 @@ export const getWorkHoursPerDay = async (startDate: Date, endDate: Date) => {
 
 export const getMonthlyCostPerClient = async (month: number, clientID: string) => {
     try {
+        const financialYear = new Date().getMonth() >= 10 ? `${(new Date().getFullYear()).toString().substring(2)}/${(new Date().getFullYear() + 1).toString().substring(2)}` : `${(new Date().getFullYear() - 1).toString().substring(2)}/${(new Date().getFullYear()).toString().substring(2)}`
+        let actualYear;
+        if(month >= 10) {
+            const extractedYear = financialYear.substring(0, 2)
+            actualYear = +(`${20}${extractedYear}`)
+            console.log(`Actual year from Dec, Nov: ${actualYear}`)
+        } else {
+            const extractedYear = financialYear.substring(3, 5)
+            actualYear = +(`${20}${extractedYear}`)
+            console.log(`Actual year from the rest of the months: ${actualYear}`)
+        }
+        
         const data = await TimeSheetEntryAgent.aggregate([
             {
                 $match: {
                     clientID: new Mongoose.Types.ObjectId(clientID),
                     trackedDay: {
-                        $gte: new Date(new Date().getFullYear(), month - 1, 1),
-                        $lt: new Date(new Date().getFullYear(), month, 1)
+                        $gte: new Date(actualYear, month - 1, 1),
+                        $lt: new Date(actualYear, month, 1)
                     }
                 }
             },

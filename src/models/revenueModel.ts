@@ -5,6 +5,9 @@ type monthData = {
     fees: {
         [key: string]: number,
     },
+    targets: {
+        [key: string]: number,
+    },
     totalBudget: number
 }
 
@@ -21,6 +24,10 @@ type revenueDTO = {
 const monthSchema = new Schema({
     retainer: Number,
     fees: {
+        type: Map,
+        of: Number,
+    },
+    targets: {
         type: Map,
         of: Number,
     },

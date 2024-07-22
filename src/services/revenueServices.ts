@@ -171,6 +171,22 @@ const aggregateCellDataValues = async (newCellValues: Record<string, any>): Prom
     }
 
 
+    if (currentValues.months[monthName].targets) {
+        Object.keys(currentValues.months[monthName].targets).forEach(key => {
+            if (newCellValues.updatedValues.targets[key]) {
+                newCellValues.updatedValues.targets[key] +=
+                    currentValues.months[monthName].targets[key];
+            }
+            else {
+                newCellValues.updatedValues.targets[key] =
+                    currentValues.months[monthName].targets[key];
+            }
+        });
+    } else {
+        currentValues.months[monthName].targets = newCellValues.updatedValues.targets
+    }
+
+
 
     return newCellValues;
 }

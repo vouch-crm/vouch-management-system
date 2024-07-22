@@ -69,6 +69,32 @@ const getByID = async (ID: string): Promise<projectReturn> => {
     }
 }
 
+const getProject = async (clientID: string, name: string): Promise<projectReturn> => {
+    try {
+        const project = await projectAgent.find({clientID, name});
+
+        if (!project) {
+            return {
+                status: serviceStatuses.FAILED,
+                message: 'No project associated with this ID!',
+                data: null
+            }
+        }
+        return {
+            status: serviceStatuses.SUCCESS,
+            message: null,
+            data: project
+        }
+
+    } catch (error) {
+        return {
+            status: serviceStatuses.ERROR,
+            message: `an error occurred: ${error}`,
+            data: null
+        }
+    }
+}
+
 const del = async (ID: string): Promise<projectReturn> => {
     try {
         const deletedProject = await projectAgent.findByIdAndDelete(ID);
@@ -99,5 +125,6 @@ export const projectServices = {
     create,
     getAll,
     getByID,
+    getProject,
     del
 }

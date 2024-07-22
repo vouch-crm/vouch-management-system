@@ -9,6 +9,7 @@ interface GroupedResult {
   [x: string]: any;
 }
 
+
 const addOrUpdateFee = async (req: Request, res: Response) => {
   try {
     const reqBody = req.body
@@ -97,13 +98,12 @@ const setTimeCostForClients = async () => {
     const dbResponse: IReturnClient = await clientServices.find();
     // @ts-ignore
     const clients = dbResponse?.data?.map((client: any) => client._id.toString())
-    console.log(clients)
     clients.forEach(async (client: string) => {
       const oldCost = await costAgent.findOne({ clientID: client })
+      console.log(oldCost)
       Object.keys(months).forEach(async (month: string) => {
         // @ts-ignore
         const timeCostPerMonth = await getMonthlyCostPerClient(months[month], client)
-        console.log(`${month}: `, timeCostPerMonth)
         if (timeCostPerMonth[0]) {
           if (oldCost) {
             const feePath = `months.${month}.fees.Time`
@@ -121,7 +121,7 @@ const setTimeCostForClients = async () => {
             const objectToCreate: costDTO = {
               clientID: client,
               type: 'Cost',
-              year: new Date().getMonth() > 10 ? `${(new Date().getFullYear() - 1).toString().substring(2)}/${(new Date().getFullYear()).toString().substring(2)}` : `${(new Date().getFullYear()).toString().substring(2)}/${(new Date().getFullYear() + 1).toString().substring(2)}`,
+              year: new Date().getMonth() >= 10 ? `${(new Date().getFullYear()).toString().substring(2)}/${(new Date().getFullYear() + 1).toString().substring(2)}` : `${(new Date().getFullYear() - 1).toString().substring(2)}/${(new Date().getFullYear()).toString().substring(2)}`,
               months: {
                 [month]: {
                   fees: {
@@ -131,7 +131,6 @@ const setTimeCostForClients = async () => {
                 }
               }
             }
-            console.log(objectToCreate.year)
             const newCost = await costAgent.create(objectToCreate)
           }
         }
@@ -147,6 +146,7 @@ const getCost = async (req: Request, res: Response) => {
   try {
     await setTimeCostForClients()
     const costData = await costAgent.find().populate({ path: 'clientID', select: 'clientBasicInfo.name' })
+    console.log('cost data: ', costData)
     const revenueData = await revenueAgent.find({ type: 'Confirmed' }).populate({ path: 'clientID', select: 'clientBasicInfo.name' })
     const data = groupByClientID(costData, revenueData)
     res.status(200).json(data)
