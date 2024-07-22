@@ -145,6 +145,7 @@ export const getEntriesWithinPeriod = async (startDate: Date, endDate: Date, pag
         throw new Error(error)
     }
 }
+
 const getClientTotalHoursAndHoursPerDay = async (clientID: string,
     startDate: Date, endDate: Date): Promise<reportReturn> => {
     try {
@@ -514,9 +515,64 @@ export const getWorkHoursForTasks = async (startDate: Date, endDate: Date) => {
     }
 }
 
+const getProjectTotalCost = async (projectID: string, startDate: Date, endDate: Date) => {
+    try {
+        console.log(typeof projectID);
+        const projectTotalCost = await TimeSheetEntryAgent.aggregate([
+            {
+                $lookup: {
+                  from: "tasks",
+                  localField: "taskID",
+                  foreignField: "_id",
+                  as: "taskDetails"
+                }
+              },
+              {
+                $unwind: "$taskDetails"
+              },
+              {
+                $match: {
+                  "taskDetails.projectID": new Mongoose.Types.ObjectId(projectID),
+                  trackedDay: {
+                    $gte: startDate,
+                    $lte: endDate
+                  }
+                }
+              },
+              {
+                $group: {
+                    _id: null,
+                    totalProjectCost: {
+                        $sum: '$cost'
+                    },
+                }
+              },
+              {
+                $project: {
+                    _id: 0,
+                    totalProjectCost:1
+                }
+              }
+        ])
+
+        return {
+            status: serviceStatuses.SUCCESS,
+            message: null,
+            data: projectTotalCost
+        }
+    } catch (error) {
+        return {
+            status: serviceStatuses.SUCCESS,
+            message: null,
+            data: null
+        }
+    }
+}
+
 export const reportServices = {
     getClientTotalHoursAndHoursPerDay,
     getEmployeeTotalHoursAndHoursPerDay,
     getClientsTotalHoursByEmployees,
     getEmployeeTotalRevenue,
+    getProjectTotalCost
 }

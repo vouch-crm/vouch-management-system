@@ -109,6 +109,20 @@ const detailedReports = async (req, res) => {
         res.status(400).json(error);
     }
 };
+const projectTotalCost = async (req, res) => {
+    const projectID = req.params.projectID;
+    const startDate = new Date(req.params.startDate);
+    const endDate = new Date(req.params.endDate);
+    const ProjectTotalCost = await reportsServices_2.reportServices.getProjectTotalCost(projectID, startDate, endDate);
+    if (ProjectTotalCost.status !== enums_1.serviceStatuses.SUCCESS) {
+        return res.status(400).json({
+            message: ProjectTotalCost.message
+        });
+    }
+    res.status(200).json({
+        projectTotalCost: ProjectTotalCost.data
+    });
+};
 reportsRouter.get('/reports-bar/:startDate/:endDate', getBarData);
 reportsRouter.get('/client-monthly-cost/:clientID', getClientMonthlyCost);
 reportsRouter.get('/report-client/:clientID/:startDate/:endDate', getClientTotalHoursAndHoursPerDay);
@@ -117,4 +131,5 @@ reportsRouter.get('/report-client/:startDate/:endDate', getClientsTotalHoursByEm
 reportsRouter.get('/report-employee-revenues/:startDate/:endDate', getEmployeeTotalRevenue);
 reportsRouter.get('/reports/weekly-report/:startDate/:endDate', getWeeklyReport);
 reportsRouter.get('/reports-entries/:startDate/:endDate', detailedReports);
+reportsRouter.get('/project-total-cost/:projectID/:startDate/:endDate', projectTotalCost);
 exports.default = reportsRouter;

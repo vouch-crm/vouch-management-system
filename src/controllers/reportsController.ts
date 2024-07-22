@@ -21,10 +21,10 @@ const getBarData = async (req: Request, res: Response) => {
 const getClientMonthlyCost = async (req: Request, res: Response) => {
     try {
         const { clientID } = req.params
-        const thisMonth = new Date().getMonth() +1
+        const thisMonth = new Date().getMonth() + 1
         const data = await getMonthlyCostPerClient(thisMonth, clientID)
         res.status(200).json(data)
-        
+
     } catch (error) {
         res.status(400)
     }
@@ -103,7 +103,7 @@ const getEmployeeTotalRevenue = async (
     });
 }
 
-const getWeeklyReport = async(req:Request, res: Response) => {
+const getWeeklyReport = async (req: Request, res: Response) => {
     try {
         const { startDate, endDate } = req.params
         const sDate = new Date(startDate)
@@ -115,29 +115,48 @@ const getWeeklyReport = async(req:Request, res: Response) => {
     }
 }
 
-const detailedReports = async(req: Request, res: Response) => {
+const detailedReports = async (req: Request, res: Response) => {
     try {
-        const { pageNumber } = req.query 
+        const { pageNumber } = req.query
         const { startDate, endDate } = req.params
         const sDate = new Date(startDate)
         const eDate = new Date(endDate)
-        const data = await getEntriesWithinPeriod(sDate, eDate, pageNumber? +pageNumber: 1)
+        const data = await getEntriesWithinPeriod(sDate, eDate, pageNumber ? +pageNumber : 1)
         res.status(200).json(data)
     } catch (error) {
         res.status(400).json(error)
     }
 }
 
+const projectTotalCost = async (req: Request, res: Response) => {
+    const projectID = req.params.projectID;
+    const startDate = new Date(req.params.startDate as string);
+    const endDate = new Date(req.params.endDate as string);
+
+    const ProjectTotalCost = await reportServices.getProjectTotalCost(projectID, startDate, endDate);
+
+    if(ProjectTotalCost.status !== serviceStatuses.SUCCESS) {
+        return res.status(400).json({
+            message: ProjectTotalCost.message
+        });
+    }
+
+    res.status(200).json({
+        projectTotalCost: ProjectTotalCost.data
+    });
+}
+
 reportsRouter.get('/reports-bar/:startDate/:endDate', getBarData);
 reportsRouter.get('/client-monthly-cost/:clientID', getClientMonthlyCost);
 reportsRouter.get('/report-client/:clientID/:startDate/:endDate',
     getClientTotalHoursAndHoursPerDay);
-reportsRouter.get('/report-employee/:employeeID/:startDate/:endDate', 
+reportsRouter.get('/report-employee/:employeeID/:startDate/:endDate',
     getEmployeeTotalHoursAndHoursPerDay);
 reportsRouter.get('/report-client/:startDate/:endDate', getClientsTotalHoursByEmployees);
 reportsRouter.get('/report-employee-revenues/:startDate/:endDate', getEmployeeTotalRevenue);
 reportsRouter.get('/reports/weekly-report/:startDate/:endDate', getWeeklyReport)
 reportsRouter.get('/reports-entries/:startDate/:endDate', detailedReports)
+reportsRouter.get('/project-total-cost/:projectID/:startDate/:endDate', projectTotalCost);
 
 
 export default reportsRouter

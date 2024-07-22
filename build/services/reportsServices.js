@@ -494,9 +494,63 @@ const getWorkHoursForTasks = async (startDate, endDate) => {
     }
 };
 exports.getWorkHoursForTasks = getWorkHoursForTasks;
+const getProjectTotalCost = async (projectID, startDate, endDate) => {
+    try {
+        console.log(typeof projectID);
+        const projectTotalCost = await timesheetEntryModel_1.TimeSheetEntryAgent.aggregate([
+            {
+                $lookup: {
+                    from: "tasks",
+                    localField: "taskID",
+                    foreignField: "_id",
+                    as: "taskDetails"
+                }
+            },
+            {
+                $unwind: "$taskDetails"
+            },
+            {
+                $match: {
+                    "taskDetails.projectID": new mongoose_1.default.Types.ObjectId(projectID),
+                    trackedDay: {
+                        $gte: startDate,
+                        $lte: endDate
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalProjectCost: {
+                        $sum: '$cost'
+                    },
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    totalProjectCost: 1
+                }
+            }
+        ]);
+        return {
+            status: enums_1.serviceStatuses.SUCCESS,
+            message: null,
+            data: projectTotalCost
+        };
+    }
+    catch (error) {
+        return {
+            status: enums_1.serviceStatuses.SUCCESS,
+            message: null,
+            data: null
+        };
+    }
+};
 exports.reportServices = {
     getClientTotalHoursAndHoursPerDay,
     getEmployeeTotalHoursAndHoursPerDay,
     getClientsTotalHoursByEmployees,
     getEmployeeTotalRevenue,
+    getProjectTotalCost
 };
