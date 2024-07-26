@@ -3,7 +3,7 @@ import mongoose, { Schema } from "mongoose";
 
 interface TaskSchema {
     client: Schema.Types.ObjectId;
-    projectID: string,
+    projectID: Schema.Types.ObjectId,
     name: string;
     jobID?: Schema.Types.ObjectId;
     access?: string[];

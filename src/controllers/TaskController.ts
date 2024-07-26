@@ -38,9 +38,16 @@ const findTask = async (req: Request, res: Response) => {
 
 const findAllTasks = async (req: Request, res: Response) => {
     try {
-        const tasks = await TaskAgent.find().populate('client')
+        const tasks = await TaskAgent.find().populate({
+            path: 'projectID',
+            populate: {
+                path: 'clientID',
+                model: 'client'
+            }
+        })
         res.status(200).json(tasks)
     } catch (error) {
+        console.log(error)
         res.status(400).json(error)
     }
 }

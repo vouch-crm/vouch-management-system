@@ -16,6 +16,6 @@ const projectSchema = new Schema({
     budget: Number
 })
 
-const projectAgent = mongoose.model<projectDTO>('Project', projectSchema);
+const projectAgent = mongoose.model<projectDTO>('project', projectSchema);
 
 export {projectDTO, projectAgent}
