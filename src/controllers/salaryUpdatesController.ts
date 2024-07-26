@@ -1,9 +1,11 @@
 import express, { Request, Response } from 'express';
 import { serviceStatuses, payFrequency, basis } from '../services/enums';
-import { SalaryUpdatesDocument } from '../models/salaryUpdatesModel';
+import { SalaryUpdatesAgent, SalaryUpdatesDocument } from '../models/salaryUpdatesModel';
 import { salaryUpdatesReturn, salaryUpdatesServices } from '../services/salaryUpdatesServices';
+import { EmployeeAgent } from '../models/employeeModel';
 import { validationFunctions } from '../middlewares/validation';
 import { checkIfAdmin } from '../middlewares/adminMiddleware';
+import Mongoose from "mongoose";
 
 const salaryUpdatesRouter = express.Router();
 
@@ -20,7 +22,7 @@ const create = async (req: Request, res: Response) => {
             break;
         case payFrequency.BI_MONTHLY:
             break;
-    
+
         default:
             return res.status(404).json({
                 message: 'Invalid pay frequency!'
@@ -37,7 +39,7 @@ const create = async (req: Request, res: Response) => {
             break;
         case basis.PER_ANNUM:
             break;
-    
+
         default:
             return res.status(404).json({
                 message: 'Invalid basis!'
@@ -50,7 +52,8 @@ const create = async (req: Request, res: Response) => {
             message: dbResponse.message
         });
     }
-
+    const hourlyRate = await setEmployeeHourlyRate(req.body.empID)  
+    await EmployeeAgent.findByIdAndUpdate(req.body.empID, { hourlyRate: +hourlyRate[0].hourlyRate.toFixed(2) })
     res.status(201).json({
         message: dbResponse.message,
         data: dbResponse.data
@@ -120,6 +123,42 @@ const del = async (req: Request, res: Response) => {
     res.status(200).json({
         message: dbResponse.message,
     });
+}
+
+const setEmployeeHourlyRate = async (empID: string) => {
+    try {
+        const data = SalaryUpdatesAgent.aggregate([
+            {
+                $match: {
+                    empID: new Mongoose.Types.ObjectId(empID),
+                    basis: 'per annum'
+                }
+            },
+            {
+                $group: {
+                    _id: "$empID",
+                    yearlyPay: {
+                        $sum: "$amount"
+                    }
+                }
+            }, {
+                $addFields: {
+                    hourlyRate: {
+                        $divide: ['$yearlyPay', 1665 * 0.8]
+                    }
+                }
+            },
+            {
+                $project: {
+                    hourlyRate: 1,
+                    yearlyPay: 1
+                }
+            }
+        ])
+        return data
+    } catch (error) {
+        throw new Error(`${error}`)
+    }
 }
 
 salaryUpdatesRouter.post('/employee-salary', checkIfAdmin, validationFunctions

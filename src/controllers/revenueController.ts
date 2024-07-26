@@ -47,15 +47,15 @@ const updateRevenueCellValue = async (req: Request, res: Response) => {
     console.log(req.body)
     console.log(req.params)
     const project = await projectServices.getProject(clientID, 'retainer')
-        //@ts-ignore
-    if(project.data.length === 0) {
-        await projectServices.create({name: 'retainer', budget: updatedCell.retainer, clientID})
+    //@ts-ignore
+    if (project.data.length === 0) {
+        await projectServices.create({ name: 'retainer', budget: updatedCell.retainer, clientID })
     }
-    for(const fee in updatedCell.fees) {
+    for (const fee in updatedCell.fees) {
         const project = await projectServices.getProject(clientID, fee)
         //@ts-ignore
-        if(project.data.length === 0) {
-            await projectServices.create({name: fee, budget: updatedCell.fees[fee], clientID})
+        if (project.data.length === 0) {
+            await projectServices.create({ name: fee, budget: updatedCell.fees[fee], clientID })
         }
     }
     if (dbResponse.status === serviceStatuses.ERROR) {
@@ -133,13 +133,13 @@ const del = async (req: Request, res: Response) => {
 }
 
 revenueRouter.post('/revenue', validationFunctions.createRevenueBodyValidationRules(),
-    validationFunctions.validationMiddleware, 
+    validationFunctions.validationMiddleware,
     revenueMiddleware.checkClientIDAndYearExist, create);
 revenueRouter.get('/revenue', getAll);
 revenueRouter.put('/revenue-cell-update/:id/:clientID', validationFunctions.updateRevenueCellBodyValidations(),
     validationFunctions.validationMiddleware, updateRevenueCellValue);
 revenueRouter.put('/revenue-converter-cell-update/:id',
-    validationFunctions.updateConvertedRevenueCellBodyValidations(), 
+    validationFunctions.updateConvertedRevenueCellBodyValidations(),
     validationFunctions.validationMiddleware, updateConvertedCellValue);
 revenueRouter.delete('/revenue/:id', del);
 

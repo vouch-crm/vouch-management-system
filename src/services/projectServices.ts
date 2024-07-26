@@ -27,7 +27,7 @@ const create = async (projectData: projectDTO): Promise<projectReturn> => {
 
 const getAll = async (): Promise<projectReturn> => {
     try {
-        const projects = await projectAgent.find();
+        const projects = await projectAgent.find().populate({ path: 'clientID', select: 'clientBasicInfo.name' });
 
         return {
             status: serviceStatuses.SUCCESS,
