@@ -11,6 +11,7 @@ type TimeSheetEntryDTO = {
     cost?: number,
     description?: string,
     timesheetRow: number,
+    billable: boolean
 }
 
 const timesheetEntrySchema = new Schema({
@@ -39,9 +40,10 @@ const timesheetEntrySchema = new Schema({
     cost: Number,
     description: String,
     timesheetRow: Number,
+    billable: Boolean
 })
 
 const TimeSheetEntryAgent = mongoose.model<TimeSheetEntryDTO>(
     'TimesheetEntry', timesheetEntrySchema);
 
-export {TimeSheetEntryDTO, TimeSheetEntryAgent}
+export { TimeSheetEntryDTO, TimeSheetEntryAgent }

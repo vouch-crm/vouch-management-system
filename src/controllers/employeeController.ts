@@ -23,7 +23,7 @@ const create = async (req: Request, res: Response) => {
 
     const probationDate = employeeServices.generateProbationDate(requestData.joinDate);
     const password = await hashingServices.hashPassword(
-        employeeServices.passwordGenerator(requestData.email));
+        employeeServices.passwordGenerator(requestData.email, requestData.password));
 
     const employeeData: EmployeeDocument = requestData;
     employeeData.probationDate = probationDate;

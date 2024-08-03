@@ -52,8 +52,9 @@ const create = async (req: Request, res: Response) => {
             message: dbResponse.message
         });
     }
-    const hourlyRate = await setEmployeeHourlyRate(req.body.empID)  
-    await EmployeeAgent.findByIdAndUpdate(req.body.empID, { hourlyRate: +hourlyRate[0].hourlyRate.toFixed(2) })
+    const employee = await EmployeeAgent.findById(req.body.empID)
+    const hourlyRate = await setEmployeeHourlyRate(req.body.empID, employee?.maximumAnnualHours, employee?.potentialChargableTime)  
+    await EmployeeAgent.findByIdAndUpdate(req.body.empID, { hourlyRate: +hourlyRate[0].hourlyRate.toFixed(2), maxCapacityHourlyRate: +hourlyRate[0].hourlyRate.toFixed(2) * 3 })
     res.status(201).json({
         message: dbResponse.message,
         data: dbResponse.data
@@ -125,7 +126,7 @@ const del = async (req: Request, res: Response) => {
     });
 }
 
-const setEmployeeHourlyRate = async (empID: string) => {
+const setEmployeeHourlyRate = async (empID: string, maxHours: number = 1665, billingPercentage: number = 0.8) => {
     try {
         const data = SalaryUpdatesAgent.aggregate([
             {
@@ -144,7 +145,7 @@ const setEmployeeHourlyRate = async (empID: string) => {
             }, {
                 $addFields: {
                     hourlyRate: {
-                        $divide: ['$yearlyPay', 1665 * 0.8]
+                        $divide: ['$yearlyPay', maxHours * billingPercentage]
                     }
                 }
             },

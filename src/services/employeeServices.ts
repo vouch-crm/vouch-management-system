@@ -8,9 +8,12 @@ export type EmployeeReturn = {
     data: Record<string, any> | null
 }
 
-const passwordGenerator = (email: string): string => {
+const passwordGenerator = (email: string, password: string): string => {
     const basePassword = email.substring(0, email.indexOf('@'));
     const defaultPassword = `emp-password-${basePassword}`;
+    if(password) {
+        return password
+    }
 
     return defaultPassword;
 }
@@ -74,12 +77,12 @@ const getEmployeeByID = async (ID: string): Promise<EmployeeReturn> => {
 }
 
 const getEmpHourlyRate = async (ID: string): Promise<number | undefined> => {
-    const employee = await EmployeeAgent.findById(ID, 'hourlyRate');
+    const employee = await EmployeeAgent.findById(ID, 'maxCapacityHourlyRate');
     if (!employee) {
         return undefined;
     }
     
-    return employee.hourlyRate;
+    return employee.maxCapacityHourlyRate;
 }
 
 const checkEmployeeExist = async (ID: string): Promise<boolean> => {

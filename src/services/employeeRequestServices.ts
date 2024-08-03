@@ -30,7 +30,7 @@ const create = async (
 
 const getAll = async (): Promise<employeeRequestReturn> => {
     try {
-        const requests: EmployeeRequestDocument[] = await EmployeeRequestAgent.find();
+        const requests: EmployeeRequestDocument[] = await EmployeeRequestAgent.find().populate({path: 'empID', select: 'firstName lastName'});
         return {
             status: serviceStatuses.SUCCESS,
             message: null,
@@ -48,6 +48,56 @@ const getAll = async (): Promise<employeeRequestReturn> => {
 const getByID = async (ID: string): Promise<employeeRequestReturn> => {
     try {
         const request: EmployeeRequestDocument | null = await EmployeeRequestAgent.findById(ID);
+        if (!request) {
+            return {
+                status: serviceStatuses.FAILED,
+                message: `No matching requests for ID = ${ID}`,
+                data: null
+            }
+        }
+
+        return {
+            status: serviceStatuses.SUCCESS,
+            message: null,
+            data: request
+        }
+    } catch (error) {
+        return {
+            status: serviceStatuses.ERROR,
+            message: `Error getting request for employee with ID = ${ID} : ${error}`,
+            data: null
+        }
+    }
+}
+
+const getByEmpID = async (ID: string): Promise<employeeRequestReturn> => {
+    try {
+        const request = await EmployeeRequestAgent.find({empID: ID});
+        if (!request) {
+            return {
+                status: serviceStatuses.FAILED,
+                message: `No matching requests for ID = ${ID}`,
+                data: null
+            }
+        }
+
+        return {
+            status: serviceStatuses.SUCCESS,
+            message: null,
+            data: request
+        }
+    } catch (error) {
+        return {
+            status: serviceStatuses.ERROR,
+            message: `Error getting request for employee with ID = ${ID} : ${error}`,
+            data: null
+        }
+    }
+}
+
+const getByIDAndUpdate = async (ID: string, data: any): Promise<employeeRequestReturn> => {
+    try {
+        const request: EmployeeRequestDocument | null = await EmployeeRequestAgent.findByIdAndUpdate(ID, data);
         if (!request) {
             return {
                 status: serviceStatuses.FAILED,
@@ -99,5 +149,7 @@ export const employeeRequestServices = {
     create,
     getAll,
     getByID,
+    getByEmpID,
+    getByIDAndUpdate,
     del
 }

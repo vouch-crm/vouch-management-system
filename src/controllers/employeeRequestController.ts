@@ -81,6 +81,42 @@ const getByID = async (req: Request, res: Response) => {
     });
 }
 
+const getByEmpID = async (req: Request, res: Response) => {
+    const ID = req.params.id;
+    const request: employeeRequestReturn = await employeeRequestServices.getByID(ID);
+    if (request.status === serviceStatuses.FAILED) {
+        return res.status(404).json({
+            message: request.message
+        });
+    } else if (request.status === serviceStatuses.ERROR) {
+        return res.status(400).json({
+            message: request.message
+        });
+    }
+
+    res.status(200).json({
+        data: request.data
+    });
+}
+
+const getByIDAndUpdate = async (req: Request, res: Response) => {
+    const ID = req.params.id;
+    const request: employeeRequestReturn = await employeeRequestServices.getByIDAndUpdate(ID, req.body);
+    if (request.status === serviceStatuses.FAILED) {
+        return res.status(404).json({
+            message: request.message
+        });
+    } else if (request.status === serviceStatuses.ERROR) {
+        return res.status(400).json({
+            message: request.message
+        });
+    }
+
+    res.status(200).json({
+        data: request.data
+    });
+}
+
 const del = async (req: Request, res: Response) => {
     const ID = req.params.id;
     const request: employeeRequestReturn = await employeeRequestServices.del(ID);
@@ -102,7 +138,9 @@ const del = async (req: Request, res: Response) => {
 empRequestRouter.post('/employee-request', validationFunctions.createEmployeeRequestBodyValidationRules(),
     validationFunctions.validationMiddleware, create);
 empRequestRouter.get('/employee-request', checkIfAdmin, getAll);
-empRequestRouter.get('/employee-request/:id', checkIfAdmin, getByID);
+empRequestRouter.patch('/employee-request/:id', checkIfAdmin, getByIDAndUpdate);
+// empRequestRouter.get('/employee-request/:id', checkIfAdmin, getByID);
+empRequestRouter.get('/employee-request/:id', getByEmpID);
 empRequestRouter.delete('/employee-request/:id', checkIfAdmin, del);
 
 export default empRequestRouter;

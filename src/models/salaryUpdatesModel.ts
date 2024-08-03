@@ -8,6 +8,7 @@ type SalaryUpdatesDocument = {
     FTE?: string,
     basis: string,
     payFrequency: string,
+    employeeBasis?: 'Full Time' | 'Part Time',
     startDate: Date,
     endDate?: Date,
     notes?: string
@@ -25,6 +26,7 @@ const salaryUpdatesSchema = new Schema({
     FTE: String,
     basis: String,
     payFrequency: String,
+    employeeBasis: String,
     startDate: Date,
     endDate: Date,
     notes: String

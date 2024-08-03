@@ -8,6 +8,7 @@ const timeSheetController = express.Router();
 
 const create = async (req: Request, res: Response) => {
     let requestData: TimeSheetEntryDTO = req.body;
+    console.log(requestData)
     const empHourlyRate: number | undefined = await employeeServices.getEmpHourlyRate(
         requestData.employeeID);
 
@@ -17,7 +18,7 @@ const create = async (req: Request, res: Response) => {
         });
     }
 
-    requestData.cost = ((requestData.timeTracked as number) / 3600) * empHourlyRate;
+    requestData.cost = ((requestData.timeTracked as number) / 3600) * empHourlyRate ;
     const newEntry = await timeSheetEntryServices.create(requestData);
     if (newEntry.status !== serviceStatuses.SUCCESS) {
         return res.status(400).json({
