@@ -153,6 +153,60 @@ const createProjectBodyValidationRules = () => {
     ]
 }
 
+const createPurchaseOrderValidationRules = () => {
+    return [
+        body('clientID').exists().withMessage('clientID not provided'),
+        body('empID').exists().withMessage('empID not provided'),
+        body('vendorName').exists().withMessage('vendorName not provided'),
+        body('purchaseReason').exists().withMessage('purchaseReason not provided'),
+        body('estimatedTime').exists().withMessage('estimatedTime not provided'),
+        body('amount').exists().withMessage('amount not provided'),
+        body('date').exists().withMessage('date not provided'),
+        body('monthOfReference').custom(value => {
+            switch (value) {
+                case 'Jan':
+                    break;
+                
+                case 'Feb':
+                    break;
+
+                case 'Mar':
+                    break;
+
+                case 'Apr':
+                    break;
+
+                case 'May':
+                    break;
+
+                case 'Jun':
+                    break;
+
+                case 'Jul':
+                    break;
+
+                case 'Aug':
+                    break;
+
+                case 'Sep':
+                    break;
+
+                case 'Oct':
+                    break;
+
+                case 'Nov':
+                    break;
+
+                case 'Dec':
+                    break;
+
+                default:
+                    throw new Error('Invalid value for field monthOfReference!');
+            }
+        })
+    ]
+}
+
 const validationMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (errors.isEmpty()) {
@@ -173,5 +227,6 @@ export const validationFunctions = {
     createRevenueBodyValidationRules,
     updateRevenueCellBodyValidations,
     updateConvertedRevenueCellBodyValidations,
-    createProjectBodyValidationRules
+    createProjectBodyValidationRules,
+    createPurchaseOrderValidationRules
 }
