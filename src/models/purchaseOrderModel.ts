@@ -31,7 +31,10 @@ const purchaseOrderSchema = new Schema({
     amount: Number,
     bestRatePossibleConfirmation: Boolean,
     date: Date,
-    status: String
+    status: {
+        type: String,
+        default: 'pending'
+    }
 });
 
 const purchaseOrderAgent = mongoose.model<purchaseOrderDTO>('purchaseOrder', purchaseOrderSchema);
