@@ -18,6 +18,7 @@ import reportsRouter from './controllers/reportsController';
 import revenueRouter from './controllers/revenueController';
 import operationalProfitAndLossRouter from './controllers/operationalProfitAndLossController';
 import projectRouter from './controllers/projectController';
+import notificationsRouter from './controllers/notificationsController'
 import { utils } from './services/utils';
 import cors from 'cors';
 import morgan from 'morgan';
@@ -52,6 +53,7 @@ app.use(reportsRouter);
 app.use(revenueRouter);
 app.use(operationalProfitAndLossRouter);
 app.use(projectRouter);
+app.use(notificationsRouter);
 
 app.get('/', (_req: Request, res: Response): void => {
     res.status(200).json({
