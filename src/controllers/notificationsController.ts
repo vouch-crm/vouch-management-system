@@ -34,7 +34,7 @@ const get = async (req: Request, res: Response) => {
     }
 }
 
-router.post('/notifications', sendNotification)
+router.post('/notifications', send)
 router.patch('/notifications/:empID', markRead)
 router.get('/notifications/:empID', get)
 
