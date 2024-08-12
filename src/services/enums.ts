@@ -43,3 +43,5 @@ export enum revenueType {
     OPPORTUNITY = 'Opportunity',
     NEW_LEADS = 'New Leads'
 }
+
+// Set enum for notifications.

@@ -3,7 +3,7 @@ import { serviceStatuses } from "../services/enums";
 import express, { Request, Response } from 'express';
 import { purchaseOrderDTO } from "../models/purchaseOrderModel";
 import { validationFunctions } from "../middlewares/validation";
-import { checkIfEmployeeHasFinanceAccess } from "../middlewares/employeeMiddleware";
+import { checkIfEmployeeHasFinancesAcces } from "../middlewares/employeeMiddleware";
 
 const purchaseOrderRouter = express.Router();
 
