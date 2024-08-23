@@ -4,6 +4,7 @@ type purchaseOrderDTO = {
     empID: string,
     clientID: string,
     vendorName: string,
+    item: string,
     monthOfReference: string,
     purchaseReason: string,
     estimatedTime: number,
@@ -25,6 +26,7 @@ const purchaseOrderSchema = new Schema({
         required: true
     },
     vendorName: String,
+    item: String,
     monthOfReference: String,
     purchaseReason: String,
     estimatedTime: Number,

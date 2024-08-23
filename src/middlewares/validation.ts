@@ -162,6 +162,7 @@ const createPurchaseOrderValidationRules = () => {
         body('estimatedTime').exists().withMessage('estimatedTime not provided'),
         body('amount').exists().withMessage('amount not provided'),
         body('date').exists().withMessage('date not provided'),
+        body('item').exists().withMessage('item not provided'),
         body('monthOfReference').custom(value => {
             switch (value) {
                 case 'Jan':
