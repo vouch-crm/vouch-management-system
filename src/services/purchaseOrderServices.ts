@@ -97,7 +97,7 @@ const update = async (ID: string, status: string): Promise<purchaseOrderReturn> 
 
         return {
             status: serviceStatuses.SUCCESS,
-            message: null,
+            message: 'Order Updated successfuly!',
             data: updatedOrder
         }
 
@@ -124,7 +124,7 @@ const del = async (ID: string): Promise<purchaseOrderReturn> => {
 
         return {
             status: serviceStatuses.SUCCESS,
-            message: null,
+            message: 'Order deleted successfuly!',
             data: deletedOrder
         }
 

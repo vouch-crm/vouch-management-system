@@ -57,7 +57,7 @@ const getEmployeeOrders = async(req: Request, res: Response) => {
 const update = async(req: Request, res: Response) => {
     const ID = req.params.id;
     const orderStatus = req.body.status;
-    if (orderStatus !== 'accepted' || orderStatus !== 'declined' || orderStatus === undefined) {
+    if (orderStatus !== 'accepted' && orderStatus !== 'declined' && orderStatus === undefined) {
         return res.status(400).json({
             message: 'Invalid request body!'
         });

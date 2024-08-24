@@ -17,7 +17,7 @@ type purchaseOrderDTO = {
 const purchaseOrderSchema = new Schema({
     empID: {
         type: Schema.Types.ObjectId,
-        ref: 'employee',
+        ref: 'Employee',
         required: true
     },
     clientID: {

@@ -204,6 +204,7 @@ const createPurchaseOrderValidationRules = () => {
                 default:
                     throw new Error('Invalid value for field monthOfReference!');
             }
+            return true
         })
     ]
 }
