@@ -536,7 +536,8 @@ const getProjectTotalCost = async (projectID: string, startDate: Date, endDate: 
                   trackedDay: {
                     $gte: startDate,
                     $lte: endDate
-                  }
+                  },
+                  billable: true
                 }
               },
               {
