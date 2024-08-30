@@ -3,7 +3,6 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import clientRouter from './controllers/clientController';
-import jobFormRouter from './controllers/jobFormsController';
 import jobRouter from './controllers/jobController';
 import employeeRouter from './controllers/employeeController';
 import adminRouter from './controllers/adminController';
@@ -40,7 +39,6 @@ app.use(cors())
 app.use(bodyParser.json());
 app.use('/client', clientRouter);
 app.use(jobRouter);
-app.use(jobFormRouter);
 app.use(employeeRouter);
 app.use(adminRouter);
 app.use(empRequestRouter);
