@@ -1,4 +1,4 @@
-import { s3 } from '../services/s3Config';
+import { s3 } from './awsConfiguration';
 import { serviceStatuses } from './enums';
 import { Buffer } from 'buffer';
 import dotenv from 'dotenv';

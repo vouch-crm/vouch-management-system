@@ -1,7 +1,7 @@
 import { IJob } from "../models/jobModel";
 import express, { Request, Response } from 'express'
 import { jobServices, IReturnJob } from "../services/jobServices";
-import { s3 } from '../services/s3Config';
+import { s3 } from '../services/awsConfiguration';
 import multer from "multer";
 const upload = multer();
 

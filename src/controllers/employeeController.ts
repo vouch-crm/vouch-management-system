@@ -5,9 +5,8 @@ import { EmployeeDocument, EmployeeInput, EmployeeLogin, EmployeeAgent } from '.
 import { validationFunctions } from '../middlewares/validation';
 import { checkIfAdmin } from '../middlewares/adminMiddleware';
 import { tokenServices } from '../services/tokenServices';
-import { s3 } from '../services/s3Config';
+import { s3 } from '../services/awsConfiguration';
 import multer from "multer";
-import { imageFilter } from '../services/multerImageFilter';
 import { serviceStatuses } from '../services/enums';
 import { S3Services } from '../services/s3Services';
 
@@ -259,8 +258,6 @@ const uploadFile = async (req: Request, res: Response) => {
 
     
 }
-
-
 
 employeeRouter.post('/employee', checkIfAdmin, validationFunctions.createEmployeeBodyValidationRules(),
     validationFunctions.validationMiddleware, create);

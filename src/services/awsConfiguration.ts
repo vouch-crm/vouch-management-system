@@ -9,4 +9,5 @@ AWS.config.update({
     region: process.env.REGION
 });
 
-export const s3 = new AWS.S3()
+export const s3 = new AWS.S3();
+export const ses = new AWS.SES();
