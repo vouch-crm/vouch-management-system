@@ -11,7 +11,7 @@ import employeeTrainingRouter from './controllers/employeeTrainingController';
 import empRequestRouter from './controllers/employeeRequestController';
 import timeSheetController from './controllers/timeSheetEntryController';
 import timeSheetTemplateRouter from './controllers/timeSheetTemplateController';
-import taskRouter from './controllers/TaskController'
+import taskRouter from './controllers/TaskController';
 import dashboradRouter from './controllers/dashboardController';
 import reportsRouter from './controllers/reportsController';
 import revenueRouter from './controllers/revenueController';

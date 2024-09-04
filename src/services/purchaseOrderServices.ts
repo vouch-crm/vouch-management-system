@@ -9,7 +9,8 @@ export type purchaseOrderReturn = {
 
 const create = async (purchaseOrderData: purchaseOrderDTO): Promise<purchaseOrderReturn> => {
     try {
-        const newPurchaseOrder = await purchaseOrderAgent.create(purchaseOrderData);
+        const count = await purchaseOrderAgent.countDocuments()
+        const newPurchaseOrder = await purchaseOrderAgent.create({...purchaseOrderData, PONumber: count +1});
 
         return {
             status: serviceStatuses.SUCCESS,
@@ -37,7 +38,7 @@ const getAll = async (): Promise<purchaseOrderReturn> => {
             message: null,
             data: orders
         }
-        
+
     } catch (error) {
         return {
             status: serviceStatuses.ERROR,
@@ -49,16 +50,16 @@ const getAll = async (): Promise<purchaseOrderReturn> => {
 
 const getEmployeeOrders = async (empID: string): Promise<purchaseOrderReturn> => {
     try {
-        const employeeOrders = await purchaseOrderAgent.find({empID})
+        const employeeOrders = await purchaseOrderAgent.find({ empID })
             .populate('empID', 'firstName lastName')
             .populate('clientID', 'clientBasicInfo');
 
-        if(!employeeOrders) {
+        if (!employeeOrders) {
             return {
                 status: serviceStatuses.FAILED,
                 message: 'No orders matching this ID!',
                 data: null
-            }   
+            }
         }
 
         return {
@@ -78,7 +79,7 @@ const getEmployeeOrders = async (empID: string): Promise<purchaseOrderReturn> =>
 
 const update = async (ID: string, status: string): Promise<purchaseOrderReturn> => {
     try {
-        const updatedOrder = await purchaseOrderAgent.findByIdAndUpdate(ID, 
+        const updatedOrder = await purchaseOrderAgent.findByIdAndUpdate(ID,
             {
                 status: status,
             },
@@ -87,12 +88,12 @@ const update = async (ID: string, status: string): Promise<purchaseOrderReturn> 
             }
         );
 
-        if(!updatedOrder) {
+        if (!updatedOrder) {
             return {
                 status: serviceStatuses.FAILED,
                 message: 'No order matching this ID!',
                 data: null
-            }   
+            }
         }
 
         return {
@@ -114,12 +115,12 @@ const del = async (ID: string): Promise<purchaseOrderReturn> => {
     try {
         const deletedOrder = await purchaseOrderAgent.findByIdAndDelete(ID);
 
-        if(!deletedOrder) {
+        if (!deletedOrder) {
             return {
                 status: serviceStatuses.FAILED,
                 message: 'No order matching this ID!',
                 data: null
-            }   
+            }
         }
 
         return {

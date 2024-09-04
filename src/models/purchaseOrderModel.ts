@@ -1,17 +1,20 @@
-import mongoose, {Schema} from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 type purchaseOrderDTO = {
     empID: string,
     clientID: string,
     vendorName: string,
-    item: string,
+    description: string,
     monthOfReference: string,
     purchaseReason: string,
     estimatedTime: number,
     amount: number,
     bestRatePossibleConfirmation: boolean,
     date: Date,
-    status: string
+    status: string,
+    jobPhase: string,
+    supplierType: string,
+    PONumber: number
 }
 
 const purchaseOrderSchema = new Schema({
@@ -26,7 +29,7 @@ const purchaseOrderSchema = new Schema({
         required: true
     },
     vendorName: String,
-    item: String,
+    description: String,
     monthOfReference: String,
     purchaseReason: String,
     estimatedTime: Number,
@@ -36,9 +39,21 @@ const purchaseOrderSchema = new Schema({
     status: {
         type: String,
         default: 'pending'
+    },
+    jobPhase: String,
+    supplierType: {
+        type: String,
+        default: '-'
+    },
+    PONumber: {
+        type: Number,
+        default: 0
     }
+
 });
+
+
 
 const purchaseOrderAgent = mongoose.model<purchaseOrderDTO>('purchaseOrder', purchaseOrderSchema);
 
-export {purchaseOrderDTO, purchaseOrderAgent}
+export { purchaseOrderDTO, purchaseOrderAgent }

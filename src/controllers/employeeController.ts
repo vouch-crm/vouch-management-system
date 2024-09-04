@@ -259,6 +259,8 @@ const uploadFile = async (req: Request, res: Response) => {
     
 }
 
+
+
 employeeRouter.post('/employee', checkIfAdmin, validationFunctions.createEmployeeBodyValidationRules(),
     validationFunctions.validationMiddleware, create);
 employeeRouter.post('/employee-login', login);
