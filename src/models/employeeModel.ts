@@ -31,6 +31,7 @@ type EmployeeDocument = {
     role?: string
     hourlyRate?: number,
     maxCapacityHourlyRate?: number,
+    manager: string,
     financialData?: {
         bankName: string,
         branchName: string,
@@ -140,6 +141,7 @@ const employeeSchema: Schema = new Schema({
         type: String,
         default: null
     },
+    manager: String,
     financialData: {
         bankName: String,
         branchName: String,
