@@ -206,6 +206,37 @@ const update = async (id: string, employeeData: Record<string, any>): Promise<Em
     }
 }
 
+const updateByEmail = async (email: string, newPassword: string): Promise<EmployeeReturn> => {
+    try {
+        const updatedEmployee = await EmployeeAgent.findOneAndUpdate(
+            { email: email }, 
+            { password: newPassword }, 
+            { new: true } 
+        );
+    
+        if (!updatedEmployee) {
+            return {
+                status: 'Failed',
+                message: `Could not find an employee with email: ${email}`,
+                data: null
+            };
+        }
+    
+        return {
+            status: 'Success',
+            message: `Password updated successfully!`,
+            data: updatedEmployee
+        };
+    } catch (error) {
+        return {
+            status: 'Error',
+            message: `Error while updating password for employee with email: ${email}: ${error}`,
+            data: null
+        };
+    }
+    
+}
+
 export const employeeServices = {
     passwordGenerator,
     generateProbationDate,
@@ -216,5 +247,6 @@ export const employeeServices = {
     getEmployeeByID,
     checkEmployeeExist,
     getEmployeeByEmail,
-    getEmpHourlyRate
+    getEmpHourlyRate,
+    updateByEmail
 }

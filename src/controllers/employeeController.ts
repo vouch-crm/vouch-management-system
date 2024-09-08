@@ -299,6 +299,43 @@ const changePasswordRequest = async(req: Request, res: Response) => {
     });
 }
 
+const changePassword = async(req: Request, res: Response) => {
+    const {token, newPassword} = req.body;
+
+    if(token === undefined || newPassword === undefined) {
+        return res.status(400).json({
+            message: 'Invalid request!'
+        });
+    }
+
+    const tokenResponse = tokenServices.verifyToken(token);
+
+    if(tokenResponse.status !== serviceStatuses.SUCCESS) {
+        return res.status(400).json({
+            message: tokenResponse.message
+        });
+    }
+
+    const employeeEmail = tokenResponse.decoded?.email;
+    const hashedPassword = await hashingServices.hashPassword(newPassword);
+
+    const dbResponse = await employeeServices.updateByEmail(employeeEmail, hashedPassword);
+
+    if(dbResponse.status === serviceStatuses.FAILED) {
+        return res.status(404).json({
+            message: dbResponse.message
+        });
+    } else if(dbResponse.status === serviceStatuses.ERROR) {
+        return res.status(400).json({
+            message: dbResponse.message
+        });
+    }
+
+    res.status(200).json({
+        message: dbResponse.message
+    });
+}
+
 employeeRouter.post('/employee', checkIfAdmin, validationFunctions.createEmployeeBodyValidationRules(),
     validationFunctions.validationMiddleware, create);
 employeeRouter.post('/employee-login', login);
@@ -306,6 +343,10 @@ employeeRouter.get('/employee', getAll);
 employeeRouter.get('/employee/:id', checkIfAdmin, getEmployeeByID);
 employeeRouter.delete('/employee/:id', checkIfAdmin, del);
 employeeRouter.put('/employee/:id', update);
+employeeRouter.post('/employee-change-password-request', 
+    validationFunctions.changePasswordRequestValidationRules(),
+    validationFunctions.validationMiddleware, changePasswordRequest);
+employeeRouter.put('/employee-change-password', changePassword);
 employeeRouter.post('/employee-image', upload.single('file'), uploadImage);
 employeeRouter.put('/employee-upload-performance/:id', uploadMulter.single('file'), uploadFile);
 

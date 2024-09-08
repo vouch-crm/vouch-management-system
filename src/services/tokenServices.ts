@@ -7,7 +7,7 @@ export type tokenReturn = {
   status: string,
   message: string | null,
   token: string | null,
-  decoded: { id: string, email: string } | null
+  decoded: Record<string, any> | null
 }
 
 const generateToken = (payload: Record<string, any>): tokenReturn => {
