@@ -9,6 +9,7 @@ import { s3 } from '../services/awsConfiguration';
 import multer from "multer";
 import { serviceStatuses } from '../services/enums';
 import { S3Services } from '../services/s3Services';
+import { emailServices } from '../services/emailService';
 
 const upload = multer({});
 
@@ -66,7 +67,11 @@ const login = async (req: Request, res: Response) => {
 
     const employeeID: string = dbResponse.data?.id as string;
     const employeeEmail: string = dbResponse.data?.email as string;
-    const tokenResponse = tokenServices.generateToken(employeeID, employeeEmail);
+    const payload = {
+        id: employeeID,
+        email: employeeEmail
+    }
+    const tokenResponse = tokenServices.generateToken(payload);
     if (tokenResponse.status === 'Success') {
         res.status(200).json({
             token: tokenResponse.token,
@@ -259,7 +264,40 @@ const uploadFile = async (req: Request, res: Response) => {
     
 }
 
+const changePasswordRequest = async(req: Request, res: Response) => {
+    const {email} = req.body;
 
+    const dbResponse = await employeeServices.getEmployeeByEmail(email);
+
+    if(dbResponse.status === serviceStatuses.FAILED) {
+        return res.status(404).json({
+            message: dbResponse.message
+        });
+    } else if(dbResponse.status === serviceStatuses.ERROR) {
+        return res.status(400).json({
+            message: dbResponse.message
+        });
+    }
+
+    const payload = {
+        email: email
+    }
+    const tokenResponse = tokenServices.generateToken(payload);
+
+    if(tokenResponse.status !== serviceStatuses.SUCCESS) {
+        return res.status(500).json({
+            message: tokenResponse.message
+        });
+    }
+
+    const token = tokenResponse.token;
+
+    await emailServices.sendEmail('test', 'test', 'test', 'test');
+
+    res.status(200).json({
+        message: 'email sent!'
+    });
+}
 
 employeeRouter.post('/employee', checkIfAdmin, validationFunctions.createEmployeeBodyValidationRules(),
     validationFunctions.validationMiddleware, create);

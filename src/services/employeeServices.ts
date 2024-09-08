@@ -119,7 +119,7 @@ const getEmployeeByEmail = async (email: string): Promise<EmployeeReturn> => {
         }
     } catch (error) {
         return {
-            status: 'Success',
+            status: 'Error',
             message: `error getting employee with email:${email}: ${error}`,
             data: null
         }
@@ -144,7 +144,6 @@ const getAll = async (): Promise<EmployeeReturn> => {
     }
 }
 
-// delete is a keyword, not allowed as a function name
 const del = async (id: string): Promise<EmployeeReturn> => {
     try {
         const employee: EmployeeDocument | null = await EmployeeAgent.findById(id);
