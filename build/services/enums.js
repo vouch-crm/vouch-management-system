@@ -47,3 +47,4 @@ var revenueType;
     revenueType["OPPORTUNITY"] = "Opportunity";
     revenueType["NEW_LEADS"] = "New Leads";
 })(revenueType || (exports.revenueType = revenueType = {}));
+// Set enum for notifications.

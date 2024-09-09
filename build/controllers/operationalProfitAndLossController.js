@@ -92,13 +92,12 @@ const setTimeCostForClients = async () => {
         const dbResponse = await clientServices_1.clientServices.find();
         // @ts-ignore
         const clients = dbResponse?.data?.map((client) => client._id.toString());
-        console.log(clients);
         clients.forEach(async (client) => {
             const oldCost = await costModel_1.costAgent.findOne({ clientID: client });
+            console.log(oldCost);
             Object.keys(months).forEach(async (month) => {
                 // @ts-ignore
                 const timeCostPerMonth = await (0, reportsServices_1.getMonthlyCostPerClient)(months[month], client);
-                console.log(`${month}: `, timeCostPerMonth);
                 if (timeCostPerMonth[0]) {
                     if (oldCost) {
                         const feePath = `months.${month}.fees.Time`;
@@ -117,7 +116,7 @@ const setTimeCostForClients = async () => {
                         const objectToCreate = {
                             clientID: client,
                             type: 'Cost',
-                            year: new Date().getMonth() > 10 ? `${(new Date().getFullYear() - 1).toString().substring(2)}/${(new Date().getFullYear()).toString().substring(2)}` : `${(new Date().getFullYear()).toString().substring(2)}/${(new Date().getFullYear() + 1).toString().substring(2)}`,
+                            year: new Date().getMonth() >= 10 ? `${(new Date().getFullYear()).toString().substring(2)}/${(new Date().getFullYear() + 1).toString().substring(2)}` : `${(new Date().getFullYear() - 1).toString().substring(2)}/${(new Date().getFullYear()).toString().substring(2)}`,
                             months: {
                                 [month]: {
                                     fees: {
@@ -127,7 +126,6 @@ const setTimeCostForClients = async () => {
                                 }
                             }
                         };
-                        console.log(objectToCreate.year);
                         const newCost = await costModel_1.costAgent.create(objectToCreate);
                     }
                 }
@@ -142,6 +140,7 @@ const getCost = async (req, res) => {
     try {
         await setTimeCostForClients();
         const costData = await costModel_1.costAgent.find().populate({ path: 'clientID', select: 'clientBasicInfo.name' });
+        console.log('cost data: ', costData);
         const revenueData = await revenueModel_1.revenueAgent.find({ type: 'Confirmed' }).populate({ path: 'clientID', select: 'clientBasicInfo.name' });
         const data = groupByClientID(costData, revenueData);
         res.status(200).json(data);

@@ -37,6 +37,7 @@ const salaryUpdatesSchema = new mongoose_1.Schema({
     FTE: String,
     basis: String,
     payFrequency: String,
+    employeeBasis: String,
     startDate: Date,
     endDate: Date,
     notes: String

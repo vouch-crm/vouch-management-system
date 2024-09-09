@@ -22,6 +22,8 @@ const reportsController_1 = __importDefault(require("./controllers/reportsContro
 const revenueController_1 = __importDefault(require("./controllers/revenueController"));
 const operationalProfitAndLossController_1 = __importDefault(require("./controllers/operationalProfitAndLossController"));
 const projectController_1 = __importDefault(require("./controllers/projectController"));
+const notificationsController_1 = __importDefault(require("./controllers/notificationsController"));
+const purchaseOrderController_1 = __importDefault(require("./controllers/purchaseOrderController"));
 const utils_1 = require("./services/utils");
 const cors_1 = __importDefault(require("cors"));
 const morgan_1 = __importDefault(require("morgan"));
@@ -49,6 +51,8 @@ app.use(reportsController_1.default);
 app.use(revenueController_1.default);
 app.use(operationalProfitAndLossController_1.default);
 app.use(projectController_1.default);
+app.use(notificationsController_1.default);
+app.use(purchaseOrderController_1.default);
 app.get('/', (_req, res) => {
     res.status(200).json({
         message: 'Server Started!'

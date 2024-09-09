@@ -34,5 +34,5 @@ const projectSchema = new mongoose_1.Schema({
     name: String,
     budget: Number
 });
-const projectAgent = mongoose_1.default.model('Project', projectSchema);
+const projectAgent = mongoose_1.default.model('project', projectSchema);
 exports.projectAgent = projectAgent;

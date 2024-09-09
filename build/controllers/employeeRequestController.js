@@ -75,6 +75,40 @@ const getByID = async (req, res) => {
         data: request.data
     });
 };
+const getByEmpID = async (req, res) => {
+    const ID = req.params.id;
+    const request = await employeeRequestServices_1.employeeRequestServices.getByID(ID);
+    if (request.status === enums_1.serviceStatuses.FAILED) {
+        return res.status(404).json({
+            message: request.message
+        });
+    }
+    else if (request.status === enums_1.serviceStatuses.ERROR) {
+        return res.status(400).json({
+            message: request.message
+        });
+    }
+    res.status(200).json({
+        data: request.data
+    });
+};
+const getByIDAndUpdate = async (req, res) => {
+    const ID = req.params.id;
+    const request = await employeeRequestServices_1.employeeRequestServices.getByIDAndUpdate(ID, req.body);
+    if (request.status === enums_1.serviceStatuses.FAILED) {
+        return res.status(404).json({
+            message: request.message
+        });
+    }
+    else if (request.status === enums_1.serviceStatuses.ERROR) {
+        return res.status(400).json({
+            message: request.message
+        });
+    }
+    res.status(200).json({
+        data: request.data
+    });
+};
 const del = async (req, res) => {
     const ID = req.params.id;
     const request = await employeeRequestServices_1.employeeRequestServices.del(ID);
@@ -94,6 +128,8 @@ const del = async (req, res) => {
 };
 empRequestRouter.post('/employee-request', validation_1.validationFunctions.createEmployeeRequestBodyValidationRules(), validation_1.validationFunctions.validationMiddleware, create);
 empRequestRouter.get('/employee-request', adminMiddleware_1.checkIfAdmin, getAll);
-empRequestRouter.get('/employee-request/:id', adminMiddleware_1.checkIfAdmin, getByID);
+empRequestRouter.patch('/employee-request/:id', adminMiddleware_1.checkIfAdmin, getByIDAndUpdate);
+// empRequestRouter.get('/employee-request/:id', checkIfAdmin, getByID);
+empRequestRouter.get('/employee-request/:id', getByEmpID);
 empRequestRouter.delete('/employee-request/:id', adminMiddleware_1.checkIfAdmin, del);
 exports.default = empRequestRouter;

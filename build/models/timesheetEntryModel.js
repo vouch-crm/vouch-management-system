@@ -51,6 +51,7 @@ const timesheetEntrySchema = new mongoose_1.Schema({
     cost: Number,
     description: String,
     timesheetRow: Number,
+    billable: Boolean
 });
 const TimeSheetEntryAgent = mongoose_1.default.model('TimesheetEntry', timesheetEntrySchema);
 exports.TimeSheetEntryAgent = TimeSheetEntryAgent;

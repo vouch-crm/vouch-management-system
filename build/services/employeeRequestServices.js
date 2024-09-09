@@ -22,7 +22,7 @@ const create = async (employeeRequestData) => {
 };
 const getAll = async () => {
     try {
-        const requests = await employeeRequests_1.EmployeeRequestAgent.find();
+        const requests = await employeeRequests_1.EmployeeRequestAgent.find().populate({ path: 'empID', select: 'firstName lastName' });
         return {
             status: enums_1.serviceStatuses.SUCCESS,
             message: null,
@@ -40,6 +40,54 @@ const getAll = async () => {
 const getByID = async (ID) => {
     try {
         const request = await employeeRequests_1.EmployeeRequestAgent.findById(ID);
+        if (!request) {
+            return {
+                status: enums_1.serviceStatuses.FAILED,
+                message: `No matching requests for ID = ${ID}`,
+                data: null
+            };
+        }
+        return {
+            status: enums_1.serviceStatuses.SUCCESS,
+            message: null,
+            data: request
+        };
+    }
+    catch (error) {
+        return {
+            status: enums_1.serviceStatuses.ERROR,
+            message: `Error getting request for employee with ID = ${ID} : ${error}`,
+            data: null
+        };
+    }
+};
+const getByEmpID = async (ID) => {
+    try {
+        const request = await employeeRequests_1.EmployeeRequestAgent.find({ empID: ID });
+        if (!request) {
+            return {
+                status: enums_1.serviceStatuses.FAILED,
+                message: `No matching requests for ID = ${ID}`,
+                data: null
+            };
+        }
+        return {
+            status: enums_1.serviceStatuses.SUCCESS,
+            message: null,
+            data: request
+        };
+    }
+    catch (error) {
+        return {
+            status: enums_1.serviceStatuses.ERROR,
+            message: `Error getting request for employee with ID = ${ID} : ${error}`,
+            data: null
+        };
+    }
+};
+const getByIDAndUpdate = async (ID, data) => {
+    try {
+        const request = await employeeRequests_1.EmployeeRequestAgent.findByIdAndUpdate(ID, data);
         if (!request) {
             return {
                 status: enums_1.serviceStatuses.FAILED,
@@ -89,5 +137,7 @@ exports.employeeRequestServices = {
     create,
     getAll,
     getByID,
+    getByEmpID,
+    getByIDAndUpdate,
     del
 };

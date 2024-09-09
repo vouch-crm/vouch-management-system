@@ -31,6 +31,10 @@ const monthSchema = new mongoose_1.Schema({
         type: Map,
         of: Number,
     },
+    targets: {
+        type: Map,
+        of: Number,
+    },
     totalBudget: Number
 }, { _id: false });
 const revenueSchema = new mongoose_1.Schema({

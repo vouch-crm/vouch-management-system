@@ -5,9 +5,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const enums_1 = require("../services/enums");
+const salaryUpdatesModel_1 = require("../models/salaryUpdatesModel");
 const salaryUpdatesServices_1 = require("../services/salaryUpdatesServices");
+const employeeModel_1 = require("../models/employeeModel");
 const validation_1 = require("../middlewares/validation");
 const adminMiddleware_1 = require("../middlewares/adminMiddleware");
+const mongoose_1 = __importDefault(require("mongoose"));
 const salaryUpdatesRouter = express_1.default.Router();
 const create = async (req, res) => {
     const salaryData = req.body;
@@ -49,6 +52,9 @@ const create = async (req, res) => {
             message: dbResponse.message
         });
     }
+    const employee = await employeeModel_1.EmployeeAgent.findById(req.body.empID);
+    const hourlyRate = await setEmployeeHourlyRate(req.body.empID, employee?.maximumAnnualHours, employee?.potentialChargableTime);
+    await employeeModel_1.EmployeeAgent.findByIdAndUpdate(req.body.empID, { hourlyRate: +hourlyRate[0].hourlyRate.toFixed(2), maxCapacityHourlyRate: +hourlyRate[0].hourlyRate.toFixed(2) * 3 });
     res.status(201).json({
         message: dbResponse.message,
         data: dbResponse.data
@@ -112,6 +118,42 @@ const del = async (req, res) => {
     res.status(200).json({
         message: dbResponse.message,
     });
+};
+const setEmployeeHourlyRate = async (empID, maxHours = 1665, billingPercentage = 0.8) => {
+    try {
+        const data = salaryUpdatesModel_1.SalaryUpdatesAgent.aggregate([
+            {
+                $match: {
+                    empID: new mongoose_1.default.Types.ObjectId(empID),
+                    basis: 'per annum'
+                }
+            },
+            {
+                $group: {
+                    _id: "$empID",
+                    yearlyPay: {
+                        $sum: "$amount"
+                    }
+                }
+            }, {
+                $addFields: {
+                    hourlyRate: {
+                        $divide: ['$yearlyPay', maxHours * billingPercentage]
+                    }
+                }
+            },
+            {
+                $project: {
+                    hourlyRate: 1,
+                    yearlyPay: 1
+                }
+            }
+        ]);
+        return data;
+    }
+    catch (error) {
+        throw new Error(`${error}`);
+    }
 };
 salaryUpdatesRouter.post('/employee-salary', adminMiddleware_1.checkIfAdmin, validation_1.validationFunctions
     .createSalaryUpdateBodyValidationRules(), validation_1.validationFunctions.validationMiddleware, create);

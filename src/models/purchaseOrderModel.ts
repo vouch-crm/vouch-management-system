@@ -14,7 +14,8 @@ type purchaseOrderDTO = {
     status: string,
     jobPhase: string,
     supplierType: string,
-    PONumber: number
+    PONumber: number,
+    manager: Schema.Types.ObjectId,
 }
 
 const purchaseOrderSchema = new Schema({
@@ -48,9 +49,10 @@ const purchaseOrderSchema = new Schema({
     PONumber: {
         type: Number,
         default: 0
-    }
+    },
+    manager: Schema.Types.ObjectId
 
-});
+}, { timestamps: true });
 
 
 
