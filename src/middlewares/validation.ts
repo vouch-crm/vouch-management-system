@@ -208,6 +208,12 @@ const createPurchaseOrderValidationRules = () => {
     ]
 }
 
+const changePasswordRequestValidationRules = () => {
+    return [
+        body('email').isEmail().withMessage('Invalid request!')
+    ]
+}
+
 const validationMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (errors.isEmpty()) {
@@ -229,5 +235,6 @@ export const validationFunctions = {
     updateRevenueCellBodyValidations,
     updateConvertedRevenueCellBodyValidations,
     createProjectBodyValidationRules,
-    createPurchaseOrderValidationRules
+    createPurchaseOrderValidationRules,
+    changePasswordRequestValidationRules
 }

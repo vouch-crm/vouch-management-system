@@ -7,15 +7,11 @@ export type tokenReturn = {
   status: string,
   message: string | null,
   token: string | null,
-  decoded: { id: string, email: string } | null
+  decoded: Record<string, any> | null
 }
 
-const generateToken = (id: string, email: string): tokenReturn => {
+const generateToken = (payload: Record<string, any>): tokenReturn => {
   try {
-    const payload = {
-      'id': id,
-      'email': email
-    };
     const secretKey = process.env.SECRET_TOKEN_KEY as string;
 
     const token = jwt.sign(payload, secretKey);

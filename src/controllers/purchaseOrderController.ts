@@ -86,6 +86,37 @@ const update = async(req: Request, res: Response) => {
     });
 }
 
+const updateOrderInfo = async(req: Request, res: Response) => {
+    const ID = req.params.id;
+    const {jobPhase, supplierType} = req.body;
+
+    if(jobPhase === undefined && supplierType === undefined) {
+        return res.status(400).json({
+            message: 'Invalid request body!'
+        });
+    }
+
+    const orderData = {
+        jobPhase,
+        supplierType
+    }
+    const updatedOrder = await purchaseOrderServices.updateOrderInfo(ID, orderData);
+
+    if (updatedOrder.status === serviceStatuses.FAILED) {
+        return res.status(404).json({
+            message: updatedOrder.message
+        });
+    } else if (updatedOrder.status === serviceStatuses.ERROR) {
+        return res.status(400).json({
+            message: updatedOrder.message
+        });
+    }
+
+    res.status(200).json({
+        message: updatedOrder.message
+    });
+}
+
 const del = async(req: Request, res: Response) => {
     const ID = req.params.id;
     const deletedOrder = await purchaseOrderServices.del(ID);
@@ -108,6 +139,7 @@ const del = async(req: Request, res: Response) => {
 purchaseOrderRouter.post('/purchase-order', validationFunctions.createPurchaseOrderValidationRules(),
     validationFunctions.validationMiddleware, create);
 purchaseOrderRouter.put('/purchase-order/:id', checkIfEmployeeHasFinancesAcces, update);
+purchaseOrderRouter.put('/purchase-order-info-update/:id', updateOrderInfo);
 purchaseOrderRouter.get('/purchase-order', checkIfEmployeeHasFinancesAcces, getAll);
 purchaseOrderRouter.get('/purchase-order/:id', getEmployeeOrders);
 purchaseOrderRouter.delete('/purchase-order/:id', del);

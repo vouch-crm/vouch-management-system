@@ -111,6 +111,37 @@ const update = async (ID: string, status: string): Promise<purchaseOrderReturn> 
     }
 }
 
+const updateOrderInfo = async(ID: string, orderData: Record<string, any>): Promise<purchaseOrderReturn> => {
+    try {
+        const updatedOrder = await purchaseOrderAgent.findByIdAndUpdate(ID, orderData,
+            {
+                new: true
+            }
+        );
+
+        if (!updatedOrder) {
+            return {
+                status: serviceStatuses.FAILED,
+                message: 'No order matching this ID!',
+                data: null
+            }
+        }
+
+        return {
+            status: serviceStatuses.SUCCESS,
+            message: 'Order Updated successfuly!',
+            data: updatedOrder
+        }
+
+    } catch (error) {
+        return {
+            status: serviceStatuses.ERROR,
+            message: `Error updating purchase order: ${error}`,
+            data: null
+        }
+    }
+}
+
 const del = async (ID: string): Promise<purchaseOrderReturn> => {
     try {
         const deletedOrder = await purchaseOrderAgent.findByIdAndDelete(ID);
@@ -143,5 +174,6 @@ export const purchaseOrderServices = {
     getAll,
     getEmployeeOrders,
     update,
+    updateOrderInfo,
     del
 }
