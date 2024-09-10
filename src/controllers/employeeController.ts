@@ -247,8 +247,8 @@ const uploadFile = async (req: Request, res: Response) => {
             title: fileTitle,
             url: s3Response.data
         }
-        
-        const dbResponse2 = await EmployeeAgent.findByIdAndUpdate({_id: ID}, {
+
+        const dbResponse2 = await EmployeeAgent.findByIdAndUpdate({ _id: ID }, {
             $push: { documents: document }
         })
         if (!dbResponse2) {
@@ -262,19 +262,19 @@ const uploadFile = async (req: Request, res: Response) => {
     }
 
 
-    
+
 }
 
-const changePasswordRequest = async(req: Request, res: Response) => {
-    const {email} = req.body;
+const changePasswordRequest = async (req: Request, res: Response) => {
+    const { email } = req.body;
 
     const dbResponse = await employeeServices.getEmployeeByEmail(email);
 
-    if(dbResponse.status === serviceStatuses.FAILED) {
+    if (dbResponse.status === serviceStatuses.FAILED) {
         return res.status(404).json({
             message: dbResponse.message
         });
-    } else if(dbResponse.status === serviceStatuses.ERROR) {
+    } else if (dbResponse.status === serviceStatuses.ERROR) {
         return res.status(400).json({
             message: dbResponse.message
         });
@@ -283,9 +283,11 @@ const changePasswordRequest = async(req: Request, res: Response) => {
     const payload = {
         email: email
     }
+    // this method of token creation is used for development purposes, however later on a method
+    // with a time limit token will be used
     const tokenResponse = tokenServices.generateToken(payload);
 
-    if(tokenResponse.status !== serviceStatuses.SUCCESS) {
+    if (tokenResponse.status !== serviceStatuses.SUCCESS) {
         return res.status(500).json({
             message: tokenResponse.message
         });
@@ -293,17 +295,26 @@ const changePasswordRequest = async(req: Request, res: Response) => {
 
     const token = tokenResponse.token;
 
-    await emailServices.sendEmail('test', 'test', 'test', 'test');
+    // once the frontend page for the change password is done, the body of the email will be
+    // replaced with the link of the page/token
+    const emailServiceResponse = await emailServices.sendEmail('development@vouch-os.com',
+        email, 'test', `Employee token: ${token}`);
+
+    if (emailServiceResponse.status !== serviceStatuses.SUCCESS) {
+        return res.status(500).json({
+            message: emailServiceResponse.message
+        });
+    }
 
     res.status(200).json({
-        message: 'email sent!'
+        message: emailServiceResponse.message
     });
 }
 
-const changePassword = async(req: Request, res: Response) => {
-    const {token, newPassword} = req.body;
+const changePassword = async (req: Request, res: Response) => {
+    const { token, newPassword } = req.body;
 
-    if(token === undefined || newPassword === undefined) {
+    if (token === undefined || newPassword === undefined) {
         return res.status(400).json({
             message: 'Invalid request!'
         });
@@ -311,7 +322,7 @@ const changePassword = async(req: Request, res: Response) => {
 
     const tokenResponse = tokenServices.verifyToken(token);
 
-    if(tokenResponse.status !== serviceStatuses.SUCCESS) {
+    if (tokenResponse.status !== serviceStatuses.SUCCESS) {
         return res.status(400).json({
             message: tokenResponse.message
         });
@@ -322,11 +333,11 @@ const changePassword = async(req: Request, res: Response) => {
 
     const dbResponse = await employeeServices.updateByEmail(employeeEmail, hashedPassword);
 
-    if(dbResponse.status === serviceStatuses.FAILED) {
+    if (dbResponse.status === serviceStatuses.FAILED) {
         return res.status(404).json({
             message: dbResponse.message
         });
-    } else if(dbResponse.status === serviceStatuses.ERROR) {
+    } else if (dbResponse.status === serviceStatuses.ERROR) {
         return res.status(400).json({
             message: dbResponse.message
         });
@@ -337,7 +348,7 @@ const changePassword = async(req: Request, res: Response) => {
     });
 }
 
-employeeRouter.post('/employee', checkIfEmployeeHasHrDashboardAcces, 
+employeeRouter.post('/employee', checkIfEmployeeHasHrDashboardAcces,
     validationFunctions.createEmployeeBodyValidationRules(),
     validationFunctions.validationMiddleware, create);
 employeeRouter.post('/employee-login', login);
@@ -345,7 +356,7 @@ employeeRouter.get('/employee', getAll);
 employeeRouter.get('/employee/:id', checkIfAdmin, getEmployeeByID);
 employeeRouter.delete('/employee/:id', checkIfAdmin, del);
 employeeRouter.put('/employee/:id', update);
-employeeRouter.post('/employee-change-password-request', 
+employeeRouter.post('/employee-change-password-request',
     validationFunctions.changePasswordRequestValidationRules(),
     validationFunctions.validationMiddleware, changePasswordRequest);
 employeeRouter.put('/employee-change-password', changePassword);

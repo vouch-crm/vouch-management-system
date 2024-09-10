@@ -1,4 +1,5 @@
 import {ses} from './awsConfiguration';
+import { serviceStatuses } from './enums';
 
 const sendEmail = async (senderEmail: string, recipientEmail: string, subject: string,
     body: string) => {
@@ -21,10 +22,15 @@ const sendEmail = async (senderEmail: string, recipientEmail: string, subject: s
         
         try {
             const result = await ses.sendEmail(params).promise();
-            console.log(`Email sent successfuly!`);
-            console.log(result);
+            return {
+                status: serviceStatuses.SUCCESS,
+                message: 'Email sent successfuly!'
+            }
         } catch (error) {
-            console.log(`Error sending this email: ${error}`);
+            return {
+                status: serviceStatuses.ERROR,
+                message: `Error sending email: ${error}`
+            }
         }
     }
 
