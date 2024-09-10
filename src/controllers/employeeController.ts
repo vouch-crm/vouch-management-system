@@ -353,8 +353,8 @@ employeeRouter.post('/employee', checkIfEmployeeHasHrDashboardAcces,
     validationFunctions.validationMiddleware, create);
 employeeRouter.post('/employee-login', login);
 employeeRouter.get('/employee', getAll);
-employeeRouter.get('/employee/:id', checkIfAdmin, getEmployeeByID);
-employeeRouter.delete('/employee/:id', checkIfAdmin, del);
+employeeRouter.get('/employee/:id', checkIfEmployeeHasHrDashboardAcces, getEmployeeByID);
+employeeRouter.delete('/employee/:id', checkIfEmployeeHasHrDashboardAcces, del);
 employeeRouter.put('/employee/:id', update);
 employeeRouter.post('/employee-change-password-request',
     validationFunctions.changePasswordRequestValidationRules(),
