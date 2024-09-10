@@ -4,9 +4,12 @@ exports.employeeServices = void 0;
 const employeeModel_1 = require("../models/employeeModel");
 const mongodb_1 = require("mongodb");
 const enums_1 = require("./enums");
-const passwordGenerator = (email) => {
+const passwordGenerator = (email, password) => {
     const basePassword = email.substring(0, email.indexOf('@'));
     const defaultPassword = `emp-password-${basePassword}`;
+    if (password) {
+        return password;
+    }
     return defaultPassword;
 };
 const generateProbationDate = (joinDate) => {
@@ -63,11 +66,11 @@ const getEmployeeByID = async (ID) => {
     }
 };
 const getEmpHourlyRate = async (ID) => {
-    const employee = await employeeModel_1.EmployeeAgent.findById(ID, 'hourlyRate');
+    const employee = await employeeModel_1.EmployeeAgent.findById(ID, 'maxCapacityHourlyRate');
     if (!employee) {
         return undefined;
     }
-    return employee.hourlyRate;
+    return employee.maxCapacityHourlyRate;
 };
 const checkEmployeeExist = async (ID) => {
     try {

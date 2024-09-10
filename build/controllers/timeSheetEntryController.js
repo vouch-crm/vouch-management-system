@@ -11,6 +11,7 @@ const express_1 = __importDefault(require("express"));
 const timeSheetController = express_1.default.Router();
 const create = async (req, res) => {
     let requestData = req.body;
+    console.log(requestData);
     const empHourlyRate = await employeeServices_1.employeeServices.getEmpHourlyRate(requestData.employeeID);
     if (empHourlyRate === undefined) {
         return res.status(404).json({

@@ -43,7 +43,7 @@ const markNotificationsRead = async (empID: string): Promise<notificationReturn>
 
 const getNotifications = async (empID: string): Promise<notificationReturn> => {
     try {
-        const notifications = await NotificationModel.find({empID})
+        const notifications = await NotificationModel.find({empID}).sort({ createdAt: -1 }).limit(5)
         return {
             status: serviceStatuses.SUCCESS,
             message: 'Notifications retrieved successfully.',

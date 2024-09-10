@@ -12,9 +12,12 @@ const notificationSchema: Schema = new Schema({
         ref: 'Employee',
         required: true
     },
-    read: String,
+    read: {
+        type: Boolean,
+        default: false
+    },
     message: String
-})
+},{timestamps: true})
 
 const NotificationModel = mongoose.model<Notification>('Notification', notificationSchema)
 export { Notification, NotificationModel }

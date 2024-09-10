@@ -24,12 +24,12 @@ const checkIfAdmin = async (req, res, next) => {
             message: dbResponse.message
         });
     }
-    const role = dbResponse.data?.role;
-    if (role !== enums_1.adminRoles.ADMIN && role !== enums_1.adminRoles.SUPERADMIN) {
-        return res.status(401).json({
-            message: 'Unauthorized access!'
-        });
-    }
+    // const role: string = dbResponse.data?.role;
+    // if (role !== adminRoles.ADMIN && role !== adminRoles.SUPERADMIN) {
+    //     return res.status(401).json({
+    //         message: 'Unauthorized access!'
+    //     });
+    // }
     next();
 };
 exports.checkIfAdmin = checkIfAdmin;

@@ -10,7 +10,7 @@ const employeeModel_1 = require("../models/employeeModel");
 const validation_1 = require("../middlewares/validation");
 const adminMiddleware_1 = require("../middlewares/adminMiddleware");
 const tokenServices_1 = require("../services/tokenServices");
-const s3Config_1 = require("../services/s3Config");
+const awsConfiguration_1 = require("../services/awsConfiguration");
 const multer_1 = __importDefault(require("multer"));
 const enums_1 = require("../services/enums");
 const s3Services_1 = require("../services/s3Services");
@@ -21,7 +21,7 @@ const employeeRouter = express_1.default.Router();
 const create = async (req, res) => {
     const requestData = req.body;
     const probationDate = employeeServices_1.employeeServices.generateProbationDate(requestData.joinDate);
-    const password = await hashingServices_1.hashingServices.hashPassword(employeeServices_1.employeeServices.passwordGenerator(requestData.email));
+    const password = await hashingServices_1.hashingServices.hashPassword(employeeServices_1.employeeServices.passwordGenerator(requestData.email, requestData.password));
     const employeeData = requestData;
     employeeData.probationDate = probationDate;
     employeeData.password = password;
@@ -143,7 +143,7 @@ const uploadImage = async (req, res) => {
             Key: req.file?.originalname || '',
             Body: req.file?.buffer || '',
         };
-        const result = await s3Config_1.s3.upload(uploadParams).promise();
+        const result = await awsConfiguration_1.s3.upload(uploadParams).promise();
         const employeeData = {
             image: result.Location
         };

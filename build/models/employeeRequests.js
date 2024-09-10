@@ -37,6 +37,10 @@ const employeeRequestSchema = new mongoose_1.Schema({
     notes: String,
     startDateFullDay: Boolean,
     endDateFullDay: Boolean,
+    status: {
+        type: String,
+        default: 'Pending'
+    }
 });
 const EmployeeRequestAgent = mongoose_1.default
     .model('EmployeeRequest', employeeRequestSchema);

@@ -22,7 +22,7 @@ const create = async (projectData) => {
 };
 const getAll = async () => {
     try {
-        const projects = await projectModel_1.projectAgent.find();
+        const projects = await projectModel_1.projectAgent.find().populate({ path: 'clientID', select: 'clientBasicInfo.name' });
         return {
             status: enums_1.serviceStatuses.SUCCESS,
             message: null,
@@ -40,6 +40,30 @@ const getAll = async () => {
 const getByID = async (ID) => {
     try {
         const project = await projectModel_1.projectAgent.findById(ID);
+        if (!project) {
+            return {
+                status: enums_1.serviceStatuses.FAILED,
+                message: 'No project associated with this ID!',
+                data: null
+            };
+        }
+        return {
+            status: enums_1.serviceStatuses.SUCCESS,
+            message: null,
+            data: project
+        };
+    }
+    catch (error) {
+        return {
+            status: enums_1.serviceStatuses.ERROR,
+            message: `an error occurred: ${error}`,
+            data: null
+        };
+    }
+};
+const getProject = async (clientID, name) => {
+    try {
+        const project = await projectModel_1.projectAgent.find({ clientID, name });
         if (!project) {
             return {
                 status: enums_1.serviceStatuses.FAILED,
@@ -89,5 +113,6 @@ exports.projectServices = {
     create,
     getAll,
     getByID,
+    getProject,
     del
 };

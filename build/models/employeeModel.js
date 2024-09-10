@@ -59,7 +59,14 @@ const employeeSchema = new mongoose_1.Schema({
     address: String,
     image: String,
     status: String,
-    hourlyRate: Number,
+    hourlyRate: {
+        type: Number,
+        default: 25,
+    },
+    maxCapacityHourlyRate: {
+        type: Number,
+        default: 75,
+    },
     role: {
         type: String,
         default: null
@@ -80,7 +87,14 @@ const employeeSchema = new mongoose_1.Schema({
     sickDaysTaken: { type: Number, default: 0 },
     workFromHome: { type: Number, default: 0 },
     performanceLastUpdated: Date,
-    documents: Array
+    documents: Array,
+    potentialChargableTime: { type: Number, default: 0.8 },
+    maximumAnnualHours: { type: Number, default: 1665 },
+    fullAccess: {
+        hrDashboard: { type: Boolean, default: false },
+        timeTracker: { type: Boolean, default: false },
+        finances: { type: Boolean, default: false }
+    }
 });
 const EmployeeAgent = mongoose_1.default.model('Employee', employeeSchema);
 exports.EmployeeAgent = EmployeeAgent;

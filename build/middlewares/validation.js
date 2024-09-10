@@ -146,6 +146,48 @@ const createProjectBodyValidationRules = () => {
         (0, express_validator_1.body)('budget').exists().withMessage('budget not provided')
     ];
 };
+const createPurchaseOrderValidationRules = () => {
+    return [
+        (0, express_validator_1.body)('clientID').exists().withMessage('clientID not provided'),
+        (0, express_validator_1.body)('empID').exists().withMessage('empID not provided'),
+        (0, express_validator_1.body)('vendorName').exists().withMessage('vendorName not provided'),
+        (0, express_validator_1.body)('purchaseReason').exists().withMessage('purchaseReason not provided'),
+        (0, express_validator_1.body)('estimatedTime').exists().withMessage('estimatedTime not provided'),
+        (0, express_validator_1.body)('amount').exists().withMessage('amount not provided'),
+        (0, express_validator_1.body)('date').exists().withMessage('date not provided'),
+        (0, express_validator_1.body)('monthOfReference').custom(value => {
+            switch (value) {
+                case 'Jan':
+                    break;
+                case 'Feb':
+                    break;
+                case 'Mar':
+                    break;
+                case 'Apr':
+                    break;
+                case 'May':
+                    break;
+                case 'Jun':
+                    break;
+                case 'Jul':
+                    break;
+                case 'Aug':
+                    break;
+                case 'Sep':
+                    break;
+                case 'Oct':
+                    break;
+                case 'Nov':
+                    break;
+                case 'Dec':
+                    break;
+                default:
+                    throw new Error('Invalid value for field monthOfReference!');
+            }
+            return true;
+        })
+    ];
+};
 const validationMiddleware = async (req, res, next) => {
     const errors = (0, express_validator_1.validationResult)(req);
     if (errors.isEmpty()) {
@@ -164,5 +206,6 @@ exports.validationFunctions = {
     createRevenueBodyValidationRules,
     updateRevenueCellBodyValidations,
     updateConvertedRevenueCellBodyValidations,
-    createProjectBodyValidationRules
+    createProjectBodyValidationRules,
+    createPurchaseOrderValidationRules
 };

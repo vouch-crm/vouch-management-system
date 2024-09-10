@@ -4,11 +4,14 @@ import express, { Request, Response } from 'express';
 import { purchaseOrderDTO } from "../models/purchaseOrderModel";
 import { validationFunctions } from "../middlewares/validation";
 import { checkIfEmployeeHasFinancesAcces } from "../middlewares/employeeMiddleware";
+import { sendNotification } from "../services/notificationsServices";
+import mongoose from "mongoose";
 
 const purchaseOrderRouter = express.Router();
 
 const create = async(req: Request, res: Response) => {
     const requestBody: purchaseOrderDTO = req.body;
+    console.log(requestBody)
     const purchaseOrder = await purchaseOrderServices.create(requestBody);
 
     if (purchaseOrder.status !== serviceStatuses.SUCCESS) {
@@ -17,8 +20,11 @@ const create = async(req: Request, res: Response) => {
         });
     }
 
+    // @ts-ignore
+    sendNotification({empID: requestBody.manager, message: `There is a new purchase order request!`})
+
     res.status(201).json({
-        message: purchaseOrder.message
+        message: requestBody
     });
 }
 

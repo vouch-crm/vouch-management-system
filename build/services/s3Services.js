@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.S3Services = void 0;
-const s3Config_1 = require("../services/s3Config");
+const awsConfiguration_1 = require("./awsConfiguration");
 const enums_1 = require("./enums");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
@@ -17,7 +17,7 @@ const uploadFile = async (file, fileName, contentType) => {
             ACL: 'public-read',
             ContentType: contentType
         };
-        const uploadResult = await s3Config_1.s3.upload(params).promise();
+        const uploadResult = await awsConfiguration_1.s3.upload(params).promise();
         return {
             status: enums_1.serviceStatuses.SUCCESS,
             message: 'File uploaded to S3 bucket successfuly!',
