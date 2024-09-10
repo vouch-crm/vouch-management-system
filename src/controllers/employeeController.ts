@@ -4,6 +4,7 @@ import { hashingServices } from '../services/hashingServices';
 import { EmployeeDocument, EmployeeInput, EmployeeLogin, EmployeeAgent } from '../models/employeeModel';
 import { validationFunctions } from '../middlewares/validation';
 import { checkIfAdmin } from '../middlewares/adminMiddleware';
+import { checkIfEmployeeHasHrDashboardAcces } from '../middlewares/employeeMiddleware';
 import { tokenServices } from '../services/tokenServices';
 import { s3 } from '../services/awsConfiguration';
 import multer from "multer";
@@ -336,7 +337,8 @@ const changePassword = async(req: Request, res: Response) => {
     });
 }
 
-employeeRouter.post('/employee', checkIfAdmin, validationFunctions.createEmployeeBodyValidationRules(),
+employeeRouter.post('/employee', checkIfEmployeeHasHrDashboardAcces, 
+    validationFunctions.createEmployeeBodyValidationRules(),
     validationFunctions.validationMiddleware, create);
 employeeRouter.post('/employee-login', login);
 employeeRouter.get('/employee', getAll);

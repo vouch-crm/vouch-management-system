@@ -1,4 +1,4 @@
-import { employeeServices, EmployeeReturn } from "../services/employeeServices";
+import { employeeServices} from "../services/employeeServices";
 import { tokenServices, tokenReturn } from "../services/tokenServices";
 import { Request, Response, NextFunction } from 'express'
 
@@ -83,7 +83,7 @@ const checkIfEmployeeHasTimeTrackingAcces = async(req: Request, res: Response, n
         });
     }
 
-    const financeAccess = employee.data?.fullAccess.finances;
+    const financeAccess = employee.data?.fullAccess.timeTracker;
     if (financeAccess !== true) {
         return res.status(401).json({
             message: 'Unauthorized access!'
@@ -115,7 +115,7 @@ const checkIfEmployeeHasHrDashboardAcces = async(req: Request, res: Response, ne
         });
     }
 
-    const financeAccess = employee.data?.fullAccess.finances;
+    const financeAccess = employee.data?.fullAccess.hrDashboard;
     if (financeAccess !== true) {
         return res.status(401).json({
             message: 'Unauthorized access!'
