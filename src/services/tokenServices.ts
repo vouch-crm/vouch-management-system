@@ -10,11 +10,17 @@ export type tokenReturn = {
   decoded: Record<string, any> | null
 }
 
-const generateToken = (payload: Record<string, any>): tokenReturn => {
+const generateToken = (payload: Record<string, any>, expiresIn?: string): tokenReturn => {
   try {
     const secretKey = process.env.SECRET_TOKEN_KEY as string;
 
-    const token = jwt.sign(payload, secretKey);
+    const options: jwt.SignOptions = {};
+
+    if(expiresIn) {
+      options.expiresIn = expiresIn
+    }
+    
+    const token = jwt.sign(payload, secretKey, options);
     return {
       status: 'Success',
       token: token,

@@ -3,7 +3,7 @@ import { serviceStatuses } from "../services/enums";
 import express, { Request, Response } from 'express';
 import { purchaseOrderDTO } from "../models/purchaseOrderModel";
 import { validationFunctions } from "../middlewares/validation";
-import { checkIfEmployeeHasFinancesAcces } from "../middlewares/employeeMiddleware";
+import { checkIfEmployeeHasFinancesAccess } from "../middlewares/employeeMiddleware";
 import { sendNotification } from "../services/notificationsServices";
 import mongoose from "mongoose";
 
@@ -138,9 +138,9 @@ const del = async(req: Request, res: Response) => {
 
 purchaseOrderRouter.post('/purchase-order', validationFunctions.createPurchaseOrderValidationRules(),
     validationFunctions.validationMiddleware, create);
-purchaseOrderRouter.put('/purchase-order/:id', checkIfEmployeeHasFinancesAcces, update);
+purchaseOrderRouter.put('/purchase-order/:id', checkIfEmployeeHasFinancesAccess, update);
 purchaseOrderRouter.put('/purchase-order-info-update/:id', updateOrderInfo);
-purchaseOrderRouter.get('/purchase-order', checkIfEmployeeHasFinancesAcces, getAll);
+purchaseOrderRouter.get('/purchase-order', checkIfEmployeeHasFinancesAccess, getAll);
 purchaseOrderRouter.get('/purchase-order/:id', getEmployeeOrders);
 purchaseOrderRouter.delete('/purchase-order/:id', del);
 

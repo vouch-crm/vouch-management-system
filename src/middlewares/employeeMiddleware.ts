@@ -29,7 +29,7 @@ const extractEmployeeFromToken = async(token: string) => {
     }
 }
 
-const checkIfEmployeeHasFinancesAcces = async(req: Request, res: Response, next: NextFunction) => {
+const checkIfEmployeeHasFinancesAccess = async(req: Request, res: Response, next: NextFunction) => {
     const authorizationToken: string | undefined = req.headers.authorization?.split(" ")[1];
     if (!authorizationToken) {
         return res.status(401).json({
@@ -61,7 +61,7 @@ const checkIfEmployeeHasFinancesAcces = async(req: Request, res: Response, next:
     next();
 }
 
-const checkIfEmployeeHasTimeTrackingAcces = async(req: Request, res: Response, next: NextFunction) => {
+const checkIfEmployeeHasTimeTrackingAccess = async(req: Request, res: Response, next: NextFunction) => {
     const authorizationToken: string | undefined = req.headers.authorization?.split(" ")[1];
     if (!authorizationToken) {
         return res.status(401).json({
@@ -93,7 +93,7 @@ const checkIfEmployeeHasTimeTrackingAcces = async(req: Request, res: Response, n
     next();
 }
 
-const checkIfEmployeeHasHrDashboardAcces = async(req: Request, res: Response, next: NextFunction) => {
+const checkIfEmployeeHasHrDashboardAccess = async(req: Request, res: Response, next: NextFunction) => {
     const authorizationToken: string | undefined = req.headers.authorization?.split(" ")[1];
     if (!authorizationToken) {
         return res.status(401).json({
@@ -126,7 +126,7 @@ const checkIfEmployeeHasHrDashboardAcces = async(req: Request, res: Response, ne
 }
 
 export {
-    checkIfEmployeeHasFinancesAcces, 
-    checkIfEmployeeHasHrDashboardAcces,
-    checkIfEmployeeHasTimeTrackingAcces
+    checkIfEmployeeHasFinancesAccess, 
+    checkIfEmployeeHasHrDashboardAccess,
+    checkIfEmployeeHasTimeTrackingAccess
 }

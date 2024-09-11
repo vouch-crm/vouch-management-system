@@ -4,7 +4,7 @@ import { hashingServices } from '../services/hashingServices';
 import { EmployeeDocument, EmployeeInput, EmployeeLogin, EmployeeAgent } from '../models/employeeModel';
 import { validationFunctions } from '../middlewares/validation';
 import { checkIfAdmin } from '../middlewares/adminMiddleware';
-import { checkIfEmployeeHasHrDashboardAcces } from '../middlewares/employeeMiddleware';
+import { checkIfEmployeeHasHrDashboardAccess } from '../middlewares/employeeMiddleware';
 import { tokenServices } from '../services/tokenServices';
 import { s3 } from '../services/awsConfiguration';
 import multer from "multer";
@@ -283,9 +283,7 @@ const changePasswordRequest = async (req: Request, res: Response) => {
     const payload = {
         email: email
     }
-    // this method of token creation is used for development purposes, however later on a method
-    // with a time limit token will be used
-    const tokenResponse = tokenServices.generateToken(payload);
+    const tokenResponse = tokenServices.generateToken(payload, '1m');
 
     if (tokenResponse.status !== serviceStatuses.SUCCESS) {
         return res.status(500).json({
@@ -348,13 +346,13 @@ const changePassword = async (req: Request, res: Response) => {
     });
 }
 
-employeeRouter.post('/employee', checkIfEmployeeHasHrDashboardAcces,
+employeeRouter.post('/employee', checkIfEmployeeHasHrDashboardAccess,
     validationFunctions.createEmployeeBodyValidationRules(),
     validationFunctions.validationMiddleware, create);
 employeeRouter.post('/employee-login', login);
 employeeRouter.get('/employee', getAll);
-employeeRouter.get('/employee/:id', checkIfEmployeeHasHrDashboardAcces, getEmployeeByID);
-employeeRouter.delete('/employee/:id', checkIfEmployeeHasHrDashboardAcces, del);
+employeeRouter.get('/employee/:id', checkIfEmployeeHasHrDashboardAccess, getEmployeeByID);
+employeeRouter.delete('/employee/:id', checkIfEmployeeHasHrDashboardAccess, del);
 employeeRouter.put('/employee/:id', update);
 employeeRouter.post('/employee-change-password-request',
     validationFunctions.changePasswordRequestValidationRules(),
