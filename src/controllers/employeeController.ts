@@ -283,7 +283,7 @@ const changePasswordRequest = async (req: Request, res: Response) => {
     const payload = {
         email: email
     }
-    const tokenResponse = tokenServices.generateToken(payload, '1m');
+    const tokenResponse = tokenServices.generateToken(payload, '15m');
 
     if (tokenResponse.status !== serviceStatuses.SUCCESS) {
         return res.status(500).json({

@@ -72,7 +72,6 @@ const connectDB = async (): Promise<void> => {
 }
 
 connectDB();
-utils.createAdmin()
 
 app.listen(PORT, (): void => {
     console.log(`Server Running On Port: ${PORT}`);
