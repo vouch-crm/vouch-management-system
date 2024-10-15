@@ -139,7 +139,6 @@ empRequestRouter.post('/employee-request', validationFunctions.createEmployeeReq
     validationFunctions.validationMiddleware, create);
 empRequestRouter.get('/employee-request', checkIfAdmin, getAll);
 empRequestRouter.patch('/employee-request/:id', checkIfAdmin, getByIDAndUpdate);
-// empRequestRouter.get('/employee-request/:id', checkIfAdmin, getByID);
 empRequestRouter.get('/employee-request/:id', getByEmpID);
 empRequestRouter.delete('/employee-request/:id', checkIfAdmin, del);
 

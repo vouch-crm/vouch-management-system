@@ -17,9 +17,8 @@ import reportsRouter from './controllers/reportsController';
 import revenueRouter from './controllers/revenueController';
 import operationalProfitAndLossRouter from './controllers/operationalProfitAndLossController';
 import projectRouter from './controllers/projectController';
-import notificationsRouter from './controllers/notificationsController'
+import notificationsRouter from './controllers/notificationsController';
 import purchaseOrderRouter from './controllers/purchaseOrderController';
-import { utils } from './services/utils';
 import cors from 'cors';
 import morgan from 'morgan';
 
@@ -35,7 +34,7 @@ app.use(
         skip: (req: Request) => req.method === "OPTIONS",
     })
 );
-app.use(cors())
+app.use(cors());
 app.use(bodyParser.json());
 app.use('/client', clientRouter);
 app.use(jobRouter);
