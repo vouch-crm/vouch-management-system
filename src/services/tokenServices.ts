@@ -52,7 +52,7 @@ const verifyToken = (token: string): tokenReturn => {
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError) {
       return {
-        status: 'Error',
+        status: 'Expired',
         message: 'token has expired',
         token: null,
         decoded: null

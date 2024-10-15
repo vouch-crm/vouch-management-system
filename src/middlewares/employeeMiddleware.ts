@@ -4,6 +4,13 @@ import { Request, Response, NextFunction } from 'express'
 
 const extractEmployeeFromToken = async(token: string) => {
     const decodedToken: tokenReturn = tokenServices.verifyToken(token);
+    if (decodedToken.status === 'Expired') {
+        return {
+            status: 'Expired',
+            message: decodedToken.message,
+            data: null
+        }
+    }
     if (decodedToken.status === 'Error') {
         return {
             status: 'Error',
@@ -39,6 +46,12 @@ const checkIfEmployeeHasFinancesAccess = async(req: Request, res: Response, next
 
     const employee = await extractEmployeeFromToken(authorizationToken);
 
+    if (employee.status === 'Expired') {
+        return res.status(401).json({
+            message: employee.message
+        });
+    }
+    
     if (employee.status === 'Error') {
         return res.status(400).json({
             message: employee.message
@@ -71,6 +84,12 @@ const checkIfEmployeeHasTimeTrackingAccess = async(req: Request, res: Response, 
 
     const employee = await extractEmployeeFromToken(authorizationToken);
 
+    if (employee.status === 'Expired') {
+        return res.status(401).json({
+            message: employee.message
+        });
+    }
+    
     if (employee.status === 'Error') {
         return res.status(400).json({
             message: employee.message
@@ -103,6 +122,12 @@ const checkIfEmployeeHasHrDashboardAccess = async(req: Request, res: Response, n
 
     const employee = await extractEmployeeFromToken(authorizationToken);
 
+    if (employee.status === 'Expired') {
+        return res.status(401).json({
+            message: employee.message
+        });
+    }
+    
     if (employee.status === 'Error') {
         return res.status(400).json({
             message: employee.message
